@@ -4,8 +4,8 @@
 @title CurveCryptoViews3Optimized
 @author Curve.Fi
 @license Copyright (c) Curve.Fi, 2020-2023 - all rights reserved
-@notice This contract contains view-only external methods which can be
-        gas-inefficient when called from smart contracts.
+@notice 本合约包含只读（view-only）的 external 方法，这些方法被其他
+        智能合约调用时 gas 效率可能较低。
 """
 
 from vyper.interfaces import ERC20
@@ -81,7 +81,7 @@ def get_dx(
     fee_dy: uint256 = 0
     _dy: uint256 = dy
 
-    # for more precise dx (but never exact), increase num loops
+    # 如需更精确（但永远无法完全精确）的 dx，可增加循环次数
     for k in range(5):
         dx, xp = self._get_dx_fee(i, j, _dy, swap)
         fee_dy = Curve(swap).fee_calc(xp) * _dy / 10**10
@@ -184,7 +184,7 @@ def _get_dx_fee(
     i: uint256, j: uint256, dy: uint256, swap: address
 ) -> (uint256, uint256[N_COINS]):
 
-    # here, dy must include fees (and 1 wei offset)
+    # 这里的 dy 必须包含手续费（以及 1 wei 的偏移）
 
     assert i != j and i < N_COINS and j < N_COINS, "coin index out of range"
     assert dy > 0, "do not exchange out 0 coins"
@@ -201,8 +201,8 @@ def _get_dx_fee(
 
     xp, D, token_supply, price_scale, A, gamma, precisions = self._prep_calc(swap)
 
-    # adjust xp with output dy. dy contains fee element, which we handle later
-    # (hence this internal method is called _get_dx_fee)
+    # 用输出的 dy 调整 xp。dy 中包含手续费部分，我们稍后再处理
+    # （因此这个内部方法命名为 _get_dx_fee）
     xp[j] -= dy
     xp[0] *= precisions[0]
     for k in range(N_COINS - 1):
@@ -239,7 +239,7 @@ def _get_dy_nofee(
 
     xp, D, token_supply, price_scale, A, gamma, precisions = self._prep_calc(swap)
 
-    # adjust xp with input dx
+    # 用输入的 dx 调整 xp
     xp[i] += dx
     xp[0] *= precisions[0]
     for k in range(N_COINS - 1):
@@ -308,8 +308,8 @@ def _calc_withdraw_one_coin(
 ) -> (uint256, uint256):
 
     token_supply: uint256 = Curve(swap).totalSupply()
-    assert token_amount <= token_supply  # dev: token amount more than supply
-    assert i < N_COINS  # dev: coin out of range
+    assert token_amount <= token_supply  # dev: 代币数量超过总供应量
+    assert i < N_COINS  # dev: 币种索引越界
 
     math: Math = Curve(swap).MATH()
 
@@ -403,9 +403,9 @@ def _prep_calc(swap: address) -> (
 @view
 def _unpack(_packed: uint256) -> uint256[3]:
     """
-    @notice Unpacks a uint256 into 3 integers (values must be <= 10**18)
-    @param val The uint256 to unpack
-    @return The unpacked uint256[3]
+    @notice 将一个 uint256 解包为 3 个整数（各值必须 <= 10**18）
+    @param val 要解包的 uint256
+    @return 解包后的 uint256[3]
     """
     return [
         (_packed >> 128) & 18446744073709551615,
