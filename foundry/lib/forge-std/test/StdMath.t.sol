@@ -150,7 +150,7 @@ contract StdMathTest is Test {
     }
 
     function test_GetPercentDelta_Int() external {
-        // We deploy a mock version so we can properly test the revert.
+        // 我们部署一个 mock 版本，以便正确测试 revert。
         StdMathMock stdMathMock = new StdMathMock();
 
         assertEq(stdMath.percentDelta(int256(0), int256(1337)), 1e18);
@@ -166,8 +166,8 @@ contract StdMathTest is Test {
         assertEq(stdMath.percentDelta(type(int192).max, type(int192).max), 0);
         assertEq(stdMath.percentDelta(type(int192).min, type(int192).min), 0);
 
-        assertEq(stdMath.percentDelta(type(int192).min, type(int192).max), 2e18); // rounds the 1 wei diff down
-        assertEq(stdMath.percentDelta(type(int192).max, type(int192).min), 2e18 - 1); // rounds the 1 wei diff down
+        assertEq(stdMath.percentDelta(type(int192).min, type(int192).max), 2e18); // 将 1 wei 的差值向下取整
+        assertEq(stdMath.percentDelta(type(int192).max, type(int192).min), 2e18 - 1); // 将 1 wei 的差值向下取整
         assertEq(stdMath.percentDelta(0, int256(2500)), 1e18);
         assertEq(stdMath.percentDelta(2500, int256(2500)), 0);
         assertEq(stdMath.percentDelta(5000, int256(2500)), 1e18);
@@ -199,7 +199,7 @@ contract StdMathTest is Test {
     }
 
     /*//////////////////////////////////////////////////////////////////////////
-                                   HELPERS
+                                   辅助函数
     //////////////////////////////////////////////////////////////////////////*/
 
     function getAbs(int256 a) private pure returns (uint256) {

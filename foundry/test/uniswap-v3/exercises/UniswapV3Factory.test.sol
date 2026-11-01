@@ -27,16 +27,16 @@ contract UniswapV3FactoryTest is Test {
         tokenB = new ERC20("B", "B", 18);
     }
 
-    // Exercise 1 - Get the address of DAI/USDC (0.1% fee) pool
+    // 练习 1 - 获取 DAI/USDC（0.1% 手续费）池子的地址
     function test_getPool() public {
-        // Write your code here
+        // 在此编写你的代码
         address pool;
         assertEq(pool, UNISWAP_V3_POOL_DAI_USDC_100);
     }
 
-    // Exercise 2 - Deploy a new pool with tokenA and tokenB, 0.1% fee
+    // 练习 2 - 用 tokenA 和 tokenB 部署一个新的池子，手续费为 0.1%
     function test_createPool() public {
-        // Write your code here
+        // 在此编写你的代码
         address pool;
 
         (address token0, address token1) = address(tokenA) <= address(tokenB)

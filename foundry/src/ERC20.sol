@@ -47,14 +47,14 @@ contract ERC20 {
         return true;
     }
 
-    // Not ERC20 function
+    // 非 ERC20 标准函数
     function mint(address dst, uint256 amount) external {
         balanceOf[dst] += amount;
         totalSupply += amount;
         emit Transfer(address(0), dst, amount);
     }
 
-    // Not ERC20 function
+    // 非 ERC20 标准函数
     function burn(uint256 amount) external {
         balanceOf[msg.sender] -= amount;
         totalSupply -= amount;

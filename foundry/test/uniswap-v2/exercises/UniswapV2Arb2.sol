@@ -7,30 +7,30 @@ import {IERC20} from "../../../src/interfaces/IERC20.sol";
 
 contract UniswapV2Arb2 {
     struct FlashSwapData {
-        // Caller of flashSwap (msg.sender inside flashSwap)
+        // flashSwap 的调用者（即 flashSwap 内部的 msg.sender）
         address caller;
-        // Pair to flash swap from
+        // 进行闪电兑换的交易对
         address pair0;
-        // Pair to swap from
+        // 进行普通兑换的交易对
         address pair1;
-        // True if flash swap is token0 in and token1 out
+        // 若闪电兑换为输入 token0、输出 token1，则为 true
         bool isZeroForOne;
-        // Amount in to repay flash swap
+        // 用于偿还闪电兑换的输入数量
         uint256 amountIn;
-        // Amount to borrow from flash swap
+        // 通过闪电兑换借入的数量
         uint256 amountOut;
-        // Revert if profit is less than this minimum
+        // 如果利润低于此最小值，则回滚（revert）
         uint256 minProfit;
     }
 
-    // Exercise 1
-    // - Flash swap to borrow tokenOut
+    // 练习 1
+    // - 通过闪电兑换借入 tokenOut
     /**
-     * @param pair0 Pair contract to flash swap
-     * @param pair1 Pair contract to swap
-     * @param isZeroForOne True if flash swap is token0 in and token1 out
-     * @param amountIn Amount in to repay flash swap
-     * @param minProfit Minimum profit that this arbitrage must make
+     * @param pair0 进行闪电兑换的交易对合约
+     * @param pair1 进行普通兑换的交易对合约
+     * @param isZeroForOne 若闪电兑换为输入 token0、输出 token1，则为 true
+     * @param amountIn 用于偿还闪电兑换的输入数量
+     * @param minProfit 本次套利必须达到的最低利润
      */
     function flashSwap(
         address pair0,
@@ -39,10 +39,10 @@ contract UniswapV2Arb2 {
         uint256 amountIn,
         uint256 minProfit
     ) external {
-        // Write your code here
-        // Don’t change any other code
+        // 在此编写你的代码
+        // 不要修改其他任何代码
 
-        // Hint - use getAmountOut to calculate amountOut to borrow
+        // 提示 - 使用 getAmountOut 计算要借入的 amountOut
     }
 
     function uniswapV2Call(
@@ -51,8 +51,8 @@ contract UniswapV2Arb2 {
         uint256 amount1Out,
         bytes calldata data
     ) external {
-        // Write your code here
-        // Don’t change any other code
+        // 在此编写你的代码
+        // 不要修改其他任何代码
     }
 
     function getAmountOut(

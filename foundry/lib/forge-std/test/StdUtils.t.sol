@@ -4,7 +4,7 @@ pragma solidity >=0.7.0 <0.9.0;
 import "../src/Test.sol";
 
 contract StdUtilsMock is StdUtils {
-    // We deploy a mock version so we can properly test expected reverts.
+    // 我们部署一个 mock 版本，以便正确测试预期的 revert。
     function exposed_getTokenBalances(address token, address[] memory addresses)
         external
         returns (uint256[] memory balances)
@@ -27,7 +27,7 @@ contract StdUtilsMock is StdUtils {
 
 contract StdUtilsTest is Test {
     /*//////////////////////////////////////////////////////////////////////////
-                                     BOUND UINT
+                                     BOUND UINT（uint 取值区间约束）
     //////////////////////////////////////////////////////////////////////////*/
 
     function test_Bound() public pure {
@@ -64,10 +64,10 @@ contract StdUtilsTest is Test {
         uint256 result;
 
         for (uint256 i = 1; i <= size * 4; ++i) {
-            // x > max
+            // x > max 的情况
             result = bound(max + i, min, max);
             assertEq(result, min + (i - 1) % size);
-            // x < min
+            // x < min 的情况
             result = bound(min - i, min, max);
             assertEq(result, max - (i - 1) % size);
         }
@@ -90,7 +90,7 @@ contract StdUtilsTest is Test {
     }
 
     function test_CannotBoundMaxLessThanMin() public {
-        // We deploy a mock version so we can properly test the revert.
+        // 我们部署一个 mock 版本，以便正确测试 revert。
         StdUtilsMock stdUtils = new StdUtilsMock();
 
         vm.expectRevert(bytes("StdUtils bound(uint256,uint256,uint256): Max is less than min."));
@@ -98,7 +98,7 @@ contract StdUtilsTest is Test {
     }
 
     function test_CannotBoundMaxLessThanMin(uint256 num, uint256 min, uint256 max) public {
-        // We deploy a mock version so we can properly test the revert.
+        // 我们部署一个 mock 版本，以便正确测试 revert。
         StdUtilsMock stdUtils = new StdUtilsMock();
 
         vm.assume(min > max);
@@ -107,7 +107,7 @@ contract StdUtilsTest is Test {
     }
 
     /*//////////////////////////////////////////////////////////////////////////
-                                     BOUND INT
+                                     BOUND INT（int 取值区间约束）
     //////////////////////////////////////////////////////////////////////////*/
 
     function test_BoundInt() public pure {
@@ -153,10 +153,10 @@ contract StdUtilsTest is Test {
         int256 result;
 
         for (uint256 i = 1; i <= size * 4; ++i) {
-            // x > max
+            // x > max 的情况
             result = bound(max + int256(i), min, max);
             assertEq(result, min + int256((i - 1) % size));
-            // x < min
+            // x < min 的情况
             result = bound(min - int256(i), min, max);
             assertEq(result, max - int256((i - 1) % size));
         }
@@ -184,7 +184,7 @@ contract StdUtilsTest is Test {
     }
 
     function test_CannotBoundIntMaxLessThanMin() public {
-        // We deploy a mock version so we can properly test the revert.
+        // 我们部署一个 mock 版本，以便正确测试 revert。
         StdUtilsMock stdUtils = new StdUtilsMock();
 
         vm.expectRevert(bytes("StdUtils bound(int256,int256,int256): Max is less than min."));
@@ -192,7 +192,7 @@ contract StdUtilsTest is Test {
     }
 
     function test_CannotBoundIntMaxLessThanMin(int256 num, int256 min, int256 max) public {
-        // We deploy a mock version so we can properly test the revert.
+        // 我们部署一个 mock 版本，以便正确测试 revert。
         StdUtilsMock stdUtils = new StdUtilsMock();
 
         vm.assume(min > max);
@@ -201,7 +201,7 @@ contract StdUtilsTest is Test {
     }
 
     /*//////////////////////////////////////////////////////////////////////////
-                                BOUND PRIVATE KEY
+                                BOUND PRIVATE KEY（私钥取值区间约束）
     //////////////////////////////////////////////////////////////////////////*/
 
     function test_BoundPrivateKey() public pure {
@@ -212,11 +212,11 @@ contract StdUtilsTest is Test {
         assertEq(boundPrivateKey(SECP256K1_ORDER - 1), SECP256K1_ORDER - 1);
         assertEq(boundPrivateKey(SECP256K1_ORDER), 1);
         assertEq(boundPrivateKey(SECP256K1_ORDER + 1), 2);
-        assertEq(boundPrivateKey(UINT256_MAX), UINT256_MAX & SECP256K1_ORDER - 1); // x&y is equivalent to x-x%y
+        assertEq(boundPrivateKey(UINT256_MAX), UINT256_MAX & SECP256K1_ORDER - 1); // x&y 等价于 x-x%y
     }
 
     /*//////////////////////////////////////////////////////////////////////////
-                                   BYTES TO UINT
+                                   BYTES TO UINT（bytes 转 uint）
     //////////////////////////////////////////////////////////////////////////*/
 
     function test_BytesToUint() external pure {
@@ -230,7 +230,7 @@ contract StdUtilsTest is Test {
     }
 
     function test_CannotConvertGT32Bytes() external {
-        // We deploy a mock version so we can properly test the revert.
+        // 我们部署一个 mock 版本，以便正确测试 revert。
         StdUtilsMock stdUtils = new StdUtilsMock();
 
         bytes memory thirty3Bytes = hex"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff";
@@ -239,7 +239,7 @@ contract StdUtilsTest is Test {
     }
 
     /*//////////////////////////////////////////////////////////////////////////
-                               COMPUTE CREATE ADDRESS
+                               计算 CREATE 地址
     //////////////////////////////////////////////////////////////////////////*/
 
     function test_ComputeCreateAddress() external pure {
@@ -250,7 +250,7 @@ contract StdUtilsTest is Test {
     }
 
     /*//////////////////////////////////////////////////////////////////////////
-                              COMPUTE CREATE2 ADDRESS
+                              计算 CREATE2 地址
     //////////////////////////////////////////////////////////////////////////*/
 
     function test_ComputeCreate2Address() external pure {
@@ -272,7 +272,7 @@ contract StdUtilsTest is Test {
 
 contract StdUtilsForkTest is Test {
     /*//////////////////////////////////////////////////////////////////////////
-                                  GET TOKEN BALANCES
+                                  获取代币余额
     //////////////////////////////////////////////////////////////////////////*/
 
     address internal SHIB = 0x95aD61b0a150d79219dCF64E1E6Cc01f0B64C4cE;
@@ -285,16 +285,16 @@ contract StdUtilsForkTest is Test {
     address internal USDC_HOLDER_1 = 0x3e67F4721E6d1c41a015f645eFa37BEd854fcf52;
 
     function setUp() public {
-        // All tests of the `getTokenBalances` method are fork tests using live contracts.
+        // `getTokenBalances` 方法的所有测试都是使用线上真实合约的 fork 测试。
         vm.createSelectFork({urlOrAlias: "mainnet", blockNumber: 16_428_900});
     }
 
     function test_CannotGetTokenBalances_NonTokenContract() external {
-        // We deploy a mock version so we can properly test the revert.
+        // 我们部署一个 mock 版本，以便正确测试 revert。
         StdUtilsMock stdUtils = new StdUtilsMock();
 
-        // The UniswapV2Factory contract has neither a `balanceOf` function nor a fallback function,
-        // so the `balanceOf` call should revert.
+        // UniswapV2Factory 合约既没有 `balanceOf` 函数也没有 fallback 函数，
+        // 因此 `balanceOf` 调用应当 revert。
         address token = address(0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f);
         address[] memory addresses = new address[](1);
         addresses[0] = USDC_HOLDER_0;
@@ -304,7 +304,7 @@ contract StdUtilsForkTest is Test {
     }
 
     function test_CannotGetTokenBalances_EOA() external {
-        // We deploy a mock version so we can properly test the revert.
+        // 我们部署一个 mock 版本，以便正确测试 revert。
         StdUtilsMock stdUtils = new StdUtilsMock();
 
         address eoa = vm.addr({privateKey: 1});

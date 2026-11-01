@@ -18,21 +18,21 @@ contract CurveV1SwapTest is Test {
         dai.approve(address(pool), type(uint256).max);
     }
 
-    // Exercise 1
-    // Call get_dy_underlying to calculate the amount of USDC for swapping
-    // 1,000,000 DAI to USDC
+    // 练习 1
+    // 调用 get_dy_underlying，计算将
+    // 1,000,000 DAI 兑换为 USDC 可得到的 USDC 数量
     function test_get_dy_underlying() public {
-        // Calculate swap from DAI to USDC
+        // 计算从 DAI 兑换到 USDC 的数量
         uint256 dy = pool.get_dy_underlying(0, 1, 1e6 * 1e18);
 
         console2.log("dy %e", dy);
         assertGt(dy, 0, "dy = 0");
     }
 
-    // Exercise 2
-    // Call exchange to swap 1,000,000 DAI to USDC
+    // 练习 2
+    // 调用 exchange，将 1,000,000 DAI 兑换为 USDC
     function test_exchange() public {
-        // Swap DAI to USDC
+        // 将 DAI 兑换为 USDC
         pool.exchange(0, 1, 1e6 * 1e18, 0.999 * 1e6 * 1e6);
 
         uint256 bal = usdc.balanceOf(address(this));

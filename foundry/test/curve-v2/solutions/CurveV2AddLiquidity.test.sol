@@ -24,11 +24,11 @@ contract CurveV2AddLiquidityTest is Test {
         usdc.approve(address(pool), type(uint256).max);
     }
 
-    // Exercise 1
-    // Call add_liquidity
-    // Add 1,000 USDC of liquidity to the pool contract
+    // 练习 1
+    // 调用 add_liquidity
+    // 向池子合约添加 1,000 USDC 的流动性
     function test_add_liquidity() public {
-        // Write your code here
+        // 在此编写你的代码
         uint256[3] memory amounts = [uint256(1e3 * 1e6), uint256(0), uint256(0)];
         pool.add_liquidity({
             amounts: amounts,

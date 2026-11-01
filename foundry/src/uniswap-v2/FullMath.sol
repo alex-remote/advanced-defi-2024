@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.24;
 
-// Modified from https://github.com/Uniswap/solidity-lib
-// DO NOT USE IN PRODUCTION
+// 修改自 https://github.com/Uniswap/solidity-lib
+// 请勿在生产环境中使用
 
 library FullMath {
     function fullMul(uint256 x, uint256 y)

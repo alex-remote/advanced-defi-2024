@@ -16,16 +16,16 @@ address constant POOL_IMP = 0xF1Cd4193bbc1aD4a23E833170f49d60f3D35a621;
 address constant AWETH = 0x4d5F47FA6A74757f35C14fD3a6Ef8E3C9BC514E8;
 
 contract AaveV3Test is Test {
-    // TODO:
-    // stable and variable
-    // supply
-    // borrow
-    // check debt + interest
-    // repay
-    // withdraw collateral
-    // credit delegation
-    // liquidation
-    // flash loans
+    // TODO（待办）：
+    // 稳定利率与浮动利率
+    // 存入（supply）
+    // 借款
+    // 检查债务 + 利息
+    // 还款
+    // 取出抵押品
+    // 信用委托
+    // 清算
+    // 闪电贷
     IWETH private constant weth = IWETH(WETH);
     IERC20 private constant usdc = IERC20(USDC);
 
@@ -85,7 +85,7 @@ contract AaveV3Test is Test {
     function test_supply() public {
         gateway.depositETH{value: 1e18}(address(0), address(this), 0);
 
-        // borrow
+        // 借款
         pool.borrow({
             asset: USDC,
             amount: 100 * 1e6,
@@ -99,7 +99,7 @@ contract AaveV3Test is Test {
         print();
         console2.log("USDC balance", usdc.balanceOf(address(this)));
 
-        // repay
+        // 还款
         deal(USDC, address(this), 200 * 1e6);
         usdc.approve(address(pool), type(uint256).max);
 
@@ -204,7 +204,7 @@ interface IPool {
     function borrow(
         address asset,
         uint256 amount,
-        // 1 = stable, 2 = variable
+        // 1 = 稳定利率，2 = 浮动利率
         uint256 interestRateMode,
         uint16 referralCode,
         address onBehalfOf

@@ -28,10 +28,10 @@ contract CurveV1RemoveLiquidityTest is Test {
         pool.add_liquidity(coins, 1);
     }
 
-    // Exercise 1
-    // Call remove_liquidity
-    // Get the 3CRV (LP token of 3Pool) balance of this contract and
-    // withdraw all LP for 3 stablecoins (DAI, USDC, USDT)
+    // 练习 1
+    // 调用 remove_liquidity
+    // 获取本合约的 3CRV（3Pool 的 LP 代币）余额，并
+    // 取出全部 LP，换回 3 种稳定币（DAI、USDC、USDT）
     function test_remove_liquidity() public {
         uint256[3] memory balsBefore = [
             dai.balanceOf(address(this)),
@@ -39,7 +39,7 @@ contract CurveV1RemoveLiquidityTest is Test {
             usdt.balanceOf(address(this))
         ];
 
-        // Write your code here
+        // 在此编写你的代码
 
         uint256[3] memory balsAfter = [
             dai.balanceOf(address(this)),
@@ -61,10 +61,10 @@ contract CurveV1RemoveLiquidityTest is Test {
         assertGt(balsAfter[2], balsBefore[2], "USDT balance = 0");
     }
 
-    // Exercise 2
-    // Call remove_liquidity_one_coin
-    // Get the 3CRV (LP token of 3Pool) balance of this contract and
-    // withdraw all LP for a single stablecoin (DAI)
+    // 练习 2
+    // 调用 remove_liquidity_one_coin
+    // 获取本合约的 3CRV（3Pool 的 LP 代币）余额，并
+    // 取出全部 LP，只换回单一稳定币（DAI）
     function test_remove_liquidity_one_coin() public {
         uint256[3] memory balsBefore = [
             dai.balanceOf(address(this)),
@@ -72,7 +72,7 @@ contract CurveV1RemoveLiquidityTest is Test {
             usdt.balanceOf(address(this))
         ];
 
-        // Write your code here
+        // 在此编写你的代码
 
         uint256[3] memory balsAfter = [
             dai.balanceOf(address(this)),

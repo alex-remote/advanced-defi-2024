@@ -24,14 +24,14 @@ contract UniswapV3SwapTest is Test {
         dai.approve(address(router), type(uint256).max);
     }
 
-    // Exercise 1
-    // - Swap 1000 DAI for WETH on DAI/WETH pool with 0.3% fee
-    // - Send WETH from Uniswap V3 to this contract
+    // 练习 1
+    // - 在手续费为 0.3% 的 DAI/WETH 池子上用 1000 DAI 兑换 WETH
+    // - 将 WETH 从 Uniswap V3 发送到本合约
     function test_exactInputSingle() public {
         uint256 wethBefore = weth.balanceOf(address(this));
 
-        // Write your code here
-        // Call router.exactInputSingle
+        // 在此编写你的代码
+        // 调用 router.exactInputSingle
         uint256 amountOut = router.exactInputSingle(
             ISwapRouter.ExactInputSingleParams({
                 tokenIn: DAI,
@@ -51,15 +51,15 @@ contract UniswapV3SwapTest is Test {
         assertEq(wethAfter - wethBefore, amountOut);
     }
 
-    // Exercise 2
-    // Swap 1000 DAI for WETH and then WETH to WBTC
-    // - Swap DAI to WETH on pool with 0.3% fee
-    // - Swap WETH to WBTC on pool with 0.3% fee
-    // - Send WBTC from Uniswap V3 to this contract
-    // NOTE: WBTC has 8 decimals
+    // 练习 2
+    // 用 1000 DAI 兑换 WETH，再将 WETH 兑换为 WBTC
+    // - 在手续费为 0.3% 的池子上将 DAI 兑换为 WETH
+    // - 在手续费为 0.3% 的池子上将 WETH 兑换为 WBTC
+    // - 将 WBTC 从 Uniswap V3 发送到本合约
+    // 注意：WBTC 有 8 位小数
     function test_exactInput() public {
-        // Write your code here
-        // Call router.exactInput
+        // 在此编写你的代码
+        // 调用 router.exactInput
         bytes memory path =
             abi.encodePacked(DAI, uint24(3000), WETH, uint24(3000), WBTC);
 
@@ -77,14 +77,14 @@ contract UniswapV3SwapTest is Test {
         assertEq(wbtc.balanceOf(address(this)), amountOut);
     }
 
-    // Exercise 3
-    // - Swap maximum of 1000 DAI to obtain exactly 0.1 WETH from DAI/WETH pool with 0.3% fee
-    // - Send WETH from Uniswap V3 to this contract
+    // 练习 3
+    // - 在手续费为 0.3% 的 DAI/WETH 池子上用最多 1000 DAI 换取恰好 0.1 WETH
+    // - 将 WETH 从 Uniswap V3 发送到本合约
     function test_exactOutputSingle() public {
         uint256 wethBefore = weth.balanceOf(address(this));
 
-        // Write your code here
-        // Call router.exactOutputSingle
+        // 在此编写你的代码
+        // 调用 router.exactOutputSingle
         uint256 amountIn = router.exactOutputSingle(
             ISwapRouter.ExactOutputSingleParams({
                 tokenIn: DAI,
@@ -104,15 +104,15 @@ contract UniswapV3SwapTest is Test {
         assertEq(wethAfter - wethBefore, 0.1 * 1e18);
     }
 
-    // Exercise 4
-    // Swap maximum of 1000 DAI to obtain exactly 0.01 WBTC
-    // - Swap DAI to WETH on pool with 0.3% fee
-    // - Swap WETH to WBTC on pool with 0.3% fee
-    // - Send WBTC from Uniswap V3 to this contract
-    // NOTE: WBTC has 8 decimals
+    // 练习 4
+    // 用最多 1000 DAI 换取恰好 0.01 WBTC
+    // - 在手续费为 0.3% 的池子上将 DAI 兑换为 WETH
+    // - 在手续费为 0.3% 的池子上将 WETH 兑换为 WBTC
+    // - 将 WBTC 从 Uniswap V3 发送到本合约
+    // 注意：WBTC 有 8 位小数
     function test_exactOutput() public {
-        // Write your code here
-        // Call router.exactOutput
+        // 在此编写你的代码
+        // 调用 router.exactOutput
         bytes memory path =
             abi.encodePacked(WBTC, uint24(3000), WETH, uint24(3000), DAI);
 
@@ -120,7 +120,7 @@ contract UniswapV3SwapTest is Test {
             ISwapRouter.ExactOutputParams({
                 path: path,
                 recipient: address(this),
-                amountOut: 0.001 * 1e8, //lower output 
+                amountOut: 0.001 * 1e8, // 降低输出数量
                 amountInMaximum: 1000 * 1e18
             })
         );

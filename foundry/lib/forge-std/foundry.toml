@@ -2,14 +2,14 @@
 fs_permissions = [{ access = "read-write", path = "./"}]
 
 [rpc_endpoints]
-# The RPC URLs are modified versions of the default for testing initialization.
-mainnet = "https://eth-mainnet.alchemyapi.io/v2/WV407BEiBmjNJfKo9Uo_55u0z0ITyCOX" # Different API key.
-optimism_goerli = "https://goerli.optimism.io/" # Adds a trailing slash.
-arbitrum_one_goerli = "https://goerli-rollup.arbitrum.io/rpc/" # Adds a trailing slash.
+# 这些 RPC URL 是默认值的修改版本，用于测试初始化。
+mainnet = "https://eth-mainnet.alchemyapi.io/v2/WV407BEiBmjNJfKo9Uo_55u0z0ITyCOX" # 不同的 API key。
+optimism_goerli = "https://goerli.optimism.io/" # 添加了末尾斜杠。
+arbitrum_one_goerli = "https://goerli-rollup.arbitrum.io/rpc/" # 添加了末尾斜杠。
 needs_undefined_env_var = "${UNDEFINED_RPC_URL_PLACEHOLDER}"
 
 [fmt]
-# These are all the `forge fmt` defaults.
+# 以下全部是 `forge fmt` 的默认值。
 line_length = 120
 tab_width = 4
 bracket_spacing = false

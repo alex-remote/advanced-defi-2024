@@ -36,7 +36,7 @@ contract UniswapV3LiquidityTest is Test {
     // 0.3%
     int24 private constant MIN_TICK = -887272;
     int24 private constant MAX_TICK = 887272;
-    // DAI/WETH 3000
+    // DAI/WETH 池子，手续费档位 3000
     uint24 private constant POOL_FEE = 3000;
     int24 private constant TICK_SPACING = 60;
 
@@ -104,15 +104,15 @@ contract UniswapV3LiquidityTest is Test {
         return position;
     }
 
-    // Exercise 1
-    // Mint a new position by adding liquidity to DAI/WETH pool with 0.3% fee.
-    // - You are free to choose the price range
-    // - Ticks must be divisible by tick spacing of the pool
-    // - This test contract is given 3000 DAI and 3 WETH. Put any amount of tokens
-    //   not exceeding this contracts's balance.
-    // - Set recipient of NFT (that represents the ownership of this position) to this contract.
+    // 练习 1
+    // 向手续费为 0.3% 的 DAI/WETH 池子添加流动性，铸造一个新的头寸（position）。
+    // - 可以自由选择价格区间
+    // - tick 必须能被池子的 tick 间距（tick spacing）整除
+    // - 本测试合约已获得 3000 DAI 和 3 WETH。可投入任意数量的代币，
+    //   只要不超过本合约的余额即可。
+    // - 将 NFT（代表该头寸的所有权）的接收者设置为本合约。
     function test_mint() public {
-        // Write your code here
+        // 在此编写你的代码
         int24 tickLower = MIN_TICK / TICK_SPACING * TICK_SPACING;
         int24 tickUpper = MAX_TICK / TICK_SPACING * TICK_SPACING;
 
@@ -144,16 +144,16 @@ contract UniswapV3LiquidityTest is Test {
         assertGt(position.liquidity, 0);
     }
 
-    // Exercise 2
-    // Increase liquidity for the position with token id = `tokenId`.
-    // 3000 DAI and 3 WETH were initially given to this contract.
-    // Some of the tokens where used to mint a new position.
-    // Use any token amount less than or equal to contract's balance.
+    // 练习 2
+    // 为 token id = `tokenId` 的头寸增加流动性。
+    // 本合约最初获得了 3000 DAI 和 3 WETH。
+    // 其中部分代币已用于铸造新的头寸。
+    // 可使用任意不超过合约余额的代币数量。
     function test_increaseLiquidity() public {
         uint256 tokenId = mint();
         Position memory p0 = getPosition(tokenId);
 
-        // Write your code here
+        // 在此编写你的代码
         (uint256 liquidityDelta, uint256 amount0, uint256 amount1) = manager
             .increaseLiquidity(
             INonfungiblePositionManager.IncreaseLiquidityParams({
@@ -174,14 +174,14 @@ contract UniswapV3LiquidityTest is Test {
         assertGt(liquidityDelta, 0);
     }
 
-    // Exercise 3
-    // Decrease liquidity for the position with token id = `tokenId`.
-    // - Amount of liquidity to decrease cannot exceed the position's liquidity.
+    // 练习 3
+    // 为 token id = `tokenId` 的头寸减少流动性。
+    // - 减少的流动性数量不能超过该头寸的流动性。
     function test_decreaseLiquidity() public {
         uint256 tokenId = mint();
         Position memory p0 = getPosition(tokenId);
 
-        // Write your code here
+        // 在此编写你的代码
         (uint256 amount0, uint256 amount1) = manager.decreaseLiquidity(
             INonfungiblePositionManager.DecreaseLiquidityParams({
                 tokenId: tokenId,
@@ -201,16 +201,16 @@ contract UniswapV3LiquidityTest is Test {
         assertGt(p1.tokensOwed1, 0);
     }
 
-    // Exercise 4
-    // Remove all liquidity (including fees) from a position by calling collect()
-    // - Decrease all liquidity for the position with token id = `tokenId`
-    // - Transfer tokens from NonFungiblePositionManager to this contract
-    //   by calling collect()
+    // 练习 4
+    // 通过调用 collect() 从头寸中移除全部流动性（包括手续费）
+    // - 减少 token id = `tokenId` 的头寸的全部流动性
+    // - 将代币从 NonFungiblePositionManager 转入本合约，
+    //   方法是调用 collect()
     function test_collect() public {
         uint256 tokenId = mint();
         Position memory p0 = getPosition(tokenId);
 
-        // Write your code here
+        // 在此编写你的代码
         manager.decreaseLiquidity(
             INonfungiblePositionManager.DecreaseLiquidityParams({
                 tokenId: tokenId,

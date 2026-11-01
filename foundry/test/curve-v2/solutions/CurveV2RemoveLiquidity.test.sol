@@ -33,15 +33,15 @@ contract CurveV2RemoveLiquidityTest is Test {
         });
     }
 
-    // Exercise 1
-    // Call remove_liquidity
-    // Get the LP balance of TriCrypto of this contract and
-    // withdraw all LP for all 3 tokens (USDC, WBTC, WETH)
+    // 练习 1
+    // 调用 remove_liquidity
+    // 获取本合约持有的 TriCrypto LP 余额，并
+    // 取出全部 LP，换回全部 3 种代币（USDC、WBTC、WETH）
     function test_remove_liquidity() public {
-        // Foundry bug? initial balance > 0
+        // Foundry 的 bug？初始余额 > 0
         uint256 wethBalBefore = weth.balanceOf(address(this));
 
-        // Write your code here
+        // 在此编写你的代码
         uint256 lpBal = pool.balanceOf(address(this));
 
         uint256[3] memory minAmounts = [uint256(1), uint256(1), uint256(1)];
@@ -70,15 +70,15 @@ contract CurveV2RemoveLiquidityTest is Test {
         console2.log("WETH balance %e", bal - wethBalBefore);
     }
 
-    // Exercise 2
-    // Call remove_liquidity_one_coin
-    // Get the LP balance of TriCrypto of this contract and
-    // withdraw all LP for a single token (USDC)
+    // 练习 2
+    // 调用 remove_liquidity_one_coin
+    // 获取本合约持有的 TriCrypto LP 余额，并
+    // 取出全部 LP，只换回单一代币（USDC）
     function test_remove_liquidity_one_coin() public {
-        // Foundry bug? initial balance > 0
+        // Foundry 的 bug？初始余额 > 0
         uint256 wethBalBefore = weth.balanceOf(address(this));
 
-        // Write your code here
+        // 在此编写你的代码
         uint256 lpBal = pool.balanceOf(address(this));
         pool.remove_liquidity_one_coin({
             lp: lpBal,

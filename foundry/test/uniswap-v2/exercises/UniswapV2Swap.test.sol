@@ -35,13 +35,13 @@ contract UniswapV2SwapTest is Test {
         weth.approve(address(router), type(uint256).max);
         vm.stopPrank();
 
-        // Add MKR liquidity to DAI/MKR pool
+        // 向 DAI/MKR 池子添加 MKR 流动性
         deal(DAI, address(pair), 1e6 * 1e18);
         deal(MKR, address(pair), 1e5 * 1e18);
         pair.sync();
     }
 
-    // Swap all input tokens for as many output tokens as possible
+    // 用全部输入代币兑换尽可能多的输出代币
     function test_swapExactTokensForTokens() public {
         address[] memory path = new address[](3);
         path[0] = WETH;
@@ -51,14 +51,14 @@ contract UniswapV2SwapTest is Test {
         uint256 amountIn = 1e18;
         uint256 amountOutMin = 1;
 
-        // Write your code here
-        // Don’t change any other code
+        // 在此编写你的代码
+        // 不要修改其他任何代码
 
         assertGe(mkr.balanceOf(user), amountOutMin, "MKR balance of user");
     }
 
-    // Receive an exact amount of output tokens for as few input tokens
-    // as possible
+    // 换取精确数量的输出代币，同时使用的输入代币
+    // 尽可能少
     function test_swapTokensForExactTokens() public {
         address[] memory path = new address[](3);
         path[0] = WETH;
@@ -68,8 +68,8 @@ contract UniswapV2SwapTest is Test {
         uint256 amountOut = 0.1 * 1e18;
         uint256 amountInMax = 1e18;
 
-        // Write your code here
-        // Don’t change any other code
+        // 在此编写你的代码
+        // 不要修改其他任何代码
 
         assertEq(mkr.balanceOf(user), amountOut, "MKR balance of user");
     }

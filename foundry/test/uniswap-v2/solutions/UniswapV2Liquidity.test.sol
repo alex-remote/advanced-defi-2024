@@ -27,14 +27,14 @@ contract UniswapV2LiquidityTest is Test {
     address private constant user = address(100);
 
     function setUp() public {
-        // Fund WETH to user
+        // 给 user 注入 WETH
         deal(user, 100 * 1e18);
         vm.startPrank(user);
         weth.deposit{value: 100 * 1e18}();
         weth.approve(address(router), type(uint256).max);
         vm.stopPrank();
 
-        // Fund DAI to user
+        // 给 user 注入 DAI
         deal(DAI, user, 1000000 * 1e18);
         vm.startPrank(user);
         dai.approve(address(router), type(uint256).max);
@@ -42,9 +42,9 @@ contract UniswapV2LiquidityTest is Test {
     }
 
     function test_addLiquidity() public {
-        // Exercise - Add liquidity to DAI / WETH pool
-        // Write your code here
-        // Don’t change any other code
+        // 练习 - 向 DAI / WETH 池子添加流动性
+        // 在此编写你的代码
+        // 不要修改其他任何代码
         vm.prank(user);
         (uint256 amountA, uint256 amountB, uint256 liquidity) = router
             .addLiquidity({
@@ -78,9 +78,9 @@ contract UniswapV2LiquidityTest is Test {
             deadline: block.timestamp
         });
 
-        // Exercise - Remove liquidity from DAI / WETH pool
-        // Write your code here
-        // Don’t change any other code
+        // 练习 - 从 DAI / WETH 池子移除流动性
+        // 在此编写你的代码
+        // 不要修改其他任何代码
         pair.approve(address(router), liquidity);
 
         (uint256 amountA, uint256 amountB) = router.removeLiquidity({

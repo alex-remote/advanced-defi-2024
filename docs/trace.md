@@ -12,7 +12,7 @@
 | 其中含英文的注释 / 文本行（估算） | 约 5,502 行 |
 | 不在翻译范围内的文件 | 202 个（见第四节） |
 | 子代理批次数 | 27 个（B01–B27） |
-| **当前进度** | **0 / 189** 个文件，批次 0 / 27 |
+| **当前进度** | **141 / 189** 个文件，批次 18 / 27 |
 
 行数说明：按编辑器显示的行数统计（最后一行没有换行符时也计为一行）。“注释行”为脚本估算的含英文单词的注释行数（已排除 `SPDX-License-Identifier` 等不需翻译的行），Markdown 文件为含英文的文本行数。
 
@@ -26,117 +26,117 @@
 
 | 批次 | 文件数 | 负责内容 | 状态 |
 |---|---|---|---|
-| B01 | 4 | 根目录 README / todo / rocket-pool，whitepapers/README | ⏳ 进行中 |
-| B02 | 5 | uniswap-v2.md、aave-v3.md、topics/amm/intro | ⏳ 进行中 |
-| B03 | 3 | uniswap-v3.md、curve-v1/comparisons、mev/README | ⏳ 进行中 |
-| B04 | 2 | curve-v1.md、curve-v2.md | ⏳ 进行中 |
-| B05 | 10 | forge-std README 与配置、foundry 配置、notes 下的 README | ⏳ 进行中 |
-| B06 | 1 | forge-std Vm.sol 第 1–441 行 | ⏳ 进行中 |
-| B07 | 1 | forge-std Vm.sol 第 442–1062 行 | ⏳ 进行中 |
-| B08 | 1 | forge-std Vm.sol 第 1063–1638 行 | ⏳ 进行中 |
-| B09 | 3 | forge-std safeconsole / console / console2 | ⏳ 进行中 |
-| B10 | 5 | forge-std IERC4626 / IERC20 / IERC165 / mocks | ⏳ 进行中 |
-| B11 | 2 | forge-std IERC721 / IERC1155 | ⏳ 进行中 |
+| B01 | 4 | 根目录 README / todo / rocket-pool，whitepapers/README | ✅ 已完成 |
+| B02 | 5 | uniswap-v2.md、aave-v3.md、topics/amm/intro | ✅ 已完成 |
+| B03 | 3 | uniswap-v3.md、curve-v1/comparisons、mev/README | ✅ 已完成 |
+| B04 | 2 | curve-v1.md、curve-v2.md | ✅ 已完成 |
+| B05 | 10 | forge-std README 与配置、foundry 配置、notes 下的 README | ✅ 已完成 |
+| B06 | 1 | forge-std Vm.sol 第 1–441 行 | ✅ 已完成 |
+| B07 | 1 | forge-std Vm.sol 第 442–1062 行 | ✅ 已完成 |
+| B08 | 1 | forge-std Vm.sol 第 1063–1638 行 | ✅ 已完成 |
+| B09 | 3 | forge-std safeconsole / console / console2 | ✅ 已完成 |
+| B10 | 5 | forge-std IERC4626 / IERC20 / IERC165 / mocks | ✅ 已完成 |
+| B11 | 2 | forge-std IERC721 / IERC1155 | ✅ 已完成 |
 | B12 | 13 | forge-std src 其余 Std* 合约 | ⏳ 进行中 |
-| B13 | 12 | forge-std test | ⏳ 进行中 |
-| B14 | 16 | foundry/src 与 notes/uni-v3/src（FullMath、TickMath 等） | ⏳ 进行中 |
-| B15 | 15 | notes/uni-v3 test 与 py、notebook/arb、utils、两个 notebook | ⏳ 进行中 |
-| B16 | 13 | notebook 其余 13 个 .ipynb | ⏳ 进行中 |
-| B17 | 8 | foundry/test uniswap-v2 练习/答案合约 | ⏳ 进行中 |
-| B18 | 30 | foundry/test uniswap-v2 测试、aave-v3、dai、curve-v1/v2 测试 | ⏳ 进行中 |
-| B19 | 12 | foundry/test uniswap-v3 | ⏳ 进行中 |
+| B13 | 12 | forge-std test | ✅ 已完成 |
+| B14 | 16 | foundry/src 与 notes/uni-v3/src（FullMath、TickMath 等） | ✅ 已完成 |
+| B15 | 15 | notes/uni-v3 test 与 py、notebook/arb、utils、两个 notebook | ✅ 已完成 |
+| B16 | 13 | notebook 其余 13 个 .ipynb | ✅ 已完成 |
+| B17 | 8 | foundry/test uniswap-v2 练习/答案合约 | ✅ 已完成 |
+| B18 | 30 | foundry/test uniswap-v2 测试、aave-v3、dai、curve-v1/v2 测试 | ✅ 已完成 |
+| B19 | 12 | foundry/test uniswap-v3 | ✅ 已完成 |
 | B20 | 15 | notes/uni-v2 v2-core 全部与 v2-periphery 核心合约 | ⏳ 进行中 |
-| B21 | 8 | v2-periphery libraries 与 examples | 🕒 排队中 |
-| B22 | 8 | v2-periphery test | 🕒 排队中 |
-| B23 | 2 | StableSwap3Pool.vy、CurveCryptoViews3Optimized.vy | 🕒 排队中 |
-| B24 | 1 | CurveTricryptoMathOptimized.vy | 🕒 排队中 |
-| B25 | 1 | CurveTricryptoOptimizedWETH.vy 第 1–859 行 | 🕒 排队中 |
-| B26 | 1 | CurveTricryptoOptimizedWETH.vy 第 860–1574 行 | 🕒 排队中 |
-| B27 | 1 | CurveTricryptoOptimizedWETH.vy 第 1575–2347 行 | 🕒 排队中 |
+| B21 | 8 | v2-periphery libraries 与 examples | ⏳ 进行中 |
+| B22 | 8 | v2-periphery test | ⏳ 进行中 |
+| B23 | 2 | StableSwap3Pool.vy、CurveCryptoViews3Optimized.vy | ⏳ 进行中 |
+| B24 | 1 | CurveTricryptoMathOptimized.vy | ⏳ 进行中 |
+| B25 | 1 | CurveTricryptoOptimizedWETH.vy 第 1–859 行 | ⏳ 进行中 |
+| B26 | 1 | CurveTricryptoOptimizedWETH.vy 第 860–1574 行 | ⏳ 进行中 |
+| B27 | 1 | CurveTricryptoOptimizedWETH.vy 第 1575–2347 行 | ⏳ 进行中 |
 
 ## 三、文件清单
 
-### （根目录）（0 / 8）
+### （根目录）（8 / 8）
 
-- [ ] 1. `README.md` → `README_zh.md` — 132 行 · 文本 94 行 · B01
-- [ ] 2. `aave-v3.md` → `aave-v3_zh.md` — 49 行 · 文本 47 行 · B02
-- [ ] 3. `curve-v1.md` → `curve-v1_zh.md` — 135 行 · 文本 101 行 · B04
-- [ ] 4. `curve-v2.md` → `curve-v2_zh.md` — 154 行 · 文本 120 行 · B04
-- [ ] 5. `rocket-pool.md` → `rocket-pool_zh.md` — 31 行 · 文本 24 行 · B01
-- [ ] 6. `todo.md` → `todo_zh.md` — 113 行 · 文本 95 行 · B01
-- [ ] 7. `uniswap-v2.md` → `uniswap-v2_zh.md` — 137 行 · 文本 105 行 · B02
-- [ ] 8. `uniswap-v3.md` → `uniswap-v3_zh.md` — 219 行 · 文本 177 行 · B03
+- [x] 1. `README.md` → `README_zh.md` — 132 行 · 文本 94 行 · B01
+- [x] 2. `aave-v3.md` → `aave-v3_zh.md` — 49 行 · 文本 47 行 · B02
+- [x] 3. `curve-v1.md` → `curve-v1_zh.md` — 135 行 · 文本 101 行 · B04
+- [x] 4. `curve-v2.md` → `curve-v2_zh.md` — 154 行 · 文本 120 行 · B04
+- [x] 5. `rocket-pool.md` → `rocket-pool_zh.md` — 31 行 · 文本 24 行 · B01
+- [x] 6. `todo.md` → `todo_zh.md` — 113 行 · 文本 95 行 · B01
+- [x] 7. `uniswap-v2.md` → `uniswap-v2_zh.md` — 137 行 · 文本 105 行 · B02
+- [x] 8. `uniswap-v3.md` → `uniswap-v3_zh.md` — 219 行 · 文本 177 行 · B03
 
-### foundry/src（0 / 8）
+### foundry/src（8 / 8）
 
-- [ ] 9. `foundry/src/Constants.sol` — 48 行 · 注释 5 行 · B14
-- [ ] 10. `foundry/src/ERC20.sol` — 63 行 · 注释 2 行 · B14
-- [ ] 11. `foundry/src/interfaces/uniswap-v3/ISwapRouter.sol` — 66 行 · 注释 8 行 · B14
-- [ ] 12. `foundry/src/interfaces/uniswap-v3/IUniswapV3Pool.sol` — 71 行 · 注释 8 行 · B14
-- [ ] 13. `foundry/src/uniswap-v2/FixedPoint.sol` — 73 行 · 注释 13 行 · B14
-- [ ] 14. `foundry/src/uniswap-v2/FullMath.sol` — 62 行 · 注释 2 行 · B14
-- [ ] 15. `foundry/src/uniswap-v3/FullMath.sol` — 131 行 · 注释 58 行 · B14
-- [ ] 16. `foundry/src/uniswap-v3/TickMath.sol` — 277 行 · 注释 24 行 · B14
+- [x] 9. `foundry/src/Constants.sol` — 48 行 · 注释 5 行 · B14
+- [x] 10. `foundry/src/ERC20.sol` — 63 行 · 注释 2 行 · B14
+- [x] 11. `foundry/src/interfaces/uniswap-v3/ISwapRouter.sol` — 66 行 · 注释 8 行 · B14
+- [x] 12. `foundry/src/interfaces/uniswap-v3/IUniswapV3Pool.sol` — 71 行 · 注释 8 行 · B14
+- [x] 13. `foundry/src/uniswap-v2/FixedPoint.sol` — 73 行 · 注释 13 行 · B14
+- [x] 14. `foundry/src/uniswap-v2/FullMath.sol` — 62 行 · 注释 2 行 · B14
+- [x] 15. `foundry/src/uniswap-v3/FullMath.sol` — 131 行 · 注释 58 行 · B14
+- [x] 16. `foundry/src/uniswap-v3/TickMath.sol` — 277 行 · 注释 24 行 · B14
 
-### foundry/test（0 / 50）
+### foundry/test（50 / 50）
 
-- [ ] 17. `foundry/test/aave-v3/AaveV3.test.sol` — 281 行 · 注释 13 行 · B18
-- [ ] 18. `foundry/test/curve-v1/exercises/CurveV1AddLiquidity.test.sol` — 37 行 · 注释 4 行 · B18
-- [ ] 19. `foundry/test/curve-v1/exercises/CurveV1RemoveLiquidity.test.sol` — 94 行 · 注释 10 行 · B18
-- [ ] 20. `foundry/test/curve-v1/exercises/CurveV1Swap.test.sol` — 43 行 · 注释 9 行 · B18
-- [ ] 21. `foundry/test/curve-v1/solutions/CurveV1AddLiquidity.test.sol` — 39 行 · 注释 4 行 · B18
-- [ ] 22. `foundry/test/curve-v1/solutions/CurveV1RemoveLiquidity.test.sol` — 97 行 · 注释 10 行 · B18
-- [ ] 23. `foundry/test/curve-v1/solutions/CurveV1Swap.test.sol` — 42 行 · 注释 7 行 · B18
-- [ ] 24. `foundry/test/curve-v2/exercises/CurveV2AddLiquidity.test.sol` — 36 行 · 注释 8 行 · B18
-- [ ] 25. `foundry/test/curve-v2/exercises/CurveV2PriceScale.test.sol` — 36 行 · 注释 7 行 · B18
-- [ ] 26. `foundry/test/curve-v2/exercises/CurveV2RemoveLiquidity.test.sol` — 87 行 · 注释 15 行 · B18
-- [ ] 27. `foundry/test/curve-v2/exercises/CurveV2Swap.test.sol` — 50 行 · 注释 14 行 · B18
-- [ ] 28. `foundry/test/curve-v2/solutions/CurveV2AddLiquidity.test.sol` — 43 行 · 注释 8 行 · B18
-- [ ] 29. `foundry/test/curve-v2/solutions/CurveV2PriceScale.test.sol` — 42 行 · 注释 7 行 · B18
-- [ ] 30. `foundry/test/curve-v2/solutions/CurveV2RemoveLiquidity.test.sol` — 107 行 · 注释 17 行 · B18
-- [ ] 31. `foundry/test/curve-v2/solutions/CurveV2Swap.test.sol` — 56 行 · 注释 12 行 · B18
-- [ ] 32. `foundry/test/dai/DaiProxy.test.sol` — 102 行 · 注释 12 行 · B18
-- [ ] 33. `foundry/test/uniswap-v2/exercises/UniswapV2Arb1.sol` — 60 行 · 注释 23 行 · B17
-- [ ] 34. `foundry/test/uniswap-v2/exercises/UniswapV2Arb1.test.sol` — 101 行 · 注释 5 行 · B18
-- [ ] 35. `foundry/test/uniswap-v2/exercises/UniswapV2Arb2.sol` — 68 行 · 注释 19 行 · B17
-- [ ] 36. `foundry/test/uniswap-v2/exercises/UniswapV2Arb2.test.sol` — 71 行 · 注释 4 行 · B18
-- [ ] 37. `foundry/test/uniswap-v2/exercises/UniswapV2Factory.test.sol` — 43 行 · 注释 3 行 · B18
-- [ ] 38. `foundry/test/uniswap-v2/exercises/UniswapV2FlashSwap.sol` — 68 行 · 注释 20 行 · B17
-- [ ] 39. `foundry/test/uniswap-v2/exercises/UniswapV2FlashSwap.test.sol` — 45 行 · 注释 4 行 · B18
-- [ ] 40. `foundry/test/uniswap-v2/exercises/UniswapV2Liquidity.test.sol` — 75 行 · 注释 8 行 · B18
-- [ ] 41. `foundry/test/uniswap-v2/exercises/UniswapV2Swap.test.sol` — 76 行 · 注释 8 行 · B18
-- [ ] 42. `foundry/test/uniswap-v2/exercises/UniswapV2Twap.sol` — 139 行 · 注释 63 行 · B17
-- [ ] 43. `foundry/test/uniswap-v2/exercises/UniswapV2Twap.test.sol` — 98 行 · 注释 8 行 · B18
-- [ ] 44. `foundry/test/uniswap-v2/solutions/UniswapV2Arb1.sol` — 130 行 · 注释 26 行 · B17
-- [ ] 45. `foundry/test/uniswap-v2/solutions/UniswapV2Arb1.test.sol` — 101 行 · 注释 5 行 · B18
-- [ ] 46. `foundry/test/uniswap-v2/solutions/UniswapV2Arb2.sol` — 129 行 · 注释 22 行 · B17
-- [ ] 47. `foundry/test/uniswap-v2/solutions/UniswapV2Arb2.test.sol` — 71 行 · 注释 4 行 · B18
-- [ ] 48. `foundry/test/uniswap-v2/solutions/UniswapV2Factory.test.sol` — 43 行 · 注释 3 行 · B18
-- [ ] 49. `foundry/test/uniswap-v2/solutions/UniswapV2FlashSwap.sol` — 84 行 · 注释 21 行 · B17
-- [ ] 50. `foundry/test/uniswap-v2/solutions/UniswapV2FlashSwap.test.sol` — 45 行 · 注释 4 行 · B18
-- [ ] 51. `foundry/test/uniswap-v2/solutions/UniswapV2Liquidity.test.sol` — 102 行 · 注释 8 行 · B18
-- [ ] 52. `foundry/test/uniswap-v2/solutions/UniswapV2Swap.test.sol` — 98 行 · 注释 6 行 · B18
-- [ ] 53. `foundry/test/uniswap-v2/solutions/UniswapV2Twap.sol` — 160 行 · 注释 63 行 · B17
-- [ ] 54. `foundry/test/uniswap-v2/solutions/UniswapV2Twap.test.sol` — 98 行 · 注释 8 行 · B18
-- [ ] 55. `foundry/test/uniswap-v3/exercises/UniswapV3Factory.test.sol` — 50 行 · 注释 4 行 · B19
-- [ ] 56. `foundry/test/uniswap-v3/exercises/UniswapV3Flash.sol` — 41 行 · 注释 7 行 · B19
-- [ ] 57. `foundry/test/uniswap-v3/exercises/UniswapV3Liquidity.test.sol` — 191 行 · 注释 25 行 · B19
-- [ ] 58. `foundry/test/uniswap-v3/exercises/UniswapV3SpotPrice.test.sol` — 34 行 · 注释 8 行 · B19
-- [ ] 59. `foundry/test/uniswap-v3/exercises/UniswapV3Swap.test.sol` — 94 行 · 注释 26 行 · B19
-- [ ] 60. `foundry/test/uniswap-v3/exercises/UniswapV3Twap.sol` — 75 行 · 注释 12 行 · B19
-- [ ] 61. `foundry/test/uniswap-v3/solutions/UniswapV3Factory.test.sol` — 51 行 · 注释 4 行 · B19
-- [ ] 62. `foundry/test/uniswap-v3/solutions/UniswapV3Flash.sol` — 72 行 · 注释 9 行 · B19
-- [ ] 63. `foundry/test/uniswap-v3/solutions/UniswapV3Liquidity.test.sol` — 243 行 · 注释 25 行 · B19
-- [ ] 64. `foundry/test/uniswap-v3/solutions/UniswapV3SpotPrice.test.sol` — 53 行 · 注释 21 行 · B19
-- [ ] 65. `foundry/test/uniswap-v3/solutions/UniswapV3Swap.test.sol` — 132 行 · 注释 27 行 · B19
-- [ ] 66. `foundry/test/uniswap-v3/solutions/UniswapV3Twap.sol` — 86 行 · 注释 14 行 · B19
+- [x] 17. `foundry/test/aave-v3/AaveV3.test.sol` — 281 行 · 注释 13 行 · B18
+- [x] 18. `foundry/test/curve-v1/exercises/CurveV1AddLiquidity.test.sol` — 37 行 · 注释 4 行 · B18
+- [x] 19. `foundry/test/curve-v1/exercises/CurveV1RemoveLiquidity.test.sol` — 94 行 · 注释 10 行 · B18
+- [x] 20. `foundry/test/curve-v1/exercises/CurveV1Swap.test.sol` — 43 行 · 注释 9 行 · B18
+- [x] 21. `foundry/test/curve-v1/solutions/CurveV1AddLiquidity.test.sol` — 39 行 · 注释 4 行 · B18
+- [x] 22. `foundry/test/curve-v1/solutions/CurveV1RemoveLiquidity.test.sol` — 97 行 · 注释 10 行 · B18
+- [x] 23. `foundry/test/curve-v1/solutions/CurveV1Swap.test.sol` — 42 行 · 注释 7 行 · B18
+- [x] 24. `foundry/test/curve-v2/exercises/CurveV2AddLiquidity.test.sol` — 36 行 · 注释 8 行 · B18
+- [x] 25. `foundry/test/curve-v2/exercises/CurveV2PriceScale.test.sol` — 36 行 · 注释 7 行 · B18
+- [x] 26. `foundry/test/curve-v2/exercises/CurveV2RemoveLiquidity.test.sol` — 87 行 · 注释 15 行 · B18
+- [x] 27. `foundry/test/curve-v2/exercises/CurveV2Swap.test.sol` — 50 行 · 注释 14 行 · B18
+- [x] 28. `foundry/test/curve-v2/solutions/CurveV2AddLiquidity.test.sol` — 43 行 · 注释 8 行 · B18
+- [x] 29. `foundry/test/curve-v2/solutions/CurveV2PriceScale.test.sol` — 42 行 · 注释 7 行 · B18
+- [x] 30. `foundry/test/curve-v2/solutions/CurveV2RemoveLiquidity.test.sol` — 107 行 · 注释 17 行 · B18
+- [x] 31. `foundry/test/curve-v2/solutions/CurveV2Swap.test.sol` — 56 行 · 注释 12 行 · B18
+- [x] 32. `foundry/test/dai/DaiProxy.test.sol` — 102 行 · 注释 12 行 · B18
+- [x] 33. `foundry/test/uniswap-v2/exercises/UniswapV2Arb1.sol` — 60 行 · 注释 23 行 · B17
+- [x] 34. `foundry/test/uniswap-v2/exercises/UniswapV2Arb1.test.sol` — 101 行 · 注释 5 行 · B18
+- [x] 35. `foundry/test/uniswap-v2/exercises/UniswapV2Arb2.sol` — 68 行 · 注释 19 行 · B17
+- [x] 36. `foundry/test/uniswap-v2/exercises/UniswapV2Arb2.test.sol` — 71 行 · 注释 4 行 · B18
+- [x] 37. `foundry/test/uniswap-v2/exercises/UniswapV2Factory.test.sol` — 43 行 · 注释 3 行 · B18
+- [x] 38. `foundry/test/uniswap-v2/exercises/UniswapV2FlashSwap.sol` — 68 行 · 注释 20 行 · B17
+- [x] 39. `foundry/test/uniswap-v2/exercises/UniswapV2FlashSwap.test.sol` — 45 行 · 注释 4 行 · B18
+- [x] 40. `foundry/test/uniswap-v2/exercises/UniswapV2Liquidity.test.sol` — 75 行 · 注释 8 行 · B18
+- [x] 41. `foundry/test/uniswap-v2/exercises/UniswapV2Swap.test.sol` — 76 行 · 注释 8 行 · B18
+- [x] 42. `foundry/test/uniswap-v2/exercises/UniswapV2Twap.sol` — 139 行 · 注释 63 行 · B17
+- [x] 43. `foundry/test/uniswap-v2/exercises/UniswapV2Twap.test.sol` — 98 行 · 注释 8 行 · B18
+- [x] 44. `foundry/test/uniswap-v2/solutions/UniswapV2Arb1.sol` — 130 行 · 注释 26 行 · B17
+- [x] 45. `foundry/test/uniswap-v2/solutions/UniswapV2Arb1.test.sol` — 101 行 · 注释 5 行 · B18
+- [x] 46. `foundry/test/uniswap-v2/solutions/UniswapV2Arb2.sol` — 129 行 · 注释 22 行 · B17
+- [x] 47. `foundry/test/uniswap-v2/solutions/UniswapV2Arb2.test.sol` — 71 行 · 注释 4 行 · B18
+- [x] 48. `foundry/test/uniswap-v2/solutions/UniswapV2Factory.test.sol` — 43 行 · 注释 3 行 · B18
+- [x] 49. `foundry/test/uniswap-v2/solutions/UniswapV2FlashSwap.sol` — 84 行 · 注释 21 行 · B17
+- [x] 50. `foundry/test/uniswap-v2/solutions/UniswapV2FlashSwap.test.sol` — 45 行 · 注释 4 行 · B18
+- [x] 51. `foundry/test/uniswap-v2/solutions/UniswapV2Liquidity.test.sol` — 102 行 · 注释 8 行 · B18
+- [x] 52. `foundry/test/uniswap-v2/solutions/UniswapV2Swap.test.sol` — 98 行 · 注释 6 行 · B18
+- [x] 53. `foundry/test/uniswap-v2/solutions/UniswapV2Twap.sol` — 160 行 · 注释 63 行 · B17
+- [x] 54. `foundry/test/uniswap-v2/solutions/UniswapV2Twap.test.sol` — 98 行 · 注释 8 行 · B18
+- [x] 55. `foundry/test/uniswap-v3/exercises/UniswapV3Factory.test.sol` — 50 行 · 注释 4 行 · B19
+- [x] 56. `foundry/test/uniswap-v3/exercises/UniswapV3Flash.sol` — 41 行 · 注释 7 行 · B19
+- [x] 57. `foundry/test/uniswap-v3/exercises/UniswapV3Liquidity.test.sol` — 191 行 · 注释 25 行 · B19
+- [x] 58. `foundry/test/uniswap-v3/exercises/UniswapV3SpotPrice.test.sol` — 34 行 · 注释 8 行 · B19
+- [x] 59. `foundry/test/uniswap-v3/exercises/UniswapV3Swap.test.sol` — 94 行 · 注释 26 行 · B19
+- [x] 60. `foundry/test/uniswap-v3/exercises/UniswapV3Twap.sol` — 75 行 · 注释 12 行 · B19
+- [x] 61. `foundry/test/uniswap-v3/solutions/UniswapV3Factory.test.sol` — 51 行 · 注释 4 行 · B19
+- [x] 62. `foundry/test/uniswap-v3/solutions/UniswapV3Flash.sol` — 72 行 · 注释 9 行 · B19
+- [x] 63. `foundry/test/uniswap-v3/solutions/UniswapV3Liquidity.test.sol` — 243 行 · 注释 25 行 · B19
+- [x] 64. `foundry/test/uniswap-v3/solutions/UniswapV3SpotPrice.test.sol` — 53 行 · 注释 21 行 · B19
+- [x] 65. `foundry/test/uniswap-v3/solutions/UniswapV3Swap.test.sol` — 132 行 · 注释 27 行 · B19
+- [x] 66. `foundry/test/uniswap-v3/solutions/UniswapV3Twap.sol` — 86 行 · 注释 14 行 · B19
 
-### foundry/lib/forge-std（0 / 40）
+### foundry/lib/forge-std（27 / 40）
 
-- [ ] 67. `foundry/lib/forge-std/.github/workflows/ci.yml` — 134 行 · 注释 4 行 · B05
-- [ ] 68. `foundry/lib/forge-std/README.md` → `foundry/lib/forge-std/README_zh.md` — 250 行 · 文本 157 行 · B05
-- [ ] 69. `foundry/lib/forge-std/foundry.toml` — 21 行 · 注释 5 行 · B05
-- [ ] 70. `foundry/lib/forge-std/scripts/vm.py` — 635 行 · 注释 10 行 · B05
+- [x] 67. `foundry/lib/forge-std/.github/workflows/ci.yml` — 134 行 · 注释 4 行 · B05
+- [x] 68. `foundry/lib/forge-std/README.md` → `foundry/lib/forge-std/README_zh.md` — 250 行 · 文本 157 行 · B05
+- [x] 69. `foundry/lib/forge-std/foundry.toml` — 21 行 · 注释 5 行 · B05
+- [x] 70. `foundry/lib/forge-std/scripts/vm.py` — 635 行 · 注释 10 行 · B05
 - [ ] 71. `foundry/lib/forge-std/src/Base.sol` — 35 行 · 注释 7 行 · B12
 - [ ] 72. `foundry/lib/forge-std/src/Script.sol` — 27 行 · 注释 6 行 · B12
 - [ ] 73. `foundry/lib/forge-std/src/StdAssertions.sol` — 669 行 · 注释 9 行 · B12
@@ -150,54 +150,54 @@
 - [ ] 81. `foundry/lib/forge-std/src/StdToml.sol` — 179 行 · 注释 12 行 · B12
 - [ ] 82. `foundry/lib/forge-std/src/StdUtils.sol` — 226 行 · 注释 35 行 · B12
 - [ ] 83. `foundry/lib/forge-std/src/Test.sol` — 33 行 · 注释 6 行 · B12
-- [ ] 84. `foundry/lib/forge-std/src/Vm.sol` — 1638 行 · 注释 653 行 · B06⏳ / B07⏳ / B08⏳
-- [ ] 85. `foundry/lib/forge-std/src/console.sol` — 1533 行 · 注释 1 行 · B09
-- [ ] 86. `foundry/lib/forge-std/src/console2.sol` — 1558 行 · 注释 6 行 · B09
-- [ ] 87. `foundry/lib/forge-std/src/interfaces/IERC1155.sol` — 105 行 · 注释 66 行 · B11
-- [ ] 88. `foundry/lib/forge-std/src/interfaces/IERC165.sol` — 12 行 · 注释 6 行 · B10
-- [ ] 89. `foundry/lib/forge-std/src/interfaces/IERC20.sol` — 43 行 · 注释 17 行 · B10
-- [ ] 90. `foundry/lib/forge-std/src/interfaces/IERC4626.sol` — 190 行 · 注释 136 行 · B10
-- [ ] 91. `foundry/lib/forge-std/src/interfaces/IERC721.sol` — 164 行 · 注释 112 行 · B11
-- [ ] 92. `foundry/lib/forge-std/src/mocks/MockERC20.sol` — 234 行 · 注释 21 行 · B10
-- [ ] 93. `foundry/lib/forge-std/src/mocks/MockERC721.sol` — 235 行 · 注释 21 行 · B10
-- [ ] 94. `foundry/lib/forge-std/src/safeconsole.sol` — 13248 行 · 注释 348 行 · B09
-- [ ] 95. `foundry/lib/forge-std/test/StdAssertions.t.sol` — 145 行 · 注释 1 行 · B13
-- [ ] 96. `foundry/lib/forge-std/test/StdChains.t.sol` — 221 行 · 注释 45 行 · B13
-- [ ] 97. `foundry/lib/forge-std/test/StdCheats.t.sol` — 618 行 · 注释 38 行 · B13
-- [ ] 98. `foundry/lib/forge-std/test/StdError.t.sol` — 120 行 · 注释 1 行 · B13
-- [ ] 99. `foundry/lib/forge-std/test/StdMath.t.sol` — 212 行 · 注释 4 行 · B13
-- [ ] 100. `foundry/lib/forge-std/test/StdStorage.t.sol` — 463 行 · 注释 26 行 · B13
-- [ ] 101. `foundry/lib/forge-std/test/StdUtils.t.sol` — 342 行 · 注释 23 行 · B13
-- [ ] 102. `foundry/lib/forge-std/test/Vm.t.sol` — 15 行 · 注释 3 行 · B13
-- [ ] 103. `foundry/lib/forge-std/test/compilation/CompilationScript.sol` — 10 行 · 注释 2 行 · B13
-- [ ] 104. `foundry/lib/forge-std/test/compilation/CompilationScriptBase.sol` — 10 行 · 注释 2 行 · B13
-- [ ] 105. `foundry/lib/forge-std/test/compilation/CompilationTest.sol` — 10 行 · 注释 2 行 · B13
-- [ ] 106. `foundry/lib/forge-std/test/compilation/CompilationTestBase.sol` — 10 行 · 注释 2 行 · B13
+- [x] 84. `foundry/lib/forge-std/src/Vm.sol` — 1638 行 · 注释 653 行 · B06✅ / B07✅ / B08✅
+- [x] 85. `foundry/lib/forge-std/src/console.sol` — 1533 行 · 注释 1 行 · B09
+- [x] 86. `foundry/lib/forge-std/src/console2.sol` — 1558 行 · 注释 6 行 · B09
+- [x] 87. `foundry/lib/forge-std/src/interfaces/IERC1155.sol` — 105 行 · 注释 66 行 · B11
+- [x] 88. `foundry/lib/forge-std/src/interfaces/IERC165.sol` — 12 行 · 注释 6 行 · B10
+- [x] 89. `foundry/lib/forge-std/src/interfaces/IERC20.sol` — 43 行 · 注释 17 行 · B10
+- [x] 90. `foundry/lib/forge-std/src/interfaces/IERC4626.sol` — 190 行 · 注释 136 行 · B10
+- [x] 91. `foundry/lib/forge-std/src/interfaces/IERC721.sol` — 164 行 · 注释 112 行 · B11
+- [x] 92. `foundry/lib/forge-std/src/mocks/MockERC20.sol` — 234 行 · 注释 21 行 · B10
+- [x] 93. `foundry/lib/forge-std/src/mocks/MockERC721.sol` — 235 行 · 注释 21 行 · B10
+- [x] 94. `foundry/lib/forge-std/src/safeconsole.sol` — 13248 行 · 注释 348 行 · B09
+- [x] 95. `foundry/lib/forge-std/test/StdAssertions.t.sol` — 145 行 · 注释 1 行 · B13
+- [x] 96. `foundry/lib/forge-std/test/StdChains.t.sol` — 221 行 · 注释 45 行 · B13
+- [x] 97. `foundry/lib/forge-std/test/StdCheats.t.sol` — 618 行 · 注释 38 行 · B13
+- [x] 98. `foundry/lib/forge-std/test/StdError.t.sol` — 120 行 · 注释 1 行 · B13
+- [x] 99. `foundry/lib/forge-std/test/StdMath.t.sol` — 212 行 · 注释 4 行 · B13
+- [x] 100. `foundry/lib/forge-std/test/StdStorage.t.sol` — 463 行 · 注释 26 行 · B13
+- [x] 101. `foundry/lib/forge-std/test/StdUtils.t.sol` — 342 行 · 注释 23 行 · B13
+- [x] 102. `foundry/lib/forge-std/test/Vm.t.sol` — 15 行 · 注释 3 行 · B13
+- [x] 103. `foundry/lib/forge-std/test/compilation/CompilationScript.sol` — 10 行 · 注释 2 行 · B13
+- [x] 104. `foundry/lib/forge-std/test/compilation/CompilationScriptBase.sol` — 10 行 · 注释 2 行 · B13
+- [x] 105. `foundry/lib/forge-std/test/compilation/CompilationTest.sol` — 10 行 · 注释 2 行 · B13
+- [x] 106. `foundry/lib/forge-std/test/compilation/CompilationTestBase.sol` — 10 行 · 注释 2 行 · B13
 
-### notebook（0 / 18）
+### notebook（18 / 18）
 
-- [ ] 107. `notebook/aave_supply.ipynb` — 76 行 · 注释 3 行 · B16
-- [ ] 108. `notebook/amm_dy_dx.ipynb` — 267 行 · 注释 5 行 · B16
-- [ ] 109. `notebook/arb/arb.ipynb` — 416 行 · 注释 21 行 · B15
-- [ ] 110. `notebook/arb/calc.py` — 242 行 · 注释 20 行 · B15
-- [ ] 111. `notebook/arb/data.py` — 60 行 · 注释 4 行 · B15
-- [ ] 112. `notebook/curve_v1_equations.ipynb` — 203 行 · 注释 10 行 · B16
-- [ ] 113. `notebook/curve_v1_imbalance_fee.ipynb` — 225 行 · 注释 12 行 · B16
-- [ ] 114. `notebook/curve_v1_newton.ipynb` — 145 行 · 注释 8 行 · B16
-- [ ] 115. `notebook/curve_v2.ipynb` — 194 行 · 注释 6 行 · B16
-- [ ] 116. `notebook/curve_v2_ema.ipynb` — 188 行 · 注释 26 行 · B15
-- [ ] 117. `notebook/curve_v2_swap_price_scale.ipynb` — 185 行 · 注释 15 行 · B16
-- [ ] 118. `notebook/hex_addr.ipynb` — 83 行 · 注释 3 行 · B16
-- [ ] 119. `notebook/mev_sandwich.ipynb` — 80 行 · 注释 2 行 · B16
-- [ ] 120. `notebook/uniswap_v2_spot_oracle.ipynb` — 114 行 · 注释 4 行 · B16
-- [ ] 121. `notebook/uniswap_v3_spot_price.ipynb` — 182 行 · 注释 29 行 · B15
-- [ ] 122. `notebook/uniswap_v3_swap.ipynb` — 73 行 · 注释 1 行 · B16
-- [ ] 123. `notebook/uniswap_v3_tick_bitmap.ipynb` — 179 行 · 注释 9 行 · B16
-- [ ] 124. `notebook/uniswap_v3_twap.ipynb` — 109 行 · 注释 3 行 · B16
+- [x] 107. `notebook/aave_supply.ipynb` — 76 行 · 注释 3 行 · B16
+- [x] 108. `notebook/amm_dy_dx.ipynb` — 267 行 · 注释 5 行 · B16
+- [x] 109. `notebook/arb/arb.ipynb` — 416 行 · 注释 21 行 · B15
+- [x] 110. `notebook/arb/calc.py` — 242 行 · 注释 20 行 · B15
+- [x] 111. `notebook/arb/data.py` — 60 行 · 注释 4 行 · B15
+- [x] 112. `notebook/curve_v1_equations.ipynb` — 203 行 · 注释 10 行 · B16
+- [x] 113. `notebook/curve_v1_imbalance_fee.ipynb` — 225 行 · 注释 12 行 · B16
+- [x] 114. `notebook/curve_v1_newton.ipynb` — 145 行 · 注释 8 行 · B16
+- [x] 115. `notebook/curve_v2.ipynb` — 194 行 · 注释 6 行 · B16
+- [x] 116. `notebook/curve_v2_ema.ipynb` — 188 行 · 注释 26 行 · B15
+- [x] 117. `notebook/curve_v2_swap_price_scale.ipynb` — 185 行 · 注释 15 行 · B16
+- [x] 118. `notebook/hex_addr.ipynb` — 83 行 · 注释 3 行 · B16
+- [x] 119. `notebook/mev_sandwich.ipynb` — 80 行 · 注释 2 行 · B16
+- [x] 120. `notebook/uniswap_v2_spot_oracle.ipynb` — 114 行 · 注释 4 行 · B16
+- [x] 121. `notebook/uniswap_v3_spot_price.ipynb` — 182 行 · 注释 29 行 · B15
+- [x] 122. `notebook/uniswap_v3_swap.ipynb` — 73 行 · 注释 1 行 · B16
+- [x] 123. `notebook/uniswap_v3_tick_bitmap.ipynb` — 179 行 · 注释 9 行 · B16
+- [x] 124. `notebook/uniswap_v3_twap.ipynb` — 109 行 · 注释 3 行 · B16
 
-### notes/uni-v2（0 / 34）
+### notes/uni-v2（3 / 34）
 
-- [ ] 125. `notes/uni-v2/v2-core/README.md` → `notes/uni-v2/v2-core/README_zh.md` — 24 行 · 文本 13 行 · B05
+- [x] 125. `notes/uni-v2/v2-core/README.md` → `notes/uni-v2/v2-core/README_zh.md` — 24 行 · 文本 13 行 · B05
 - [ ] 126. `notes/uni-v2/v2-core/contracts/UniswapV2ERC20.sol` — 94 行 · 注释 1 行 · B20
 - [ ] 127. `notes/uni-v2/v2-core/contracts/UniswapV2Factory.sol` — 59 行 · 注释 12 行 · B20
 - [ ] 128. `notes/uni-v2/v2-core/contracts/UniswapV2Pair.sol` — 253 行 · 注释 79 行 · B20
@@ -207,7 +207,7 @@
 - [ ] 132. `notes/uni-v2/v2-core/test/UniswapV2ERC20.spec.ts` — 116 行 · 注释 2 行 · B20
 - [ ] 133. `notes/uni-v2/v2-core/test/UniswapV2Factory.spec.ts` — 86 行 · 注释 2 行 · B20
 - [ ] 134. `notes/uni-v2/v2-core/test/UniswapV2Pair.spec.ts` — 284 行 · 注释 7 行 · B20
-- [ ] 135. `notes/uni-v2/v2-periphery/README.md` → `notes/uni-v2/v2-periphery/README_zh.md` — 24 行 · 文本 13 行 · B05
+- [x] 135. `notes/uni-v2/v2-periphery/README.md` → `notes/uni-v2/v2-periphery/README_zh.md` — 24 行 · 文本 13 行 · B05
 - [ ] 136. `notes/uni-v2/v2-periphery/contracts/UniswapV2Migrator.sol` — 49 行 · 注释 4 行 · B20
 - [ ] 137. `notes/uni-v2/v2-periphery/contracts/UniswapV2Router01.sol` — 280 行 · 注释 9 行 · B20
 - [ ] 138. `notes/uni-v2/v2-periphery/contracts/UniswapV2Router02.sol` — 470 行 · 注释 38 行 · B20
@@ -216,7 +216,7 @@
 - [ ] 141. `notes/uni-v2/v2-periphery/contracts/examples/ExampleOracleSimple.sol` — 67 行 · 注释 10 行 · B21
 - [ ] 142. `notes/uni-v2/v2-periphery/contracts/examples/ExampleSlidingWindowOracle.sol` — 125 行 · 注释 29 行 · B21
 - [ ] 143. `notes/uni-v2/v2-periphery/contracts/examples/ExampleSwapToPrice.sol` — 77 行 · 注释 7 行 · B21
-- [ ] 144. `notes/uni-v2/v2-periphery/contracts/examples/README.md` → `notes/uni-v2/v2-periphery/contracts/examples/README_zh.md` — 14 行 · 文本 11 行 · B05
+- [x] 144. `notes/uni-v2/v2-periphery/contracts/examples/README.md` → `notes/uni-v2/v2-periphery/contracts/examples/README_zh.md` — 14 行 · 文本 11 行 · B05
 - [ ] 145. `notes/uni-v2/v2-periphery/contracts/libraries/SafeMath.sol` — 17 行 · 注释 1 行 · B20
 - [ ] 146. `notes/uni-v2/v2-periphery/contracts/libraries/UniswapV2Library.sol` — 187 行 · 注释 96 行 · B21
 - [ ] 147. `notes/uni-v2/v2-periphery/contracts/libraries/UniswapV2LiquidityMathLibrary.sol` — 139 行 · 注释 15 行 · B21
@@ -232,51 +232,51 @@
 - [ ] 157. `notes/uni-v2/v2-periphery/test/UniswapV2Router02.spec.ts` — 380 行 · 注释 6 行 · B22
 - [ ] 158. `notes/uni-v2/v2-periphery/test/shared/fixtures.ts` — 100 行 · 注释 9 行 · B22
 
-### notes/uni-v3（0 / 15）
+### notes/uni-v3（15 / 15）
 
-- [ ] 159. `notes/uni-v3/README.md` → `notes/uni-v3/README_zh.md` — 15 行 · 文本 10 行 · B05
-- [ ] 160. `notes/uni-v3/py/arb/calc.py` — 242 行 · 注释 20 行 · B15
-- [ ] 161. `notes/uni-v3/py/arb/data.py` — 60 行 · 注释 4 行 · B15
-- [ ] 162. `notes/uni-v3/py/arb/main.py` — 41 行 · 注释 3 行 · B15
-- [ ] 163. `notes/uni-v3/py/dev.py` — 13 行 · 注释 2 行 · B15
-- [ ] 164. `notes/uni-v3/src/Constants.sol` — 17 行 · 注释 2 行 · B14
-- [ ] 165. `notes/uni-v3/src/V2.sol` — 94 行 · 注释 4 行 · B14
-- [ ] 166. `notes/uni-v3/src/interfaces/IERC20.sol` — 18 行 · 注释 1 行 · B14
-- [ ] 167. `notes/uni-v3/src/interfaces/uni-v3/IUniswapV3Pool.sol` — 52 行 · 注释 8 行 · B14
-- [ ] 168. `notes/uni-v3/src/lib/FullMath.sol` — 131 行 · 注释 58 行 · B14
-- [ ] 169. `notes/uni-v3/src/lib/TickBitmap.sol` — 61 行 · 注释 8 行 · B14
-- [ ] 170. `notes/uni-v3/src/lib/TickLiquidity.sol` — 60 行 · 注释 5 行 · B14
-- [ ] 171. `notes/uni-v3/src/lib/TickMath.sol` — 270 行 · 注释 22 行 · B14
-- [ ] 172. `notes/uni-v3/test/Py.sol` — 26 行 · 注释 1 行 · B15
-- [ ] 173. `notes/uni-v3/test/Sim.sol` — 249 行 · 注释 18 行 · B15
+- [x] 159. `notes/uni-v3/README.md` → `notes/uni-v3/README_zh.md` — 15 行 · 文本 10 行 · B05
+- [x] 160. `notes/uni-v3/py/arb/calc.py` — 242 行 · 注释 20 行 · B15
+- [x] 161. `notes/uni-v3/py/arb/data.py` — 60 行 · 注释 4 行 · B15
+- [x] 162. `notes/uni-v3/py/arb/main.py` — 41 行 · 注释 3 行 · B15
+- [x] 163. `notes/uni-v3/py/dev.py` — 13 行 · 注释 2 行 · B15
+- [x] 164. `notes/uni-v3/src/Constants.sol` — 17 行 · 注释 2 行 · B14
+- [x] 165. `notes/uni-v3/src/V2.sol` — 94 行 · 注释 4 行 · B14
+- [x] 166. `notes/uni-v3/src/interfaces/IERC20.sol` — 18 行 · 注释 1 行 · B14
+- [x] 167. `notes/uni-v3/src/interfaces/uni-v3/IUniswapV3Pool.sol` — 52 行 · 注释 8 行 · B14
+- [x] 168. `notes/uni-v3/src/lib/FullMath.sol` — 131 行 · 注释 58 行 · B14
+- [x] 169. `notes/uni-v3/src/lib/TickBitmap.sol` — 61 行 · 注释 8 行 · B14
+- [x] 170. `notes/uni-v3/src/lib/TickLiquidity.sol` — 60 行 · 注释 5 行 · B14
+- [x] 171. `notes/uni-v3/src/lib/TickMath.sol` — 270 行 · 注释 22 行 · B14
+- [x] 172. `notes/uni-v3/test/Py.sol` — 26 行 · 注释 1 行 · B15
+- [x] 173. `notes/uni-v3/test/Sim.sol` — 249 行 · 注释 18 行 · B15
 
-### topics（0 / 10）
+### topics（6 / 10）
 
 - [ ] 174. `topics/amm/curve-v1/StableSwap3Pool.vy` — 897 行 · 注释 140 行 · B23
-- [ ] 175. `topics/amm/curve-v1/comparisons.md` → `topics/amm/curve-v1/comparisons_zh.md` — 10 行 · 文本 8 行 · B03
+- [x] 175. `topics/amm/curve-v1/comparisons.md` → `topics/amm/curve-v1/comparisons_zh.md` — 10 行 · 文本 8 行 · B03
 - [ ] 176. `topics/amm/curve-v2/CurveCryptoViews3Optimized.vy` — 414 行 · 注释 17 行 · B23
 - [ ] 177. `topics/amm/curve-v2/CurveTricryptoMathOptimized.vy` — 878 行 · 注释 198 行 · B24
-- [ ] 178. `topics/amm/curve-v2/CurveTricryptoOptimizedWETH.vy` — 2347 行 · 注释 654 行 · B25🕒 / B26🕒 / B27🕒
-- [ ] 179. `topics/amm/intro/amm_equations.md` → `topics/amm/intro/amm_equations_zh.md` — 8 行 · 文本 6 行 · B02
-- [ ] 180. `topics/amm/intro/amm_order_book.md` → `topics/amm/intro/amm_order_book_zh.md` — 62 行 · 文本 42 行 · B02
-- [ ] 181. `topics/amm/intro/what_is_amm.md` → `topics/amm/intro/what_is_amm_zh.md` — 31 行 · 文本 18 行 · B02
-- [ ] 182. `topics/mev/FlashbotsTest.sol` — 19 行 · 注释 2 行 · B15
-- [ ] 183. `topics/mev/README.md` → `topics/mev/README_zh.md` — 70 行 · 文本 47 行 · B03
+- [ ] 178. `topics/amm/curve-v2/CurveTricryptoOptimizedWETH.vy` — 2347 行 · 注释 654 行 · B25⏳ / B26⏳ / B27⏳
+- [x] 179. `topics/amm/intro/amm_equations.md` → `topics/amm/intro/amm_equations_zh.md` — 8 行 · 文本 6 行 · B02
+- [x] 180. `topics/amm/intro/amm_order_book.md` → `topics/amm/intro/amm_order_book_zh.md` — 62 行 · 文本 42 行 · B02
+- [x] 181. `topics/amm/intro/what_is_amm.md` → `topics/amm/intro/what_is_amm_zh.md` — 31 行 · 文本 18 行 · B02
+- [x] 182. `topics/mev/FlashbotsTest.sol` — 19 行 · 注释 2 行 · B15
+- [x] 183. `topics/mev/README.md` → `topics/mev/README_zh.md` — 70 行 · 文本 47 行 · B03
 
-### utils（0 / 3）
+### utils（3 / 3）
 
-- [ ] 184. `utils/flat.js` — 69 行 · 注释 4 行 · B15
-- [ ] 185. `utils/rename.js` — 37 行 · 注释 2 行 · B15
-- [ ] 186. `utils/video_durations.py` — 52 行 · 注释 3 行 · B15
+- [x] 184. `utils/flat.js` — 69 行 · 注释 4 行 · B15
+- [x] 185. `utils/rename.js` — 37 行 · 注释 2 行 · B15
+- [x] 186. `utils/video_durations.py` — 52 行 · 注释 3 行 · B15
 
-### whitepapers（0 / 1）
+### whitepapers（1 / 1）
 
-- [ ] 187. `whitepapers/README.md` → `whitepapers/README_zh.md` — 25 行 · 文本 13 行 · B01
+- [x] 187. `whitepapers/README.md` → `whitepapers/README_zh.md` — 25 行 · 文本 13 行 · B01
 
-### foundry（0 / 2）
+### foundry（2 / 2）
 
-- [ ] 188. `foundry/.gitignore` — 17 行 · 注释 4 行 · B05
-- [ ] 189. `foundry/foundry.toml` — 10 行 · 注释 2 行 · B05
+- [x] 188. `foundry/.gitignore` — 17 行 · 注释 4 行 · B05
+- [x] 189. `foundry/foundry.toml` — 10 行 · 注释 2 行 · B05
 
 ## 四、不在翻译范围内的文件
 
@@ -516,3 +516,25 @@
 
 - 2026-11-01 任务初始化：统计 391 个跟踪文件，确定 189 个待翻译文件，分为 27 个批次交由子代理并行翻译。
 - 2026-11-01 启动 B01–B20 共 20 个子代理（达到并发上限 20），B21–B27 排队，待有子代理完成后补位启动。
+- 2026-11-01 15:07 B09 完成（3 项，校验通过）：safeconsole 342 行选择器注释批量译出；SPDX、@author、@solidity memory-safe-assembly 编译器注解保留
+- 2026-11-01 B09 完成后补位启动 B21。
+- 2026-11-01 15:07 B06 完成（1 项，校验通过）：Vm.sol 第 1–441 行 200 行注释
+- 2026-11-01 B06 完成后补位启动 B22。
+- 2026-11-01 15:08 B02 完成（5 项，校验通过）：围栏内为纯英文说明文字（非代码），一并译出
+- 2026-11-01 15:08 B05 完成（10 项，校验通过）
+- 2026-11-01 B02、B05 完成后补位启动 B23、B24。
+- 2026-11-01 15:08 B04 完成（2 项，校验通过）
+- 2026-11-01 15:08 B07 完成（1 项，校验通过）
+- 2026-11-01 15:08 B13 完成（12 项，校验通过）
+- 2026-11-01 15:08 B16 完成（13 项，校验通过）
+- 2026-11-01 15:08 B17 完成（8 项，校验通过）
+- 2026-11-01 15:08 B18 完成（30 项，校验通过）
+- 2026-11-01 15:08 B19 完成（12 项，校验通过）
+- 2026-11-01 补位启动最后 3 个批次 B25、B26、B27，至此 27 个批次全部启动。
+- 2026-11-01 15:08 B01 完成（4 项，校验通过）
+- 2026-11-01 15:08 B03 完成（3 项，校验通过）
+- 2026-11-01 15:08 B11 完成（2 项，校验通过）
+- 2026-11-01 15:09 B14 完成（16 项，校验通过）
+- 2026-11-01 15:09 B15 完成（15 项，校验通过）
+- 2026-11-01 15:09 B08 完成（1 项，校验通过）
+- 2026-11-01 15:09 B10 完成（5 项，校验通过）

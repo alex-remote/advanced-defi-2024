@@ -104,7 +104,7 @@ contract StdAssertionsTest is StdAssertions {
         this.assertEqCallExternal(targetB, callDataB, targetA, callDataA, strictRevertData);
     }
 
-    // Helper function to test outcome of assertEqCall via `expect` cheatcodes
+    // 辅助函数：通过 `expect` 系列 cheatcode 测试 assertEqCall 的结果
     function assertEqCallExternal(
         address targetA,
         bytes memory callDataA,

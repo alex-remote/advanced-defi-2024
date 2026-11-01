@@ -190,7 +190,7 @@ contract StdStorageTest is Test {
 
     function test_StorageCheckedWriteMapPackedFullSuccess() public {
         uint256 full = test.map_packed(address(1337));
-        // keep upper 128, set lower 128 to 1337
+        // 保留高 128 位，将低 128 位设为 1337
         full = (full & (uint256((1 << 128) - 1) << 128)) | 1337;
         stdstore.target(address(test)).sig(test.map_packed.selector).with_key(address(uint160(1337))).checked_write(
             full
@@ -255,12 +255,12 @@ contract StdStorageTest is Test {
     }
 
     function testFuzzPacked(uint256 val, uint8 elemToGet) public {
-        // This function tries an assortment of packed slots, shifts meaning number of elements
-        // that are packed. Shiftsizes are the size of each element, i.e. 8 means a data type that is 8 bits, 16 == 16 bits, etc.
-        // Combined, these determine how a slot is packed. Making it random is too hard to avoid global rejection limit
-        // and make it performant.
+        // 该函数尝试各种不同的打包存储槽，shifts 表示被打包的元素
+        // 数量。Shiftsizes 是每个元素的大小，即 8 表示 8 位的数据类型，16 == 16 位，以此类推。
+        // 两者结合决定了存储槽的打包方式。若完全随机化，将很难避开全局拒绝次数上限
+        // 并保证性能。
 
-        // change the number of shifts
+        // 改变 shifts 的数量
         for (uint256 i = 1; i < 5; i++) {
             uint256 shifts = i;
 
@@ -283,9 +283,9 @@ contract StdStorageTest is Test {
                 }
             }
 
-            // we may have some right bits unaccounted for
+            // 可能还有一些右侧的位未被计入
             leftBits += 256 - (leftBits + shiftSizes[elemToGet] + rightBits);
-            // clear left bits, then clear right bits and realign
+            // 先清除左侧的位，再清除右侧的位并重新对齐
             uint256 expectedValToRead = (val << leftBits) >> (leftBits + rightBits);
 
             uint256 readVal = stdstore.target(address(test)).enable_packed_slots().sig(
@@ -297,19 +297,19 @@ contract StdStorageTest is Test {
     }
 
     function testFuzzPacked2(uint256 nvars, uint256 seed) public {
-        // Number of random variables to generate.
+        // 要生成的随机变量的数量。
         nvars = bound(nvars, 1, 20);
 
-        // This will decrease as we generate values in the below loop.
+        // 在下面的循环中生成值时，该值会逐渐减少。
         uint256 bitsRemaining = 256;
 
-        // Generate a random value and size for each variable.
+        // 为每个变量生成随机的值和大小。
         uint256[] memory vals = new uint256[](nvars);
         uint256[] memory sizes = new uint256[](nvars);
         uint256[] memory offsets = new uint256[](nvars);
 
         for (uint256 i = 0; i < nvars; i++) {
-            // Generate a random value and size.
+            // 生成随机的值和大小。
             offsets[i] = i == 0 ? 0 : offsets[i - 1] + sizes[i - 1];
 
             uint256 nvarsRemaining = nvars - i;
@@ -326,14 +326,14 @@ contract StdStorageTest is Test {
             vals[i] = bound(uint256(keccak256(abi.encodePacked(seed, i))), 0, maxVal);
         }
 
-        // Pack all values into the slot.
+        // 将所有值打包进存储槽。
         for (uint256 i = 0; i < nvars; i++) {
             stdstore.enable_packed_slots().target(address(test)).sig("getRandomPacked(uint256,uint256)").with_key(
                 sizes[i]
             ).with_key(offsets[i]).checked_write(vals[i]);
         }
 
-        // Verify the read data matches.
+        // 验证读取到的数据一致。
         for (uint256 i = 0; i < nvars; i++) {
             uint256 readVal = stdstore.enable_packed_slots().target(address(test)).sig(
                 "getRandomPacked(uint256,uint256)"
@@ -407,7 +407,7 @@ contract StorageTest {
     }
 
     function extra_sload() public view returns (bytes32 t) {
-        // trigger read on slot `tE`, and make a staticcall to make sure compiler doesn't optimize this SLOAD away
+        // 触发对槽 `tE` 的读取，并发起一次 staticcall，确保编译器不会把这次 SLOAD 优化掉
         assembly {
             pop(staticcall(gas(), sload(tE.slot), 0, 0, 0, 0))
         }
@@ -426,18 +426,18 @@ contract StorageTest {
     }
 
     function setRandomPacking(uint256 val, uint256 size, uint256 offset) public {
-        // Generate mask based on the size of the value
+        // 根据值的大小生成掩码
         uint256 mask = _getMask(size);
-        // Zero out all bits for the word we're about to set
+        // 将即将设置的字中对应的所有位清零
         uint256 cleanedWord = randomPacking & ~(mask << offset);
-        // Place val in the correct spot of the cleaned word
+        // 将 val 放到清理后的字中的正确位置
         randomPacking = cleanedWord | val << offset;
     }
 
     function getRandomPacked(uint256 size, uint256 offset) public view returns (uint256) {
-        // Generate mask based on the size of the value
+        // 根据值的大小生成掩码
         uint256 mask = _getMask(size);
-        // Shift to place the bits in the correct position, and use mask to zero out remaining bits
+        // 移位使各位处于正确位置，并用 mask 将其余位清零
         return (randomPacking >> offset) & mask;
     }
 
@@ -454,10 +454,10 @@ contract StorageTest {
             }
         }
 
-        // we may have some right bits unaccounted for
+        // 可能还有一些右侧的位未被计入
         leftBits += 256 - (leftBits + shiftSizes[elem] + rightBits);
 
-        // clear left bits, then clear right bits and realign
+        // 先清除左侧的位，再清除右侧的位并重新对齐
         return (randomPacking << leftBits) >> (leftBits + rightBits);
     }
 }

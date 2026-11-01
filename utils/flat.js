@@ -24,11 +24,11 @@ function walk(root, f) {
   }
 }
 
-// Script to flatten videos
+// 用于扁平化（flatten）视频目录的脚本
 // node rename.js amm/uniswap-v2 uni-v2-flat
 async function main() {
   const args = process.argv.slice(2)
-  // relative path to src and dst
+  // src 和 dst 的相对路径
   const src = args[0]
   const dst = args[1]
 
@@ -46,7 +46,7 @@ async function main() {
 
   file_paths.sort()
 
-  // Filter out file ending with -raw or -noise
+  // 过滤掉以 -raw 或 -noise 结尾的文件
   const regex = /-(raw|noise)\./;
   let j = 1;
   for (let i = 0; i < file_paths.length; i++) {

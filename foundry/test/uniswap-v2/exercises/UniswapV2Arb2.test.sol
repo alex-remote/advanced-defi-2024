@@ -16,9 +16,9 @@ import {
 } from "../../../src/Constants.sol";
 import {UniswapV2Arb2} from "./UniswapV2Arb2.sol";
 
-// Test arbitrage between Uniswap and Sushiswap
-// Buy WETH on Uniswap, sell on Sushiswap.
-// For flashSwap, borrow DAI from DAI/MKR pair
+// 测试 Uniswap 与 Sushiswap 之间的套利
+// 在 Uniswap 上买入 WETH，在 Sushiswap 上卖出。
+// 对于 flashSwap，从 DAI/MKR 交易对借入 DAI
 contract UniswapV2Arb2Test is Test {
     IUniswapV2Router02 private constant uni_router =
         IUniswapV2Router02(UNISWAP_V2_ROUTER_02);
@@ -33,7 +33,7 @@ contract UniswapV2Arb2Test is Test {
     function setUp() public {
         arb = new UniswapV2Arb2();
 
-        // Setup - WETH cheaper on Uniswap than Sushiswap
+        // 准备 - Uniswap 上的 WETH 比 Sushiswap 上便宜
         deal(address(this), 100 * 1e18);
 
         weth.deposit{value: 100 * 1e18}();

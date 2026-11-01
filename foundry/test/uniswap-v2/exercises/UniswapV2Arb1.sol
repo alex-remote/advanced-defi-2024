@@ -9,43 +9,43 @@ import {IERC20} from "../../../src/interfaces/IERC20.sol";
 
 contract UniswapV2Arb1 {
     struct SwapParams {
-        // Router to execute first swap - tokenIn for tokenOut
+        // 执行第一次兑换的路由合约 - 用 tokenIn 换 tokenOut
         address router0;
-        // Router to execute second swap - tokenOut for tokenIn
+        // 执行第二次兑换的路由合约 - 用 tokenOut 换 tokenIn
         address router1;
-        // Token in of first swap
+        // 第一次兑换的输入代币
         address tokenIn;
-        // Token out of first swap
+        // 第一次兑换的输出代币
         address tokenOut;
-        // Amount in for the first swap
+        // 第一次兑换的输入数量
         uint256 amountIn;
-        // Revert the arbitrage if profit is less than this minimum
+        // 如果利润低于此最小值，则回滚（revert）本次套利
         uint256 minProfit;
     }
 
-    // Exercise 1
-    // - Execute an arbitrage between router0 and router1
-    // - Pull tokenIn from msg.sender
-    // - Send amountIn + profit back to msg.sender
+    // 练习 1
+    // - 在 router0 和 router1 之间执行套利
+    // - 从 msg.sender 拉取 tokenIn
+    // - 将 amountIn + 利润发回给 msg.sender
     function swap(SwapParams calldata params) external {
-        // Write your code here
-        // Don’t change any other code
+        // 在此编写你的代码
+        // 不要修改其他任何代码
     }
 
-    // Exercise 2
-    // - Execute an arbitrage between router0 and router1 using flash swap
-    // - Borrow tokenIn with flash swap from pair
-    // - Send profit back to msg.sender
+    // 练习 2
+    // - 使用闪电兑换（flash swap）在 router0 和 router1 之间执行套利
+    // - 通过闪电兑换从 pair 借入 tokenIn
+    // - 将利润发回给 msg.sender
     /**
-     * @param pair Address of pair contract to flash swap and borrow tokenIn
-     * @param isToken0 True if token to borrow is token0 of pair
-     * @param params Swap parameters
+     * @param pair 用于闪电兑换并借入 tokenIn 的交易对合约地址
+     * @param isToken0 若要借入的代币是 pair 的 token0，则为 true
+     * @param params 兑换参数
      */
     function flashSwap(address pair, bool isToken0, SwapParams calldata params)
         external
     {
-        // Write your code here
-        // Don’t change any other code
+        // 在此编写你的代码
+        // 不要修改其他任何代码
     }
 
     function uniswapV2Call(
@@ -54,7 +54,7 @@ contract UniswapV2Arb1 {
         uint256 amount1Out,
         bytes calldata data
     ) external {
-        // Write your code here
-        // Don’t change any other code
+        // 在此编写你的代码
+        // 不要修改其他任何代码
     }
 }

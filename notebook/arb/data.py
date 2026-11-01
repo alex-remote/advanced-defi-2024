@@ -27,12 +27,12 @@ def build(
 ) -> tuple[list[int], list[int], list[tuple[int, int, int]]]:
     assert len(data) > 0
 
-    # Ticks are decreasing
-    # Reverse the list to make it increasing
+    # tick 为递减顺序
+    # 反转列表，使其变为递增
     if not asc:
         data.reverse()
 
-    # Check ticks are increasing
+    # 检查 tick 是否递增
     t = -math.inf
     for l in data:
         assert t <= l.lo < l.hi
@@ -49,7 +49,7 @@ def build(
         liqs.append(l.liq)
 
     pool = [(l.lo, l.hi, l.liq) for l in data]
-    # Reverse list to make ticks decreasing
+    # 反转列表，使 tick 变为递减
     if not asc:
         pool.reverse()
 

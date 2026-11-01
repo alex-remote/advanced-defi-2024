@@ -12,8 +12,8 @@ interface ISwapRouter {
         uint160 sqrtPriceLimitX96;
     }
 
-    /// @notice Swaps `amountIn` of one token for as much as possible of another token
-    /// @return amountOut The amount of the received token
+    /// @notice 将 `amountIn` 数量的一种代币兑换为尽可能多的另一种代币
+    /// @return amountOut 收到的代币数量
     function exactInputSingle(ExactInputSingleParams calldata params)
         external
         payable
@@ -26,8 +26,8 @@ interface ISwapRouter {
         uint256 amountOutMinimum;
     }
 
-    /// @notice Swaps `amountIn` of one token for as much as possible of another along the specified path
-    /// @return amountOut The amount of the received token
+    /// @notice 沿指定路径将 `amountIn` 数量的一种代币兑换为尽可能多的另一种代币
+    /// @return amountOut 收到的代币数量
     function exactInput(ExactInputParams calldata params)
         external
         payable
@@ -43,8 +43,8 @@ interface ISwapRouter {
         uint160 sqrtPriceLimitX96;
     }
 
-    /// @notice Swaps as little as possible of one token for `amountOut` of another token
-    /// @return amountIn The amount of the input token
+    /// @notice 用尽可能少的一种代币兑换 `amountOut` 数量的另一种代币
+    /// @return amountIn 输入代币的数量
     function exactOutputSingle(ExactOutputSingleParams calldata params)
         external
         payable
@@ -57,8 +57,8 @@ interface ISwapRouter {
         uint256 amountInMaximum;
     }
 
-    /// @notice Swaps as little as possible of one token for `amountOut` of another along the specified path (reversed)
-    /// @return amountIn The amount of the input token
+    /// @notice 沿指定路径（反向）用尽可能少的一种代币兑换 `amountOut` 数量的另一种代币
+    /// @return amountIn 输入代币的数量
     function exactOutput(ExactOutputParams calldata params)
         external
         payable

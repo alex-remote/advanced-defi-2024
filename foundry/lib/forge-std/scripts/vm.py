@@ -58,7 +58,7 @@ def main():
     out += "\n\n"
     out += VM_SAFE_DOC
     vm_safe = Cheatcodes(
-        # TODO: Custom errors were introduced in 0.8.4
+        # TODO: 自定义错误（custom error）是在 0.8.4 中才引入的
         errors=[],  # contract.errors
         events=contract.events,
         enums=contract.enums,
@@ -80,7 +80,7 @@ def main():
     pp.p_contract(vm_unsafe, "Vm", "VmSafe")
     out += pp.finish()
 
-    # Compatibility with <0.8.0
+    # 兼容 <0.8.0 的版本
     def memory_to_calldata(m: re.Match) -> str:
         return " calldata " + m.group(1)
 
@@ -124,7 +124,7 @@ def cmp_cheatcode(a: "Cheatcode", b: "Cheatcode") -> int:
     return 0
 
 
-# HACK: A way to add group header comments without having to modify printer code
+# HACK: 一种无需修改 printer 代码即可添加分组标题注释的方法
 def prefix_with_group_headers(cheats: list["Cheatcode"]):
     s = set()
     for i, cheat in enumerate(cheats):

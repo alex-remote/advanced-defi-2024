@@ -44,7 +44,7 @@ contract UniswapV2TwapTest is Test {
         path[0] = WETH;
         path[1] = DAI;
 
-        // Input token amount and all subsequent output token amounts
+        // 输入代币数量以及后续所有输出代币数量
         uint256[] memory amounts = router.swapExactTokensForTokens({
             amountIn: 100 * 1e18,
             amountOutMin: 1,
@@ -69,29 +69,29 @@ contract UniswapV2TwapTest is Test {
     }
 
     function test_twap_close_to_last_spot() public {
-        // Update TWAP
+        // 更新 TWAP
         skip(MIN_WAIT + 1);
         twap.update();
 
-        // Get TWAP
+        // 获取 TWAP
         uint256 twap0 = twap.consult(WETH, 1e18);
 
-        // Swap
+        // 兑换
         swap();
         uint256 spot = getSpot();
         console2.log("ETH spot price", spot);
 
-        // Update TWAP
+        // 更新 TWAP
         skip(MIN_WAIT + 1);
         twap.update();
 
-        // Get TWAP
+        // 获取 TWAP
         uint256 twap1 = twap.consult(WETH, 1e18);
 
         console2.log("twap0", twap0);
         console2.log("twap1", twap1);
 
-        // Check TWAP is close to last spot
+        // 检查 TWAP 接近最近的现货价格（spot）
         assertLt(twap1, twap0, "twap1 >= twap0");
         assertGe(twap1, spot, "twap1 < spot");
     }

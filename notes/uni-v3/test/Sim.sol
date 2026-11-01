@@ -18,7 +18,7 @@ import {
 /*
 forge test --fork-url $FORK_URL --ffi --match-path test/Sim.sol -vvv
 
-Export data to python notebook
+将数据导出到 python notebook
 cp -R ./tmp/*.json ../../python/uniswap-v3/arb/tmp/
 */
 
@@ -32,20 +32,20 @@ contract Sim is Test {
     IERC20 token1;
 
     struct Liquidity {
-        // lower tick
+        // 下界 tick
         int24 lo;
-        // higher tick
+        // 上界 tick
         int24 hi;
-        // liquidity net
+        // 净流动性（liquidity net）
         int128 net;
-        // active liquidity
+        // 活跃流动性
         uint128 liq;
     }
 
     Liquidity[] pool_a_liq;
     Liquidity[] pool_b_liq;
 
-    // Swap inside setUp to spread price differences
+    // 在 setUp 中执行兑换，以拉大两个池子之间的价差
     bool constant SWAP = true;
 
     function setUp() public {
@@ -56,7 +56,7 @@ contract Sim is Test {
         require(pool_a.token0() == pool_b.token0(), "token 0");
         require(pool_a.token1() == pool_b.token1(), "token 1");
 
-        // Tokens
+        // 代币
         token0 = IERC20(pool_a.token0());
         token1 = IERC20(pool_a.token1());
 
@@ -71,7 +71,7 @@ contract Sim is Test {
         token1.approve(address(pool_a), type(uint256).max);
         token1.approve(address(pool_b), type(uint256).max);
 
-        // Ticks
+        // 当前 tick
         int24 tick_a = pool_a.tick();
         int24 tick_b = pool_b.tick();
 
@@ -82,9 +82,9 @@ contract Sim is Test {
 
         if (SWAP) {
             // tick_a < tick_b
-            // Decrease tick_a -> swap X -> Y
+            // 降低 tick_a -> 兑换 X -> Y
             pool_a.swap({amtIn: 1e6 * 1e6, minAmtOut: 1, zeroForOne: true});
-            // Increase tick_b -> swap Y -> X
+            // 提高 tick_b -> 兑换 Y -> X
             pool_b.swap({amtIn: 10 * 1e18, minAmtOut: 1, zeroForOne: false});
 
             tick_a = pool_a.tick();
@@ -106,7 +106,7 @@ contract Sim is Test {
         console.log("fee a:", pool_a.fee());
         console.log("fee b:", pool_b.fee());
 
-        // Collect data
+        // 收集数据
         delete pool_a_liq;
         delete pool_b_liq;
 
@@ -137,7 +137,7 @@ contract Sim is Test {
                     pool.range({tick: tick - 1, lte: false});
 
                 if (tick == min_tick && tick < lo) {
-                    // Add current liquidity up to tick lo
+                    // 添加当前流动性（区间延伸至 tick lo）
                     pool_liq.push(
                         Liquidity({lo: tick, hi: lo, net: 0, liq: uint128(liq)})
                     );
@@ -163,7 +163,7 @@ contract Sim is Test {
                     pool.range({tick: tick, lte: true});
 
                 if (tick == max_tick && hi < tick) {
-                    // Add current liquidity up to tick hi
+                    // 添加当前流动性（区间延伸至 tick hi）
                     pool_liq.push(
                         Liquidity({lo: hi, hi: tick, net: 0, liq: uint128(liq)})
                     );

@@ -22,20 +22,20 @@ interface IUniswapV3Pool {
     function ticks(int24 tick) external view returns (Tick memory);
 
     struct Slot0 {
-        // the current price
+        // 当前价格
         uint160 sqrtPriceX96;
-        // the current tick
+        // 当前 tick
         int24 tick;
-        // the most-recently updated index of the observations array
+        // observations 数组中最近一次更新的索引
         uint16 observationIndex;
-        // the current maximum number of observations that are being stored
+        // 当前正在存储的观测值（observation）的最大数量
         uint16 observationCardinality;
-        // the next maximum number of observations to store, triggered in observations.write
+        // 下一个要存储的观测值最大数量，在 observations.write 中触发
         uint16 observationCardinalityNext;
-        // the current protocol fee as a percentage of the swap fee taken on withdrawal
-        // represented as an integer denominator (1/x)%
+        // 当前的协议手续费，表示为提取时所收取兑换手续费的百分比
+        // 以整数分母 (1/x)% 的形式表示
         uint8 feeProtocol;
-        // whether the pool is locked
+        // 池子是否被锁定
         bool unlocked;
     }
 

@@ -25,23 +25,23 @@ contract CurveV2SwapTest is Test {
         weth.approve(address(pool), type(uint256).max);
     }
 
-    // Exercise 1
-    // Call get_dy to calculate the amount of USDC for swapping
-    // 1 WETH to USDC
+    // 练习 1
+    // 调用 get_dy，计算将
+    // 1 WETH 兑换为 USDC 可得到的 USDC 数量
     function test_get_dy() public {
-        // Calculate swap from WETH to USDC
-        // Write your code here
+        // 计算从 WETH 兑换到 USDC 的数量
+        // 在此编写你的代码
         uint256 dy = 0;
 
         console2.log("dy %e", dy);
         assertGt(dy, 0, "dy = 0");
     }
 
-    // Exercise 2
-    // Call exchange to swap 1 WETH to USDC
+    // 练习 2
+    // 调用 exchange，将 1 WETH 兑换为 USDC
     function test_exchange() public {
-        // Swap WETH to USDC
-        // Write your code here
+        // 将 WETH 兑换为 USDC
+        // 在此编写你的代码
 
         uint256 bal = usdc.balanceOf(address(this));
         console2.log("USDC balance %e", bal);

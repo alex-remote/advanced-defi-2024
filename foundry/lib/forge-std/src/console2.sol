@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.4.22 <0.9.0;
 
-/// @dev The original console.sol uses `int` and `uint` for computing function selectors, but it should
-/// use `int256` and `uint256`. This modified version fixes that. This version is recommended
-/// over `console.sol` if you don't need compatibility with Hardhat as the logs will show up in
-/// forge stack traces. If you do need compatibility with Hardhat, you must use `console.sol`.
-/// Reference: https://github.com/NomicFoundation/hardhat/issues/2178
+/// @dev 原版 console.sol 使用 `int` 和 `uint` 来计算函数选择器，但实际上应该
+/// 使用 `int256` 和 `uint256`。这个修改版修复了该问题。如果你不需要兼容 Hardhat，推荐使用本版本
+/// 而不是 `console.sol`，因为这样日志会显示在
+/// forge 的调用栈追踪中。如果你确实需要兼容 Hardhat，则必须使用 `console.sol`。
+/// 参考：https://github.com/NomicFoundation/hardhat/issues/2178
 library console2 {
     address constant CONSOLE_ADDRESS = address(0x000000000000000000636F6e736F6c652e6c6f67);
 

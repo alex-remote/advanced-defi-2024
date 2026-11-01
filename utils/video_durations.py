@@ -16,7 +16,7 @@ def get_video_duration(file_path):
     return float(duration)
 
 
-### main script ###
+### 主脚本 ###
 # python video_durations.py relative/path/to/folder/with/videos
 
 target_path = sys.argv[1]
@@ -40,7 +40,7 @@ for f in files:
         dt = datetime.timedelta(seconds = round(dur))
         print(timestamp, f, dt)
 
-        # Update total_sec after printing timestamp
+        # 打印时间戳之后再更新 total_sec
         total_sec += dur
         videos.append({ 
             "file_name": f, 

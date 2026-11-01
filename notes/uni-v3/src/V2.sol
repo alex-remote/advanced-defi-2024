@@ -64,7 +64,7 @@ contract V2 is IPool {
             tickLo = tick + 1;
             tickHi = type(int24).max;
         }
-        // Liquidity is constant
+        // 流动性恒定不变
         liquidityNet = 0;
     }
 

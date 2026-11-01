@@ -23,11 +23,11 @@ contract DaiProxyTest is Test {
     function setUp() public {
         proxy = new DaiProxy();
 
-        // Check min borrow
+        // 检查最小借款额
         IVat.Ilk memory ilk = vat.ilks(ETH_C);
         assertGe(DAI_AMOUNT * RAY, ilk.dust, "DAI borrow amount < dust");
 
-        // Interest rate accumulator
+        // 利率累加器
         console.log("ilk.rate", ilk.rate);
     }
 
@@ -75,19 +75,19 @@ contract DaiProxyTest is Test {
 }
 
 interface IVat {
-    // Collateral type
+    // 抵押品类型
     struct Ilk {
-        uint256 Art; // Total normalized debt      [wad]
-        uint256 rate; // Accumulated rates         [ray]
-        uint256 spot; // Price with safety margin  [ray]
-        uint256 line; // Debt ceiling              [rad]
-        uint256 dust; // Urn debt floor            [rad]
+        uint256 Art; // 标准化债务总额             [wad]
+        uint256 rate; // 累计利率                  [ray]
+        uint256 spot; // 含安全边际的价格          [ray]
+        uint256 line; // 债务上限                  [rad]
+        uint256 dust; // Urn 债务下限              [rad]
     }
 
-    // Vault
+    // 金库（Vault）
     struct Urn {
-        uint256 ink; // Locked collateral  [wad]
-        uint256 art; // Normalised debt    [wad]
+        uint256 ink; // 锁定的抵押品       [wad]
+        uint256 art; // 标准化债务         [wad]
     }
 
     function ilks(bytes32 ilk) external view returns (Ilk memory);

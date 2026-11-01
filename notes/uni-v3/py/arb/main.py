@@ -16,9 +16,9 @@ fee_b = int(sys.argv[4]) / 1e6
 ticks_a, liqs_a, pool_a = build(get(path_a), True)
 ticks_b, liqs_b, pool_b = build(get(path_b), False)
 
-# First tick lo
+# 第一个区间的 tick lo
 tick_a = pool_a[0][0]
-# First tick hi
+# 第一个区间的 tick hi
 tick_b = pool_b[0][1]
 
 (dya, dyb, sa, sb) = calc_dya(

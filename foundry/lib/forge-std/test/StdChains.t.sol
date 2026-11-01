@@ -23,35 +23,35 @@ contract StdChainsMock is Test {
 
 contract StdChainsTest is Test {
     function test_ChainRpcInitialization() public {
-        // RPCs specified in `foundry.toml` should be updated.
+        // 在 `foundry.toml` 中指定的 RPC 应当被更新。
         assertEq(getChain(1).rpcUrl, "https://eth-mainnet.alchemyapi.io/v2/WV407BEiBmjNJfKo9Uo_55u0z0ITyCOX");
         assertEq(getChain("optimism_goerli").rpcUrl, "https://goerli.optimism.io/");
         assertEq(getChain("arbitrum_one_goerli").rpcUrl, "https://goerli-rollup.arbitrum.io/rpc/");
 
-        // Environment variables should be the next fallback
+        // 环境变量应作为下一级回退来源
         assertEq(getChain("arbitrum_nova").rpcUrl, "https://nova.arbitrum.io/rpc");
         vm.setEnv("ARBITRUM_NOVA_RPC_URL", "myoverride");
         assertEq(getChain("arbitrum_nova").rpcUrl, "myoverride");
         vm.setEnv("ARBITRUM_NOVA_RPC_URL", "https://nova.arbitrum.io/rpc");
 
-        // Cannot override RPCs defined in `foundry.toml`
+        // 无法覆盖在 `foundry.toml` 中定义的 RPC
         vm.setEnv("MAINNET_RPC_URL", "myoverride2");
         assertEq(getChain("mainnet").rpcUrl, "https://eth-mainnet.alchemyapi.io/v2/WV407BEiBmjNJfKo9Uo_55u0z0ITyCOX");
 
-        // Other RPCs should remain unchanged.
+        // 其他 RPC 应保持不变。
         assertEq(getChain(31337).rpcUrl, "http://127.0.0.1:8545");
         assertEq(getChain("sepolia").rpcUrl, "https://sepolia.infura.io/v3/b9794ad1ddf84dfb8c34d6bb5dca2001");
     }
 
-    // Named with a leading underscore to clarify this is not intended to be run as a normal test,
-    // and is intended to be used in the below `test_Rpcs` test.
+    // 以下划线开头命名，以表明它不打算作为普通测试运行，
+    // 而是供下方的 `test_Rpcs` 测试使用。
     function _testRpc(string memory rpcAlias) internal {
         string memory rpcUrl = getChain(rpcAlias).rpcUrl;
         vm.createSelectFork(rpcUrl);
     }
 
-    // Ensure we can connect to the default RPC URL for each chain.
-    // Currently commented out since this is slow and public RPCs are flaky, often resulting in failing CI.
+    // 确保能够连接到每条链的默认 RPC URL。
+    // 目前已注释掉，因为它运行缓慢且公共 RPC 不稳定，经常导致 CI 失败。
     // function test_Rpcs() public {
     //     _testRpc("mainnet");
     //     _testRpc("goerli");
@@ -78,7 +78,7 @@ contract StdChainsTest is Test {
     // }
 
     function test_ChainNoDefault() public {
-        // We deploy a mock to properly test the revert.
+        // 我们部署一个 mock 合约，以便正确测试 revert。
         StdChainsMock stdChainsMock = new StdChainsMock();
 
         vm.expectRevert("StdChains getChain(string): Chain with alias \"does_not_exist\" not found.");
@@ -86,7 +86,7 @@ contract StdChainsTest is Test {
     }
 
     function test_SetChainFirstFails() public {
-        // We deploy a mock to properly test the revert.
+        // 我们部署一个 mock 合约，以便正确测试 revert。
         StdChainsMock stdChainsMock = new StdChainsMock();
 
         vm.expectRevert("StdChains setChain(string,ChainData): Chain ID 31337 already used by \"anvil\".");
@@ -94,7 +94,7 @@ contract StdChainsTest is Test {
     }
 
     function test_ChainBubbleUp() public {
-        // We deploy a mock to properly test the revert.
+        // 我们部署一个 mock 合约，以便正确测试 revert。
         StdChainsMock stdChainsMock = new StdChainsMock();
 
         stdChainsMock.exposed_setChain("needs_undefined_env_var", ChainData("", 123456789, ""));
@@ -105,7 +105,7 @@ contract StdChainsTest is Test {
     }
 
     function test_CannotSetChain_ChainIdExists() public {
-        // We deploy a mock to properly test the revert.
+        // 我们部署一个 mock 合约，以便正确测试 revert。
         StdChainsMock stdChainsMock = new StdChainsMock();
 
         stdChainsMock.exposed_setChain("custom_chain", ChainData("Custom Chain", 123456789, "https://custom.chain/"));
@@ -135,14 +135,14 @@ contract StdChainsTest is Test {
         assertEq(anotherCustomChain.chainId, 987654321);
         assertEq(anotherCustomChain.chainAlias, "another_custom_chain");
         assertEq(anotherCustomChain.rpcUrl, "https://custom.chain/");
-        // Verify the first chain data was not overwritten
+        // 验证第一条链的数据没有被覆盖
         chainById = getChain(123456789);
         assertEq(chainById.name, "Custom Chain");
         assertEq(chainById.chainId, 123456789);
     }
 
     function test_SetNoEmptyAlias() public {
-        // We deploy a mock to properly test the revert.
+        // 我们部署一个 mock 合约，以便正确测试 revert。
         StdChainsMock stdChainsMock = new StdChainsMock();
 
         vm.expectRevert("StdChains setChain(string,ChainData): Chain alias cannot be the empty string.");
@@ -150,7 +150,7 @@ contract StdChainsTest is Test {
     }
 
     function test_SetNoChainId0() public {
-        // We deploy a mock to properly test the revert.
+        // 我们部署一个 mock 合约，以便正确测试 revert。
         StdChainsMock stdChainsMock = new StdChainsMock();
 
         vm.expectRevert("StdChains setChain(string,ChainData): Chain ID cannot be 0.");
@@ -158,7 +158,7 @@ contract StdChainsTest is Test {
     }
 
     function test_GetNoChainId0() public {
-        // We deploy a mock to properly test the revert.
+        // 我们部署一个 mock 合约，以便正确测试 revert。
         StdChainsMock stdChainsMock = new StdChainsMock();
 
         vm.expectRevert("StdChains getChain(uint256): Chain ID cannot be 0.");
@@ -166,7 +166,7 @@ contract StdChainsTest is Test {
     }
 
     function test_GetNoEmptyAlias() public {
-        // We deploy a mock to properly test the revert.
+        // 我们部署一个 mock 合约，以便正确测试 revert。
         StdChainsMock stdChainsMock = new StdChainsMock();
 
         vm.expectRevert("StdChains getChain(string): Chain alias cannot be the empty string.");
@@ -174,7 +174,7 @@ contract StdChainsTest is Test {
     }
 
     function test_ChainIdNotFound() public {
-        // We deploy a mock to properly test the revert.
+        // 我们部署一个 mock 合约，以便正确测试 revert。
         StdChainsMock stdChainsMock = new StdChainsMock();
 
         vm.expectRevert("StdChains getChain(string): Chain with alias \"no_such_alias\" not found.");
@@ -182,7 +182,7 @@ contract StdChainsTest is Test {
     }
 
     function test_ChainAliasNotFound() public {
-        // We deploy a mock to properly test the revert.
+        // 我们部署一个 mock 合约，以便正确测试 revert。
         StdChainsMock stdChainsMock = new StdChainsMock();
 
         vm.expectRevert("StdChains getChain(uint256): Chain with ID 321 not found.");
@@ -191,7 +191,7 @@ contract StdChainsTest is Test {
     }
 
     function test_SetChain_ExistingOne() public {
-        // We deploy a mock to properly test the revert.
+        // 我们部署一个 mock 合约，以便正确测试 revert。
         StdChainsMock stdChainsMock = new StdChainsMock();
 
         setChain("custom_chain", ChainData("Custom Chain", 123456789, "https://custom.chain/"));
@@ -208,10 +208,10 @@ contract StdChainsTest is Test {
     }
 
     function test_DontUseDefaultRpcUrl() public {
-        // We deploy a mock to properly test the revert.
+        // 我们部署一个 mock 合约，以便正确测试 revert。
         StdChainsMock stdChainsMock = new StdChainsMock();
 
-        // Should error if default RPCs flag is set to false.
+        // 如果默认 RPC 标志被设为 false，应当报错。
         stdChainsMock.exposed_setFallbackToDefaultRpcUrls(false);
         vm.expectRevert();
         stdChainsMock.exposed_getChain(31337);

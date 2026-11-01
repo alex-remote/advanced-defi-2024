@@ -25,7 +25,7 @@ contract UniswapV3Flash {
     }
 
     function flash(uint256 amount0, uint256 amount1) external {
-        // Task 1 - ABI encode FlashCallbackData
+        // 任务 1 - 对 FlashCallbackData 进行 ABI 编码
         bytes memory data = abi.encode(
             FlashCallbackData({
                 amount0: amount0,
@@ -33,26 +33,26 @@ contract UniswapV3Flash {
                 caller: msg.sender
             })
         );
-        // Task 2 - Call IUniswapV3Pool.flash
+        // 任务 2 - 调用 IUniswapV3Pool.flash
         IUniswapV3Pool(pool).flash(address(this), amount0, amount1, data);
     }
 
     function uniswapV3FlashCallback(
-        // Pool fee x amount requested
+        // 池子手续费率 x 请求借出的数量
         uint256 fee0,
         uint256 fee1,
         bytes calldata data
     ) external {
-        // Task 3 - Check msg.sender is pool
+        // 任务 3 - 检查 msg.sender 是否为池子
         if (msg.sender != address(pool)) {
             revert NotAuthorized();
         }
 
-        // Task 4 - Decode data into FlashCallbackData
+        // 任务 4 - 将 data 解码为 FlashCallbackData
         FlashCallbackData memory decoded = abi.decode(data, (FlashCallbackData));
 
-        // Task 5  - Transfer fees from FlashCallbackData.caller
-        // Write custom code here
+        // 任务 5 - 从 FlashCallbackData.caller 转入手续费
+        // 在此编写自定义代码
         if (fee0 > 0) {
             token0.transferFrom(decoded.caller, address(this), fee0);
         }
@@ -60,8 +60,8 @@ contract UniswapV3Flash {
             token1.transferFrom(decoded.caller, address(this), fee1);
         }
 
-        // Task 6 - Repay pool, amount borrowed + fee
-        // Repay borrow
+        // 任务 6 - 向池子还款，金额为借款数量 + 手续费
+        // 偿还借款
         if (decoded.amount0 > 0) {
             token0.transfer(address(pool), decoded.amount0 + fee0);
         }

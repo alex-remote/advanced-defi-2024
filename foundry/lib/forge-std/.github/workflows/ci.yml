@@ -21,9 +21,9 @@ jobs:
       - name: Print forge version
         run: forge --version
 
-      # Backwards compatibility checks:
-      # - the oldest and newest version of each supported minor version
-      # - versions with specific issues
+      # 向后兼容性检查：
+      # - 每个受支持的次版本号中最旧和最新的版本
+      # - 存在特定问题的版本
       - name: Check compatibility with latest
         if: always()
         run: |
@@ -84,7 +84,7 @@ jobs:
             exit 1
           fi
 
-      # via-ir compilation time checks.
+      # via-ir 编译耗时检查。
       - name: Measure compilation time of Test with 0.8.17 --via-ir
         if: always()
         run: forge build --skip test --contracts test/compilation/CompilationTest.sol --use solc:0.8.17 --via-ir

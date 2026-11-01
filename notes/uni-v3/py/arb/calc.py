@@ -4,7 +4,7 @@ Q96 = 2**96
 MIN_DY_DELTA = 0.001
 
 
-# Tick to sqrt price x 96
+# 将 tick 转换为 sqrt price x 96
 def tick_to_sqrt_p_96(tick):
     return int(1.0001 ** (tick / 2) * Q96)
 
@@ -82,7 +82,7 @@ def calc_dy_to_s_hi(L, s_lo, dy):
     return dy / L + s_lo
 
 
-# next
+# 下一个（next）
 def nxt(pool, i, up):
     if i + 1 >= len(pool):
         if up:
@@ -97,7 +97,7 @@ def calc_amt_out(i, o, di, f):
     return o * di / (i + di)
 
 
-# Optimal dy amount in (including fees) into pool A (dya -> dx -> dyb)
+# 输入池子 A 的最优 dy 数量（含手续费）(dya -> dx -> dyb)
 def calc_opt_dy_in(xa, ya, xb, yb, fa, fb):
     k0 = xa * ya * xb * yb * (1 - fa) * (1 - fb)
     k1 = (xb + xa * (1 - fb)) * (1 - fa)
@@ -123,12 +123,12 @@ def calc_opt_dya(la, sa, lb, sb, fa, fb):
 
     dx = calc_amt_out(ya, xa, dya, fa)
     dyb = calc_amt_out(xb, yb, dx, fb)
-    # Exit on small rounding error
+    # 差额仅为微小的舍入误差时直接返回
     if abs(dya - dyb) < MIN_DY_DELTA:
         return (0, 0, sa, sb)
 
     assert dya <= dyb, f"{dya} > {dyb}"
-    # Check sa and sb after swaps
+    # 检查兑换后的 sa 和 sb
     sa_swap = calc_dy_to_s_hi(la, sa, dya * (1 - fa))
     sb_swap = calc_dx_to_s_lo(lb, sb, dx * (1 - fb))
     assert (
@@ -165,7 +165,7 @@ def swap_to_sb_lo(xa, xb, la, sa, sa_lo, sa_hi, lb, sb, sb_lo, sb_hi, fa, fb):
 
 # pa < pb
 # dya -> dx -> dyb
-# pool = [(sqrt price lo, sqrt price hi, liquidity)]
+# pool = [(sqrt price 下界, sqrt price 上界, 流动性)]
 def calc_dya(pool_a, pool_b, fa, fb):
     (sa_lo, sa_hi, la) = pool_a[0]
     (sb_lo, sb_hi, lb) = pool_b[0]
@@ -181,7 +181,7 @@ def calc_dya(pool_a, pool_b, fa, fb):
         xb = calc_dx(lb, sb_lo, sb_hi)
         if sa_hi <= sb_lo:
             if xa <= xb:
-                # swap to sa_hi
+                # 兑换至 sa_hi
                 # print("opt", sa, sb)
                 (da, db, sa, sb) = swap_to_sa_hi(
                     xa, xb, la, sa, sa_lo, sa_hi, lb, sb, sb_lo, sb_hi, fa, fb
@@ -189,7 +189,7 @@ def calc_dya(pool_a, pool_b, fa, fb):
                 dya += da
                 dyb += db
             else:
-                # swap to sb_lo
+                # 兑换至 sb_lo
                 (da, db, sa, sb) = swap_to_sb_lo(
                     xa, xb, la, sa, sa_lo, sa_hi, lb, sb, sb_lo, sb_hi, fa, fb
                 )
@@ -200,21 +200,21 @@ def calc_dya(pool_a, pool_b, fa, fb):
             if dya_opt == 0:
                 break
             if sa_hi < sa_swap:
-                # swap to sa_hi
+                # 兑换至 sa_hi
                 (da, db, sa, sb) = swap_to_sa_hi(
                     xa, xb, la, sa, sa_lo, sa_hi, lb, sb, sb_lo, sb_hi, fa, fb
                 )
                 dya += da
                 dyb += db
             elif sb_swap < sb_lo:
-                # swap to sb_lo
+                # 兑换至 sb_lo
                 (da, db, sa, sb) = swap_to_sb_lo(
                     xa, xb, la, sa, sa_lo, sa_hi, lb, sb, sb_lo, sb_hi, fa, fb
                 )
                 dya += da
                 dyb += db
             else:
-                # swap to optimal price (between sa_swap and sb_swap)
+                # 兑换至最优价格（介于 sa_swap 与 sb_swap 之间）
                 dya += dya_opt
                 dyb += dyb_opt
                 sa_lo = sa_swap
@@ -223,7 +223,7 @@ def calc_dya(pool_a, pool_b, fa, fb):
                 sb = sb_swap
                 break
         assert sa <= sb, f"{sa} > {sb}"
-        # Update prices
+        # 更新价格
         if sa == sa_hi:
             (sa_lo, sa_hi, la) = nxt(pool_a, a, True)
             a += 1

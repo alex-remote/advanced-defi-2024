@@ -19,9 +19,9 @@ contract UniswapV3Twap {
         token1 = pool.token1();
     }
 
-    // Copied from
+    // 复制自
     // https://github.com/Uniswap/v3-periphery/blob/0.8/contracts/libraries/OracleLibrary.sol
-    /// @notice Given a tick and a token amount, calculates the amount of token received in exchange
+    /// @notice 给定一个 tick 和代币数量，计算兑换可得到的代币数量
     function getQuoteAtTick(
         int24 tick,
         uint128 baseAmount,
@@ -30,7 +30,7 @@ contract UniswapV3Twap {
     ) internal pure returns (uint256 quoteAmount) {
         uint160 sqrtRatioX96 = TickMath.getSqrtRatioAtTick(tick);
 
-        // Calculate quoteAmount with better precision if it doesn't overflow when multiplied by itself
+        // 如果自乘时不会上溢，则以更高的精度计算 quoteAmount
         if (sqrtRatioX96 <= type(uint128).max) {
             uint256 ratioX192 = uint256(sqrtRatioX96) * sqrtRatioX96;
             quoteAmount = baseToken < quoteToken
@@ -50,29 +50,29 @@ contract UniswapV3Twap {
         view
         returns (uint256 amountOut)
     {
-        // Task 1 - Require tokenIn is token0 or token1
+        // 任务 1 - 要求 tokenIn 为 token0 或 token1
         if (tokenIn != token0 && tokenIn != token1) {
             revert InvalidToken();
-        } // Task 2 - Assign tokenOut
+        } // 任务 2 - 为 tokenOut 赋值
         address tokenOut = tokenIn == token0 ? token1 : token0;
 
-        // Task 3 - Fill out timeDeltas with dt and 0
+        // 任务 3 - 用 dt 和 0 填充 timeDeltas
         uint32[] memory timeDeltas = new uint32[](2);
         timeDeltas[0] = dt;
         timeDeltas[1] = 0;
 
-        // Task 4 - Call pool.observe
-        // NOTE int56 since tick * time = int24 * uint32
+        // 任务 4 - 调用 pool.observe
+        // 注意：使用 int56 是因为 tick * time = int24 * uint32
         (int56[] memory tickCumulatives,) = pool.observe(timeDeltas);
 
-        // Task 5 - Calculate tickCumulativeDelta
+        // 任务 5 - 计算 tickCumulativeDelta
         int56 tickCumulativeDelta = tickCumulatives[1] - tickCumulatives[0];
 
-        // Task 6 - Calculate average tick
+        // 任务 6 - 计算平均 tick
         // int56 / uint32 = int24
         int24 tick = int24(tickCumulativeDelta / int56(uint56(dt)));
 
-        // Always round to negative infinity
+        // 始终向负无穷方向取整
         if (
             tickCumulativeDelta < 0
                 && (tickCumulativeDelta % int56(uint56(dt)) != 0)
@@ -80,7 +80,7 @@ contract UniswapV3Twap {
             tick--;
         }
 
-        // Task 7 - Call getQuoteAtTick
+        // 任务 7 - 调用 getQuoteAtTick
         return getQuoteAtTick(tick, amountIn, tokenIn, tokenOut);
     }
 }

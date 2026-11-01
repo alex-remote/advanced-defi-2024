@@ -5,6 +5,6 @@ pragma experimental ABIEncoderV2;
 
 import "../../src/Test.sol";
 
-// The purpose of this contract is to benchmark compilation time to avoid accidentally introducing
-// a change that results in very long compilation times with via-ir. See https://github.com/foundry-rs/forge-std/issues/207
+// 该合约的目的是对编译时间做基准测试，以避免意外引入
+// 导致 via-ir 编译时间过长的改动。参见 https://github.com/foundry-rs/forge-std/issues/207
 contract CompilationTestBase is TestBase {}

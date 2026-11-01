@@ -5,7 +5,7 @@ import {IUniswapV3Pool} from "../interfaces/uni-v3/IUniswapV3Pool.sol";
 import {TickBitmap} from "./TickBitmap.sol";
 
 library TickLiquidity {
-    // Find liquidity range that
+    // 查找满足以下条件的流动性区间
     // lte -> tickLo < tickHi <= tick
     // !lte -> tick < tickLo < tickHi
     function findLiquidityRange(IUniswapV3Pool pool, int24 tick, bool lte)
@@ -31,7 +31,7 @@ library TickLiquidity {
 
         require(tickLo < tickHi, "tick lo >= tick hi");
 
-        // liquidityNet at tickLo = liquidity added when crossing upward
+        // tickLo 处的 liquidityNet = 向上穿越时增加的流动性
         IUniswapV3Pool.Tick memory tickInfo = pool.ticks(tickLo);
         return (tickLo, tickHi, tickInfo.liquidityNet);
     }
@@ -53,7 +53,7 @@ library TickLiquidity {
 
             if (initialized) return next;
 
-            // Not found in this word, move to next word
+            // 在当前字（word）中未找到，移动到下一个字
             tick = lte ? next - tickSpacing : next + tickSpacing;
         }
     }

@@ -13,6 +13,6 @@ interface IERC20 {
     function transferFrom(address src, address dst, uint256 amt)
         external
         returns (bool);
-    // Non-IERC20
+    // 非 IERC20 标准函数
     function decimals() external view returns (uint8);
 }

@@ -6,7 +6,7 @@ function padd(s, c, n) {
   return `${c.repeat(n)}${s}`.slice(-n)
 }
 
-// Script to rename number prefix
+// 用于重命名数字前缀的脚本
 // node rename.js section-02-swap/ 0
 async function main() {
   const args = process.argv.slice(2)

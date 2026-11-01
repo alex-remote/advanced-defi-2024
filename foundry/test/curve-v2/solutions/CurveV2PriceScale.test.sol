@@ -17,13 +17,13 @@ forge test \
 contract CurveV2PriceScaleTest is Test {
     ITriCrypto private constant pool = ITriCrypto(CURVE_TRI_CRYPTO);
 
-    // Exercise 1
-    // Calculate transformed balances
+    // 练习 1
+    // 计算转换后的余额
     function test_calc_transformed_bals() public {
         uint256[3] memory xp = [uint256(0), uint256(0), uint256(0)];
         uint256[3] memory precisions = pool.precisions();
 
-        // Write your code here
+        // 在此编写你的代码
         xp[0] = pool.balances(0) * precisions[0];
         for (uint256 i = 1; i < 3; i++) {
             uint256 bal = pool.balances(i);

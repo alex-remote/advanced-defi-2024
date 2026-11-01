@@ -157,7 +157,7 @@ contract StdCheatsTest is Test {
     }
 
     function test_DestroyAccount() public {
-        // deploy something to destroy it
+        // 部署一个合约，以便随后销毁它
         BarERC721 barToken = new BarERC721();
         address bar = address(barToken);
         vm.setNonce(bar, 10);
@@ -200,7 +200,7 @@ contract StdCheatsTest is Test {
         assertEq(deployed.balance, 1 ether);
     }
 
-    // We need this so we can call "this.deployCode" rather than "deployCode" directly
+    // 需要这个函数，这样我们才能调用 "this.deployCode" 而不是直接调用 "deployCode"
     function deployCodeHelper(string memory what) external {
         deployCode(what);
     }
@@ -213,16 +213,16 @@ contract StdCheatsTest is Test {
     function getCode(address who) internal view returns (bytes memory o_code) {
         /// @solidity memory-safe-assembly
         assembly {
-            // retrieve the size of the code, this needs assembly
+            // 获取代码大小，这需要用到 assembly
             let size := extcodesize(who)
-            // allocate output byte array - this could also be done without assembly
-            // by using o_code = new bytes(size)
+            // 分配输出字节数组——这一步也可以不用 assembly 完成
+            // 即使用 o_code = new bytes(size)
             o_code := mload(0x40)
-            // new "memory end" including padding
+            // 包含填充在内的新 "memory end"（内存末尾）
             mstore(0x40, add(o_code, and(add(add(size, 0x20), 0x1f), not(0x1f))))
-            // store length in memory
+            // 将长度存入 memory
             mstore(o_code, size)
-            // actually retrieve the code, this needs assembly
+            // 真正获取代码，这需要用到 assembly
             extcodecopy(who, add(o_code, 0x20), 0, size)
         }
     }
@@ -335,7 +335,7 @@ contract StdCheatsTest is Test {
     }
 
     function testFuzz_AssumeAddressIsNot(address addr) external {
-        // skip over Payable and NonPayable enums
+        // 跳过 Payable 和 NonPayable 两个枚举值
         for (uint8 i = 2; i < uint8(type(AddressType).max); i++) {
             assumeAddressIsNot(addr, AddressType(i));
         }
@@ -345,55 +345,55 @@ contract StdCheatsTest is Test {
     }
 
     function test_AssumePayable() external {
-        // We deploy a mock version so we can properly test the revert.
+        // 我们部署一个 mock 版本，以便正确测试 revert。
         StdCheatsMock stdCheatsMock = new StdCheatsMock();
 
-        // all should revert since these addresses are not payable
+        // 以下调用都应 revert，因为这些地址不是 payable 的
 
-        // VM address
+        // VM 地址
         vm.expectRevert();
         stdCheatsMock.exposed_assumePayable(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
 
-        // Console address
+        // Console 地址
         vm.expectRevert();
         stdCheatsMock.exposed_assumePayable(0x000000000000000000636F6e736F6c652e6c6f67);
 
-        // Create2Deployer
+        // Create2Deployer 地址
         vm.expectRevert();
         stdCheatsMock.exposed_assumePayable(0x4e59b44847b379578588920cA78FbF26c0B4956C);
 
-        // all should pass since these addresses are payable
+        // 以下调用都应通过，因为这些地址是 payable 的
 
-        // vitalik.eth
+        // vitalik.eth 地址
         stdCheatsMock.exposed_assumePayable(0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045);
 
-        // mock payable contract
+        // mock 的 payable 合约
         MockContractPayable cp = new MockContractPayable();
         stdCheatsMock.exposed_assumePayable(address(cp));
     }
 
     function test_AssumeNotPayable() external {
-        // We deploy a mock version so we can properly test the revert.
+        // 我们部署一个 mock 版本，以便正确测试 revert。
         StdCheatsMock stdCheatsMock = new StdCheatsMock();
 
-        // all should pass since these addresses are not payable
+        // 以下调用都应通过，因为这些地址不是 payable 的
 
-        // VM address
+        // VM 地址
         stdCheatsMock.exposed_assumeNotPayable(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
 
-        // Console address
+        // Console 地址
         stdCheatsMock.exposed_assumeNotPayable(0x000000000000000000636F6e736F6c652e6c6f67);
 
-        // Create2Deployer
+        // Create2Deployer 地址
         stdCheatsMock.exposed_assumeNotPayable(0x4e59b44847b379578588920cA78FbF26c0B4956C);
 
-        // all should revert since these addresses are payable
+        // 以下调用都应 revert，因为这些地址是 payable 的
 
-        // vitalik.eth
+        // vitalik.eth 地址
         vm.expectRevert();
         stdCheatsMock.exposed_assumeNotPayable(0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045);
 
-        // mock payable contract
+        // mock 的 payable 合约
         MockContractPayable cp = new MockContractPayable();
         vm.expectRevert();
         stdCheatsMock.exposed_assumeNotPayable(address(cp));
@@ -452,7 +452,7 @@ contract StdCheatsMock is StdCheats {
         assumeNotPayable(addr);
     }
 
-    // We deploy a mock version so we can properly test expected reverts.
+    // 我们部署一个 mock 版本，以便正确测试预期的 revert。
     function exposed_assumeNotBlacklisted(address token, address addr) external view {
         return assumeNotBlacklisted(token, addr);
     }
@@ -466,12 +466,12 @@ contract StdCheatsForkTest is Test {
     address internal constant USDT_BLACKLISTED_USER = 0x8f8a8F4B54a2aAC7799d7bc81368aC27b852822A;
 
     function setUp() public {
-        // All tests of the `assumeNotBlacklisted` method are fork tests using live contracts.
+        // `assumeNotBlacklisted` 方法的所有测试都是使用线上真实合约的 fork 测试。
         vm.createSelectFork({urlOrAlias: "mainnet", blockNumber: 16_428_900});
     }
 
     function test_CannotAssumeNoBlacklisted_EOA() external {
-        // We deploy a mock version so we can properly test the revert.
+        // 我们部署一个 mock 版本，以便正确测试 revert。
         StdCheatsMock stdCheatsMock = new StdCheatsMock();
         address eoa = vm.addr({privateKey: 1});
         vm.expectRevert("StdCheats assumeNotBlacklisted(address,address): Token address is not a contract.");
@@ -484,7 +484,7 @@ contract StdCheatsForkTest is Test {
     }
 
     function test_AssumeNoBlacklisted_USDC() external {
-        // We deploy a mock version so we can properly test the revert.
+        // 我们部署一个 mock 版本，以便正确测试 revert。
         StdCheatsMock stdCheatsMock = new StdCheatsMock();
         vm.expectRevert();
         stdCheatsMock.exposed_assumeNotBlacklisted(USDC, USDC_BLACKLISTED_USER);
@@ -496,7 +496,7 @@ contract StdCheatsForkTest is Test {
     }
 
     function test_AssumeNoBlacklisted_USDT() external {
-        // We deploy a mock version so we can properly test the revert.
+        // 我们部署一个 mock 版本，以便正确测试 revert。
         StdCheatsMock stdCheatsMock = new StdCheatsMock();
         vm.expectRevert();
         stdCheatsMock.exposed_assumeNotBlacklisted(USDT, USDT_BLACKLISTED_USER);
@@ -508,7 +508,7 @@ contract StdCheatsForkTest is Test {
     }
 
     function test_dealUSDC() external {
-        // roll fork to the point when USDC contract updated to store balance in packed slots
+        // 将 fork 回滚到 USDC 合约升级为在打包存储槽中存储余额的时间点
         vm.rollFork(19279215);
 
         uint256 balance = 100e6;
@@ -519,12 +519,12 @@ contract StdCheatsForkTest is Test {
 
 contract Bar {
     constructor() payable {
-        /// `DEAL` STDCHEAT
+        /// 供 `DEAL` STDCHEAT 测试使用
         totalSupply = 10000e18;
         balanceOf[address(this)] = totalSupply;
     }
 
-    /// `HOAX` and `CHANGEPRANK` STDCHEATS
+    /// 供 `HOAX` 和 `CHANGEPRANK` STDCHEATS 测试使用
     function bar(address expectedSender) public payable {
         require(msg.sender == expectedSender, "!prank");
     }
@@ -539,14 +539,14 @@ contract Bar {
         require(tx.origin == expectedOrigin, "!prank");
     }
 
-    /// `DEAL` STDCHEAT
+    /// 供 `DEAL` STDCHEAT 测试使用
     mapping(address => uint256) public balanceOf;
     uint256 public totalSupply;
 }
 
 contract BarERC1155 {
     constructor() payable {
-        /// `DEALERC1155` STDCHEAT
+        /// 供 `DEALERC1155` STDCHEAT 测试使用
         _totalSupply[0] = 10000e18;
         _balances[0][address(this)] = _totalSupply[0];
     }
@@ -559,14 +559,14 @@ contract BarERC1155 {
         return _totalSupply[id];
     }
 
-    /// `DEALERC1155` STDCHEAT
+    /// 供 `DEALERC1155` STDCHEAT 测试使用
     mapping(uint256 => mapping(address => uint256)) private _balances;
     mapping(uint256 => uint256) private _totalSupply;
 }
 
 contract BarERC721 {
     constructor() payable {
-        /// `DEALERC721` STDCHEAT
+        /// 供 `DEALERC721` STDCHEAT 测试使用
         _owners[1] = address(1);
         _balances[address(1)] = 1;
         _owners[2] = address(this);
