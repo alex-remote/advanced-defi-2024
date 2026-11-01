@@ -12,7 +12,7 @@
 | 其中含英文的注释 / 文本行（估算） | 约 5,502 行 |
 | 不在翻译范围内的文件 | 202 个（见第四节） |
 | 子代理批次数 | 27 个（B01–B27） |
-| **当前进度** | **188 / 189** 个文件，批次 26 / 27 |
+| **当前进度** | **189 / 189** 个文件，批次 27 / 27 |
 
 行数说明：按编辑器显示的行数统计（最后一行没有换行符时也计为一行）。“注释行”为脚本估算的含英文单词的注释行数（已排除 `SPDX-License-Identifier` 等不需翻译的行），Markdown 文件为含英文的文本行数。
 
@@ -51,7 +51,7 @@
 | B23 | 2 | StableSwap3Pool.vy、CurveCryptoViews3Optimized.vy | ✅ 已完成 |
 | B24 | 1 | CurveTricryptoMathOptimized.vy | ✅ 已完成 |
 | B25 | 1 | CurveTricryptoOptimizedWETH.vy 第 1–859 行 | ✅ 已完成 |
-| B26 | 1 | CurveTricryptoOptimizedWETH.vy 第 860–1574 行 | ⏳ 进行中 |
+| B26 | 1 | CurveTricryptoOptimizedWETH.vy 第 860–1574 行 | ✅ 已完成 |
 | B27 | 1 | CurveTricryptoOptimizedWETH.vy 第 1575–2347 行 | ✅ 已完成 |
 
 ## 三、文件清单
@@ -250,13 +250,13 @@
 - [x] 172. `notes/uni-v3/test/Py.sol` — 26 行 · 注释 1 行 · B15
 - [x] 173. `notes/uni-v3/test/Sim.sol` — 249 行 · 注释 18 行 · B15
 
-### topics（9 / 10）
+### topics（10 / 10）
 
 - [x] 174. `topics/amm/curve-v1/StableSwap3Pool.vy` — 897 行 · 注释 140 行 · B23
 - [x] 175. `topics/amm/curve-v1/comparisons.md` → `topics/amm/curve-v1/comparisons_zh.md` — 10 行 · 文本 8 行 · B03
 - [x] 176. `topics/amm/curve-v2/CurveCryptoViews3Optimized.vy` — 414 行 · 注释 17 行 · B23
 - [x] 177. `topics/amm/curve-v2/CurveTricryptoMathOptimized.vy` — 878 行 · 注释 198 行 · B24
-- [ ] 178. `topics/amm/curve-v2/CurveTricryptoOptimizedWETH.vy` — 2347 行 · 注释 654 行 · B25✅ / B26⏳ / B27✅
+- [x] 178. `topics/amm/curve-v2/CurveTricryptoOptimizedWETH.vy` — 2347 行 · 注释 654 行 · B25✅ / B26✅ / B27✅
 - [x] 179. `topics/amm/intro/amm_equations.md` → `topics/amm/intro/amm_equations_zh.md` — 8 行 · 文本 6 行 · B02
 - [x] 180. `topics/amm/intro/amm_order_book.md` → `topics/amm/intro/amm_order_book_zh.md` — 62 行 · 文本 42 行 · B02
 - [x] 181. `topics/amm/intro/what_is_amm.md` → `topics/amm/intro/what_is_amm_zh.md` — 31 行 · 文本 18 行 · B02
@@ -546,3 +546,7 @@
 - 2026-11-01 15:11 B24 完成（1 项，校验通过）
 - 2026-11-01 15:12 B27 完成（1 项，校验通过）：# dev: 注释保留前缀
 - 2026-11-01 15:13 B25 完成（1 项，校验通过）
+- 2026-11-01 15:13 B26 完成（1 项，校验通过）：# dev: 注释保留前缀；跨行长句按句意分行
+- 2026-11-01 全部 27 个批次完成。终检：以原始提交 1f7a0d1 为基准对 189 个文件逐一校验，0 个 FAIL，所有文件行数与原文一致、去掉注释后的代码逐行未变，无范围外改动。
+- 统一约定：作者标注 `NOTE:` 统一译为“注意：”；Vyper 的 `# dev: xxx` revert 注释保留 `dev:` 前缀、只译说明；`/// @solidity memory-safe-assembly`、`forgefmt`、`# @version` 等编译器/工具指令，SPDX、版权与许可证文本，被注释掉的代码，纯公式/纯标识符/纯 URL 行保留原文。
+- 有 15 个在范围内的代码文件最终无需改动（其注释仅为协议名、调用链示意、被注释掉的代码、revert 标识、命令行或编译器注解），已人工复核并勾选。
