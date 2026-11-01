@@ -40,7 +40,7 @@ library stdStorageSafe {
         }
     }
 
-    // Calls target contract with configured parameters
+    // 用已配置的参数调用目标合约
     function callTarget(StdStorage storage self) internal view returns (bool, bytes32) {
         bytes memory cald = abi.encodePacked(self._sig, getCallParams(self));
         (bool success, bytes memory rdat) = self._target.staticcall(cald);
@@ -49,9 +49,9 @@ library stdStorageSafe {
         return (success, result);
     }
 
-    // Tries mutating slot value to determine if the targeted value is stored in it.
-    // If current value is 0, then we are setting slot value to type(uint256).max
-    // Otherwise, we set it to 0. That way, return value should always be affected.
+    // 尝试修改存储槽的值，以判断目标值是否存储在该槽中。
+    // 如果当前值为 0，就把槽的值设为 type(uint256).max；
+    // 否则设为 0。这样一来，返回值总是应当受到影响。
     function checkSlotMutatesCall(StdStorage storage self, bytes32 slot) internal returns (bool) {
         bytes32 prevSlotValue = vm.load(self._target, slot);
         (bool success, bytes32 prevReturnValue) = callTarget(self);
@@ -66,8 +66,8 @@ library stdStorageSafe {
         return (success && (prevReturnValue != newReturnValue));
     }
 
-    // Tries setting one of the bits in slot to 1 until return value changes.
-    // Index of resulted bit is an offset packed slot has from left/right side
+    // 尝试把存储槽中的某一位设为 1，直到返回值发生变化。
+    // 所得到的位的索引，就是打包存储槽（packed slot）从左侧/右侧算起的偏移量
     function findOffset(StdStorage storage self, bytes32 slot, bool left) internal returns (bool, uint256) {
         for (uint256 offset = 0; offset < 256; offset++) {
             uint256 valueToPut = left ? (1 << (255 - offset)) : (1 << offset);
@@ -88,7 +88,7 @@ library stdStorageSafe {
         (bool foundLeft, uint256 offsetLeft) = findOffset(self, slot, true);
         (bool foundRight, uint256 offsetRight) = findOffset(self, slot, false);
 
-        // `findOffset` may mutate slot value, so we are setting it to initial value
+        // `findOffset` 可能会修改存储槽的值，因此这里把它恢复为初始值
         vm.store(self._target, slot, prevSlotValue);
         return (foundLeft && foundRight, offsetLeft, offsetRight);
     }
@@ -97,19 +97,19 @@ library stdStorageSafe {
         return find(self, true);
     }
 
-    /// @notice find an arbitrary storage slot given a function sig, input data, address of the contract and a value to check against
-    // slot complexity:
-    //  if flat, will be bytes32(uint256(uint));
-    //  if map, will be keccak256(abi.encode(key, uint(slot)));
-    //  if deep map, will be keccak256(abi.encode(key1, keccak256(abi.encode(key0, uint(slot)))));
-    //  if map struct, will be bytes32(uint256(keccak256(abi.encode(key1, keccak256(abi.encode(key0, uint(slot)))))) + structFieldDepth);
+    /// @notice 根据函数签名、输入数据、合约地址以及用于比对的值，查找任意的存储槽
+    // 存储槽的复杂度：
+    //  若为普通变量（flat），则为 bytes32(uint256(uint));
+    //  若为 mapping，则为 keccak256(abi.encode(key, uint(slot)));
+    //  若为嵌套 mapping（deep map），则为 keccak256(abi.encode(key1, keccak256(abi.encode(key0, uint(slot)))));
+    //  若为 mapping 中的结构体（map struct），则为 bytes32(uint256(keccak256(abi.encode(key1, keccak256(abi.encode(key0, uint(slot)))))) + structFieldDepth);
     function find(StdStorage storage self, bool _clear) internal returns (FindData storage) {
         address who = self._target;
         bytes4 fsig = self._sig;
         uint256 field_depth = self._depth;
         bytes memory params = getCallParams(self);
 
-        // calldata to test against
+        // 用于测试比对的 calldata
         if (self.finds[who][fsig][keccak256(abi.encodePacked(params, field_depth))].found) {
             if (_clear) {
                 clear(self);
@@ -143,7 +143,7 @@ library stdStorageSafe {
                     }
                 }
 
-                // Check that value between found offsets is equal to the current call result
+                // 检查找到的两个偏移量之间的值是否等于当前调用的结果
                 uint256 curVal = (uint256(prev) & getMaskByOffsets(offsetLeft, offsetRight)) >> offsetRight;
 
                 if (uint256(callResult) != curVal) {
@@ -311,17 +311,17 @@ library stdStorageSafe {
         delete self._calldata;
     }
 
-    // Returns mask which contains non-zero bits for values between `offsetLeft` and `offsetRight`
-    // (slotValue & mask) >> offsetRight will be the value of the given packed variable
+    // 返回一个掩码（mask），其在 `offsetLeft` 与 `offsetRight` 之间的位为非零
+    // (slotValue & mask) >> offsetRight 即为给定打包变量的值
     function getMaskByOffsets(uint256 offsetLeft, uint256 offsetRight) internal pure returns (uint256 mask) {
         // mask = ((1 << (256 - (offsetRight + offsetLeft))) - 1) << offsetRight;
-        // using assembly because (1 << 256) causes overflow
+        // 之所以使用汇编，是因为 (1 << 256) 会导致上溢
         assembly {
             mask := shl(offsetRight, sub(shl(sub(256, add(offsetRight, offsetLeft)), 1), 1))
         }
     }
 
-    // Returns slot value with updated packed variable.
+    // 返回更新了打包变量之后的存储槽值。
     function getUpdatedSlotValue(bytes32 curValue, uint256 varValue, uint256 offsetLeft, uint256 offsetRight)
         internal
         pure

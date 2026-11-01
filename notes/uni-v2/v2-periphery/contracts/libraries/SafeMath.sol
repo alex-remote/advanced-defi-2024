@@ -1,6 +1,6 @@
 pragma solidity =0.6.6;
 
-// a library for performing overflow-safe math, courtesy of DappHub (https://github.com/dapphub/ds-math)
+// 用于执行防溢出安全数学运算的库，由 DappHub 提供 (https://github.com/dapphub/ds-math)
 
 library SafeMath {
     function add(uint x, uint y) internal pure returns (uint z) {

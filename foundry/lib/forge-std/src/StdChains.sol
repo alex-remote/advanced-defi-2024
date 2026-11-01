@@ -4,32 +4,32 @@ pragma solidity >=0.6.2 <0.9.0;
 import {VmSafe} from "./Vm.sol";
 
 /**
- * StdChains provides information about EVM compatible chains that can be used in scripts/tests.
- * For each chain, the chain's name, chain ID, and a default RPC URL are provided. Chains are
- * identified by their alias, which is the same as the alias in the `[rpc_endpoints]` section of
- * the `foundry.toml` file. For best UX, ensure the alias in the `foundry.toml` file match the
- * alias used in this contract, which can be found as the first argument to the
- * `setChainWithDefaultRpcUrl` call in the `initializeStdChains` function.
+ * StdChains 提供可在脚本/测试中使用的 EVM 兼容链的相关信息。
+ * 对每条链，都提供链名称、chain ID 以及一个默认的 RPC URL。链通过
+ * 其别名（alias）来标识，该别名与 `foundry.toml` 文件中 `[rpc_endpoints]` 部分的别名相同。
+ * 为获得最佳使用体验（UX），请确保 `foundry.toml` 文件中的别名与
+ * 本合约中使用的别名一致；本合约中的别名即 `initializeStdChains` 函数里
+ * 每次调用 `setChainWithDefaultRpcUrl` 时传入的第一个参数。
  *
- * There are two main ways to use this contract:
- *   1. Set a chain with `setChain(string memory chainAlias, ChainData memory chain)` or
- *      `setChain(string memory chainAlias, Chain memory chain)`
- *   2. Get a chain with `getChain(string memory chainAlias)` or `getChain(uint256 chainId)`.
+ * 使用本合约主要有两种方式：
+ *   1. 用 `setChain(string memory chainAlias, ChainData memory chain)` 或
+ *      `setChain(string memory chainAlias, Chain memory chain)` 设置一条链
+ *   2. 用 `getChain(string memory chainAlias)` 或 `getChain(uint256 chainId)` 获取一条链。
  *
- * The first time either of those are used, chains are initialized with the default set of RPC URLs.
- * This is done in `initializeStdChains`, which uses `setChainWithDefaultRpcUrl`. Defaults are recorded in
- * `defaultRpcUrls`.
+ * 首次使用上述任一方式时，会用默认的 RPC URL 集合初始化各条链。
+ * 这一步在 `initializeStdChains` 中完成，它会调用 `setChainWithDefaultRpcUrl`。默认值记录在
+ * `defaultRpcUrls` 中。
  *
- * The `setChain` function is straightforward, and it simply saves off the given chain data.
+ * `setChain` 函数很直接，它只是把传入的链数据保存起来。
  *
- * The `getChain` methods use `getChainWithUpdatedRpcUrl` to return a chain. For example, let's say
- * we want to retrieve the RPC URL for `mainnet`:
- *   - If you have specified data with `setChain`, it will return that.
- *   - If you have configured a mainnet RPC URL in `foundry.toml`, it will return the URL, provided it
- *     is valid (e.g. a URL is specified, or an environment variable is given and exists).
- *   - If neither of the above conditions is met, the default data is returned.
+ * `getChain` 方法使用 `getChainWithUpdatedRpcUrl` 来返回一条链。例如，假设
+ * 我们想获取 `mainnet` 的 RPC URL：
+ *   - 如果你已通过 `setChain` 指定了数据，就返回该数据。
+ *   - 如果你在 `foundry.toml` 中配置了 mainnet 的 RPC URL，就返回该 URL，前提是它
+ *     有效（例如指定了一个 URL，或者给出了一个环境变量且该变量存在）。
+ *   - 如果上述条件都不满足，则返回默认数据。
  *
- * Summarizing the above, the prioritization hierarchy is `setChain` -> `foundry.toml` -> environment variable -> defaults.
+ * 综上，优先级顺序为 `setChain` -> `foundry.toml` -> 环境变量 -> 默认值。
  */
 abstract contract StdChains {
     VmSafe private constant vm = VmSafe(address(uint160(uint256(keccak256("hevm cheat code")))));
@@ -43,29 +43,29 @@ abstract contract StdChains {
     }
 
     struct Chain {
-        // The chain name.
+        // 链名称。
         string name;
-        // The chain's Chain ID.
+        // 链的 Chain ID。
         uint256 chainId;
-        // The chain's alias. (i.e. what gets specified in `foundry.toml`).
+        // 链的别名（即在 `foundry.toml` 中指定的名称）。
         string chainAlias;
-        // A default RPC endpoint for this chain.
-        // NOTE: This default RPC URL is included for convenience to facilitate quick tests and
-        // experimentation. Do not use this RPC URL for production test suites, CI, or other heavy
-        // usage as you will be throttled and this is a disservice to others who need this endpoint.
+        // 该链的默认 RPC 端点。
+        // 注意：提供这个默认 RPC URL 只是为了方便快速测试和
+        // 实验。不要把它用于生产环境的测试套件、CI 或其他高负载场景，
+        // 因为你会被限流，而且这会影响其他需要使用该端点的人。
         string rpcUrl;
     }
 
-    // Maps from the chain's alias (matching the alias in the `foundry.toml` file) to chain data.
+    // 从链的别名（与 `foundry.toml` 文件中的别名一致）映射到链数据。
     mapping(string => Chain) private chains;
-    // Maps from the chain's alias to it's default RPC URL.
+    // 从链的别名映射到其默认 RPC URL。
     mapping(string => string) private defaultRpcUrls;
-    // Maps from a chain ID to it's alias.
+    // 从 chain ID 映射到其别名。
     mapping(uint256 => string) private idToAlias;
 
     bool private fallbackToDefaultRpcUrls = true;
 
-    // The RPC URL will be fetched from config or defaultRpcUrls if possible.
+    // 如果可能，RPC URL 会从配置或 defaultRpcUrls 中获取。
     function getChain(string memory chainAlias) internal virtual returns (Chain memory chain) {
         require(bytes(chainAlias).length != 0, "StdChains getChain(string): Chain alias cannot be the empty string.");
 
@@ -94,7 +94,7 @@ abstract contract StdChains {
         chain = getChainWithUpdatedRpcUrl(chainAlias, chain);
     }
 
-    // set chain info, with priority to argument's rpcUrl field.
+    // 设置链信息，优先使用参数中的 rpcUrl 字段。
     function setChain(string memory chainAlias, ChainData memory chain) internal virtual {
         require(
             bytes(chainAlias).length != 0,
@@ -127,7 +127,7 @@ abstract contract StdChains {
         idToAlias[chain.chainId] = chainAlias;
     }
 
-    // set chain info, with priority to argument's rpcUrl field.
+    // 设置链信息，优先使用参数中的 rpcUrl 字段。
     function setChain(string memory chainAlias, Chain memory chain) internal virtual {
         setChain(chainAlias, ChainData({name: chain.name, chainId: chain.chainId, rpcUrl: chain.rpcUrl}));
     }
@@ -146,8 +146,8 @@ abstract contract StdChains {
         return string(copy);
     }
 
-    // lookup rpcUrl, in descending order of priority:
-    // current -> config (foundry.toml) -> environment variable -> default
+    // 查找 rpcUrl，按优先级从高到低依次为：
+    // 当前值 -> 配置（foundry.toml）-> 环境变量 -> 默认值
     function getChainWithUpdatedRpcUrl(string memory chainAlias, Chain memory chain)
         private
         view
@@ -163,8 +163,8 @@ abstract contract StdChains {
                 } else {
                     chain.rpcUrl = vm.envString(envName);
                 }
-                // Distinguish 'not found' from 'cannot read'
-                // The upstream error thrown by forge for failing cheats changed so we check both the old and new versions
+                // 区分“未找到”与“无法读取”这两种情况
+                // forge 对 cheatcode 调用失败抛出的上游错误格式有过变化，因此新旧两种版本都要检查
                 bytes memory oldNotFoundError =
                     abi.encodeWithSignature("CheatCodeError", string(abi.encodePacked("invalid rpc url ", chainAlias)));
                 bytes memory newNotFoundError = abi.encodeWithSignature(
@@ -194,7 +194,7 @@ abstract contract StdChains {
 
         stdChainsInitialized = true;
 
-        // If adding an RPC here, make sure to test the default RPC URL in `testRpcs`
+        // 如果在这里新增 RPC，请务必在 `testRpcs` 中测试其默认 RPC URL
         setChainWithDefaultRpcUrl("anvil", ChainData("Anvil", 31337, "http://127.0.0.1:8545"));
         setChainWithDefaultRpcUrl(
             "mainnet", ChainData("Mainnet", 1, "https://eth-mainnet.alchemyapi.io/v2/pwc5rmJhrdoaSEfimoKEmsvOjKSmPDrP")
@@ -239,12 +239,12 @@ abstract contract StdChains {
         setChainWithDefaultRpcUrl("fraxtal_testnet", ChainData("Fraxtal Testnet", 2522, "https://rpc.testnet.frax.com"));
     }
 
-    // set chain info, with priority to chainAlias' rpc url in foundry.toml
+    // 设置链信息，优先使用 foundry.toml 中 chainAlias 对应的 rpc url
     function setChainWithDefaultRpcUrl(string memory chainAlias, ChainData memory chain) private {
         string memory rpcUrl = chain.rpcUrl;
         defaultRpcUrls[chainAlias] = rpcUrl;
         chain.rpcUrl = "";
         setChain(chainAlias, chain);
-        chain.rpcUrl = rpcUrl; // restore argument
+        chain.rpcUrl = rpcUrl; // 恢复参数原值
     }
 }

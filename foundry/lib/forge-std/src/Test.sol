@@ -3,10 +3,10 @@ pragma solidity >=0.6.2 <0.9.0;
 
 pragma experimental ABIEncoderV2;
 
-// 💬 ABOUT
-// Forge Std's default Test.
+// 💬 简介
+// Forge Std 的默认 Test。
 
-// 🧩 MODULES
+// 🧩 模块
 import {console} from "./console.sol";
 import {console2} from "./console2.sol";
 import {safeconsole} from "./safeconsole.sol";
@@ -23,11 +23,11 @@ import {stdToml} from "./StdToml.sol";
 import {StdUtils} from "./StdUtils.sol";
 import {Vm} from "./Vm.sol";
 
-// 📦 BOILERPLATE
+// 📦 样板代码
 import {TestBase} from "./Base.sol";
 
-// ⭐️ TEST
+// ⭐️ 测试
 abstract contract Test is TestBase, StdAssertions, StdChains, StdCheats, StdInvariant, StdUtils {
-    // Note: IS_TEST() must return true.
+    // 注意：IS_TEST() 必须返回 true。
     bool public IS_TEST = true;
 }

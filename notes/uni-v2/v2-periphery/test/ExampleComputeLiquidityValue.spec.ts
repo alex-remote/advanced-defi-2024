@@ -99,7 +99,7 @@ describe('ExampleComputeLiquidityValue', () => {
         await factory.setFeeTo(wallet.address)
       })
 
-      // this is necessary to cause kLast to be set
+      // 这是使 kLast 被设置所必需的
       beforeEach('mint more liquidity to address zero', async () => {
         await token0.transfer(pair.address, expandTo18Decimals(10))
         await token1.transfer(pair.address, expandTo18Decimals(1000))
@@ -196,7 +196,7 @@ describe('ExampleComputeLiquidityValue', () => {
         MaxUint256.div(1000),
         MaxUint256.div(1000)
       )
-      // diff of 30 bips
+      // 相差 30 个基点（bips）
       expect(reserveA).to.eq('100120248075158403008')
       expect(reserveB).to.eq('100150338345970840319')
     })
@@ -212,8 +212,8 @@ describe('ExampleComputeLiquidityValue', () => {
           105,
           expandTo18Decimals(5)
         )
-        expect(token0Amount).to.eq('488683612488266114') // slightly less than 5% of 10, or 0.5
-        expect(token1Amount).to.eq('51161327957205755422') // slightly more than 5% of 100, or 5
+        expect(token0Amount).to.eq('488683612488266114') // 略少于 10 的 5%，即 0.5
+        expect(token1Amount).to.eq('51161327957205755422') // 略多于 100 的 5%，即 5
       })
 
       it('produces the correct value after arbing to 1:95', async () => {
@@ -224,8 +224,8 @@ describe('ExampleComputeLiquidityValue', () => {
           95,
           expandTo18Decimals(5)
         )
-        expect(token0Amount).to.eq('512255881944227034') // slightly more than 5% of 10, or 0.5
-        expect(token1Amount).to.eq('48807237571060645526') // slightly less than 5% of 100, or 5
+        expect(token0Amount).to.eq('512255881944227034') // 略多于 10 的 5%，即 0.5
+        expect(token1Amount).to.eq('48807237571060645526') // 略少于 100 的 5%，即 5
       })
 
       it('produces correct value at the current price', async () => {
@@ -289,7 +289,7 @@ describe('ExampleComputeLiquidityValue', () => {
           )
           const [reserve0, reserve1] = await pair.getReserves()
           expect(reserve0).to.eq('20000000000000000000')
-          expect(reserve1).to.eq('500751126690035052579') // half plus the fee
+          expect(reserve1).to.eq('500751126690035052579') // 一半再加上手续费
         })
 
         it('is roughly 1/25th liquidity', async () => {
@@ -325,7 +325,7 @@ describe('ExampleComputeLiquidityValue', () => {
         await factory.setFeeTo(wallet.address)
       })
 
-      // this is necessary to cause kLast to be set
+      // 这是使 kLast 被设置所必需的
       beforeEach('mint more liquidity to address zero', async () => {
         await token0.transfer(pair.address, expandTo18Decimals(10))
         await token1.transfer(pair.address, expandTo18Decimals(1000))
@@ -342,8 +342,8 @@ describe('ExampleComputeLiquidityValue', () => {
             105,
             expandTo18Decimals(5)
           )
-          expect(token0Amount).to.eq('488680839243189328') // slightly less than 5% of 10, or 0.5
-          expect(token1Amount).to.eq('51161037620273529068') // slightly more than 5% of 100, or 5
+          expect(token0Amount).to.eq('488680839243189328') // 略少于 10 的 5%，即 0.5
+          expect(token1Amount).to.eq('51161037620273529068') // 略多于 100 的 5%，即 5
         })
 
         it('produces the correct value after arbing to 1:95', async () => {
@@ -354,8 +354,8 @@ describe('ExampleComputeLiquidityValue', () => {
             95,
             expandTo18Decimals(5)
           )
-          expect(token0Amount).to.eq('512252817918759166') // slightly more than 5% of 10, or 0.5
-          expect(token1Amount).to.eq('48806945633721895174') // slightly less than 5% of 100, or 5
+          expect(token0Amount).to.eq('512252817918759166') // 略多于 10 的 5%，即 0.5
+          expect(token1Amount).to.eq('48806945633721895174') // 略少于 100 的 5%，即 5
         })
 
         it('produces correct value at the current price', async () => {
@@ -420,7 +420,7 @@ describe('ExampleComputeLiquidityValue', () => {
           )
           const [reserve0, reserve1] = await pair.getReserves()
           expect(reserve0).to.eq('40000000000000000000')
-          expect(reserve1).to.eq('1001502253380070105158') // half plus the fee
+          expect(reserve1).to.eq('1001502253380070105158') // 一半再加上手续费
         })
 
         it('is roughly 1:25', async () => {

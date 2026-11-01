@@ -31,7 +31,7 @@ describe('UniswapV2Migrator', () => {
     const fixture = await loadFixture(v2Fixture)
     WETHPartner = fixture.WETHPartner
     WETHPair = fixture.WETHPair
-    router = fixture.router01 // we used router01 for this contract
+    router = fixture.router01 // 我们在这个合约中使用的是 router01
     migrator = fixture.migrator
     WETHExchangeV1 = fixture.WETHExchangeV1
   })

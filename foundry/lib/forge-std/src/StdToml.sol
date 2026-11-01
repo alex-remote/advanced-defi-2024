@@ -5,14 +5,14 @@ pragma experimental ABIEncoderV2;
 
 import {VmSafe} from "./Vm.sol";
 
-// Helpers for parsing and writing TOML files
-// To parse:
+// 用于解析和写入 TOML 文件的辅助工具
+// 解析示例：
 // ```
 // using stdToml for string;
 // string memory toml = vm.readFile("<some_path>");
 // toml.readUint("<json_path>");
 // ```
-// To write:
+// 写入示例：
 // ```
 // using stdToml for string;
 // string memory json = "json";

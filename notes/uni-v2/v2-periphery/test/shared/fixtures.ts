@@ -38,37 +38,37 @@ interface V2Fixture {
 }
 
 export async function v2Fixture(provider: Web3Provider, [wallet]: Wallet[]): Promise<V2Fixture> {
-  // deploy tokens
+  // 部署代币
   const tokenA = await deployContract(wallet, ERC20, [expandTo18Decimals(10000)])
   const tokenB = await deployContract(wallet, ERC20, [expandTo18Decimals(10000)])
   const WETH = await deployContract(wallet, WETH9)
   const WETHPartner = await deployContract(wallet, ERC20, [expandTo18Decimals(10000)])
 
-  // deploy V1
+  // 部署 V1
   const factoryV1 = await deployContract(wallet, UniswapV1Factory, [])
   await factoryV1.initializeFactory((await deployContract(wallet, UniswapV1Exchange, [])).address)
 
-  // deploy V2
+  // 部署 V2
   const factoryV2 = await deployContract(wallet, UniswapV2Factory, [wallet.address])
 
-  // deploy routers
+  // 部署路由合约
   const router01 = await deployContract(wallet, UniswapV2Router01, [factoryV2.address, WETH.address], overrides)
   const router02 = await deployContract(wallet, UniswapV2Router02, [factoryV2.address, WETH.address], overrides)
 
-  // event emitter for testing
+  // 用于测试的事件触发器（event emitter）
   const routerEventEmitter = await deployContract(wallet, RouterEventEmitter, [])
 
-  // deploy migrator
+  // 部署迁移合约（migrator）
   const migrator = await deployContract(wallet, UniswapV2Migrator, [factoryV1.address, router01.address], overrides)
 
-  // initialize V1
+  // 初始化 V1
   await factoryV1.createExchange(WETHPartner.address, overrides)
   const WETHExchangeV1Address = await factoryV1.getExchange(WETHPartner.address)
   const WETHExchangeV1 = new Contract(WETHExchangeV1Address, JSON.stringify(UniswapV1Exchange.abi), provider).connect(
     wallet
   )
 
-  // initialize V2
+  // 初始化 V2
   await factoryV2.createPair(tokenA.address, tokenB.address)
   const pairAddress = await factoryV2.getPair(tokenA.address, tokenB.address)
   const pair = new Contract(pairAddress, JSON.stringify(IUniswapV2Pair.abi), provider).connect(wallet)
@@ -90,7 +90,7 @@ export async function v2Fixture(provider: Web3Provider, [wallet]: Wallet[]): Pro
     factoryV2,
     router01,
     router02,
-    router: router02, // the default router, 01 had a minor bug
+    router: router02, // 默认路由合约，01 有一个小 bug
     routerEventEmitter,
     migrator,
     WETHExchangeV1,

@@ -15,20 +15,20 @@ abstract contract StdCheatsSafe {
 
     bool private gasMeteringOff;
 
-    // Data structures to parse Transaction objects from the broadcast artifact
-    // that conform to EIP1559. The Raw structs is what is parsed from the JSON
-    // and then converted to the one that is used by the user for better UX.
+    // 用于从 broadcast 产物中解析 Transaction 对象的数据结构，
+    // 适用于符合 EIP1559 的交易。Raw 结构体是直接从 JSON 解析出来的，
+    // 随后会被转换成供用户使用的结构体，以获得更好的使用体验（UX）。
 
     struct RawTx1559 {
         string[] arguments;
         address contractAddress;
         string contractName;
-        // json value name = function
+        // json 中的字段名 = function
         string functionSig;
         bytes32 hash;
-        // json value name = tx
+        // json 中的字段名 = tx
         RawTx1559Detail txDetail;
-        // json value name = type
+        // json 中的字段名 = type
         string opcode;
     }
 
@@ -64,9 +64,9 @@ abstract contract StdCheatsSafe {
         uint256 value;
     }
 
-    // Data structures to parse Transaction objects from the broadcast artifact
-    // that DO NOT conform to EIP1559. The Raw structs is what is parsed from the JSON
-    // and then converted to the one that is used by the user for better UX.
+    // 用于从 broadcast 产物中解析 Transaction 对象的数据结构，
+    // 适用于不符合 EIP1559 的交易。Raw 结构体是直接从 JSON 解析出来的，
+    // 随后会被转换成供用户使用的结构体，以获得更好的使用体验（UX）。
 
     struct TxLegacy {
         string[] arguments;
@@ -101,9 +101,9 @@ abstract contract StdCheatsSafe {
         bytes32[] storageKeys;
     }
 
-    // Data structures to parse Receipt objects from the broadcast artifact.
-    // The Raw structs is what is parsed from the JSON
-    // and then converted to the one that is used by the user for better UX.
+    // 用于从 broadcast 产物中解析 Receipt 对象的数据结构。
+    // Raw 结构体是直接从 JSON 解析出来的，
+    // 随后会被转换成供用户使用的结构体，以获得更好的使用体验（UX）。
 
     struct RawReceipt {
         bytes32 blockHash;
@@ -137,8 +137,8 @@ abstract contract StdCheatsSafe {
         uint256 transactionIndex;
     }
 
-    // Data structures to parse the entire broadcast artifact, assuming the
-    // transactions conform to EIP1559.
+    // 用于解析整个 broadcast 产物的数据结构，假定其中的
+    // 交易都符合 EIP1559。
 
     struct EIP1559ScriptArtifact {
         string[] libraries;
@@ -161,7 +161,7 @@ abstract contract StdCheatsSafe {
     }
 
     struct RawReceiptLog {
-        // json value = address
+        // json 中的字段 = address
         address logAddress;
         bytes32 blockHash;
         bytes blockNumber;
@@ -175,7 +175,7 @@ abstract contract StdCheatsSafe {
     }
 
     struct ReceiptLog {
-        // json value = address
+        // json 中的字段 = address
         address logAddress;
         bytes32 blockHash;
         uint256 blockNumber;
@@ -205,9 +205,9 @@ abstract contract StdCheatsSafe {
         ForgeAddress
     }
 
-    // Checks that `addr` is not blacklisted by token contracts that have a blacklist.
+    // 检查 `addr` 没有被带黑名单机制的代币合约列入黑名单。
     function assumeNotBlacklisted(address token, address addr) internal view virtual {
-        // Nothing to check if `token` is not a contract.
+        // 如果 `token` 不是合约，则无需检查。
         uint256 tokenCodeSize;
         assembly {
             tokenCodeSize := extcodesize(token)
@@ -217,19 +217,19 @@ abstract contract StdCheatsSafe {
         bool success;
         bytes memory returnData;
 
-        // 4-byte selector for `isBlacklisted(address)`, used by USDC.
+        // `isBlacklisted(address)` 的 4 字节选择器，USDC 使用该函数。
         (success, returnData) = token.staticcall(abi.encodeWithSelector(0xfe575a87, addr));
         vm.assume(!success || abi.decode(returnData, (bool)) == false);
 
-        // 4-byte selector for `isBlackListed(address)`, used by USDT.
+        // `isBlackListed(address)` 的 4 字节选择器，USDT 使用该函数。
         (success, returnData) = token.staticcall(abi.encodeWithSelector(0xe47d6060, addr));
         vm.assume(!success || abi.decode(returnData, (bool)) == false);
     }
 
-    // Checks that `addr` is not blacklisted by token contracts that have a blacklist.
-    // This is identical to `assumeNotBlacklisted(address,address)` but with a different name, for
-    // backwards compatibility, since this name was used in the original PR which has already has
-    // a release. This function can be removed in a future release once we want a breaking change.
+    // 检查 `addr` 没有被带黑名单机制的代币合约列入黑名单。
+    // 它与 `assumeNotBlacklisted(address,address)` 完全相同，只是名字不同，这是为了
+    // 向后兼容：这个名字在最初的 PR 中就已使用，并且已经发布过版本。
+    // 等将来打算做破坏性变更时，可以在后续版本中移除此函数。
     function assumeNoBlacklisted(address token, address addr) internal view virtual {
         assumeNotBlacklisted(token, addr);
     }
@@ -277,10 +277,10 @@ abstract contract StdCheatsSafe {
         assumeAddressIsNot(addr, addressType4);
     }
 
-    // This function checks whether an address, `addr`, is payable. It works by sending 1 wei to
-    // `addr` and checking the `success` return value.
-    // NOTE: This function may result in state changes depending on the fallback/receive logic
-    // implemented by `addr`, which should be taken into account when this function is used.
+    // 此函数检查地址 `addr` 是否可接收 ETH（payable）。其原理是向 `addr` 发送 1 wei，
+    // 并检查返回值 `success`。
+    // 注意：根据 `addr` 实现的 fallback/receive 逻辑，此函数可能会导致状态变化，
+    // 使用此函数时应考虑到这一点。
     function _isPayable(address addr) private returns (bool) {
         require(
             addr.balance < UINT256_MAX,
@@ -292,16 +292,16 @@ abstract contract StdCheatsSafe {
         vm.deal(address(this), 1);
         (bool success,) = payable(addr).call{value: 1}("");
 
-        // reset balances
+        // 恢复余额
         vm.deal(address(this), origBalanceTest);
         vm.deal(addr, origBalanceAddr);
 
         return success;
     }
 
-    // NOTE: This function may result in state changes depending on the fallback/receive logic
-    // implemented by `addr`, which should be taken into account when this function is used. See the
-    // `_isPayable` method for more information.
+    // 注意：根据 `addr` 实现的 fallback/receive 逻辑，此函数可能会导致状态变化，
+    // 使用此函数时应考虑到这一点。更多信息请参见
+    // `_isPayable` 方法。
     function assumePayable(address addr) internal virtual {
         vm.assume(_isPayable(addr));
     }
@@ -319,10 +319,10 @@ abstract contract StdCheatsSafe {
     }
 
     function assumeNotPrecompile(address addr, uint256 chainId) internal pure virtual {
-        // Note: For some chains like Optimism these are technically predeploys (i.e. bytecode placed at a specific
-        // address), but the same rationale for excluding them applies so we include those too.
+        // 注意：对于 Optimism 等一些链，这些地址严格来说是预部署合约（predeploy，即放置在特定
+        // 地址上的字节码），但排除它们的理由同样适用，因此也把它们包含进来。
 
-        // These should be present on all EVM-compatible chains.
+        // 这些地址应当存在于所有 EVM 兼容链上。
         vm.assume(addr < address(0x1) || addr > address(0x9));
 
         // forgefmt: disable-start
@@ -342,7 +342,7 @@ abstract contract StdCheatsSafe {
     }
 
     function assumeNotForgeAddress(address addr) internal pure virtual {
-        // vm, console, and Create2Deployer addresses
+        // vm、console 以及 Create2Deployer 的地址
         vm.assume(
             addr != address(vm) && addr != 0x000000000000000000636F6e736F6c652e6c6f67
                 && addr != 0x4e59b44847b379578588920cA78FbF26c0B4956C
@@ -421,7 +421,7 @@ abstract contract StdCheatsSafe {
         return rawToConvertedEIPTx1559(rawTx);
     }
 
-    // Analogous to readTransactions, but for receipts.
+    // 与 readTransactions 类似，但用于 receipt（交易回执）。
     function readReceipts(string memory path) internal view virtual returns (Receipt[] memory) {
         string memory deployData = vm.readFile(path);
         bytes memory parsedDeployData = vm.parseJson(deployData, ".receipts");
@@ -484,9 +484,9 @@ abstract contract StdCheatsSafe {
         return logs;
     }
 
-    // Deploy a contract by fetching the contract bytecode from
-    // the artifacts directory
-    // e.g. `deployCode(code, abi.encode(arg1,arg2,arg3))`
+    // 部署合约：从 artifacts 目录获取合约字节码
+    // 并进行部署
+    // 例如：`deployCode(code, abi.encode(arg1,arg2,arg3))`
     function deployCode(string memory what, bytes memory args) internal virtual returns (address addr) {
         bytes memory bytecode = abi.encodePacked(vm.getCode(what), args);
         /// @solidity memory-safe-assembly
@@ -507,7 +507,7 @@ abstract contract StdCheatsSafe {
         require(addr != address(0), "StdCheats deployCode(string): Deployment failed.");
     }
 
-    /// @dev deploy contract with value on construction
+    /// @dev 部署合约，并在构造时附带转入 value
     function deployCode(string memory what, bytes memory args, uint256 val) internal virtual returns (address addr) {
         bytes memory bytecode = abi.encodePacked(vm.getCode(what), args);
         /// @solidity memory-safe-assembly
@@ -528,22 +528,22 @@ abstract contract StdCheatsSafe {
         require(addr != address(0), "StdCheats deployCode(string,uint256): Deployment failed.");
     }
 
-    // creates a labeled address and the corresponding private key
+    // 创建一个带标签的地址及其对应的私钥
     function makeAddrAndKey(string memory name) internal virtual returns (address addr, uint256 privateKey) {
         privateKey = uint256(keccak256(abi.encodePacked(name)));
         addr = vm.addr(privateKey);
         vm.label(addr, name);
     }
 
-    // creates a labeled address
+    // 创建一个带标签的地址
     function makeAddr(string memory name) internal virtual returns (address addr) {
         (addr,) = makeAddrAndKey(name);
     }
 
-    // Destroys an account immediately, sending the balance to beneficiary.
-    // Destroying means: balance will be zero, code will be empty, and nonce will be 0
-    // This is similar to selfdestruct but not identical: selfdestruct destroys code and nonce
-    // only after tx ends, this will run immediately.
+    // 立即销毁一个账户，并把其余额发送给 beneficiary。
+    // 销毁意味着：余额将变为 0，代码将被清空，nonce 将变为 0
+    // 这与 selfdestruct 类似但不完全相同：selfdestruct 要等交易结束后才会销毁代码和 nonce，
+    // 而此函数会立即生效。
     function destroyAccount(address who, address beneficiary) internal virtual {
         uint256 currBalance = who.balance;
         vm.etch(who, abi.encode());
@@ -554,7 +554,7 @@ abstract contract StdCheatsSafe {
         vm.deal(beneficiary, currBalance + beneficiaryBalance);
     }
 
-    // creates a struct containing both a labeled address and the corresponding private key
+    // 创建一个结构体，同时包含带标签的地址及其对应的私钥
     function makeAccount(string memory name) internal virtual returns (Account memory account) {
         (account.addr, account.key) = makeAddrAndKey(name);
     }
@@ -593,36 +593,36 @@ abstract contract StdCheatsSafe {
 
     modifier noGasMetering() {
         vm.pauseGasMetering();
-        // To prevent turning gas monitoring back on with nested functions that use this modifier,
-        // we check if gasMetering started in the off position. If it did, we don't want to turn
-        // it back on until we exit the top level function that used the modifier
+        // 为了防止在嵌套使用此 modifier 的函数中把 gas 计量提前重新打开，
+        // 我们会检查 gasMetering 起始时是否处于关闭状态。如果是，我们就不会在此处重新打开，
+        // 而是等到退出使用此 modifier 的最外层函数时再打开
         //
-        // i.e. funcA() noGasMetering { funcB() }, where funcB has noGasMetering as well.
-        // funcA will have `gasStartedOff` as false, funcB will have it as true,
-        // so we only turn metering back on at the end of the funcA
+        // 例如：funcA() noGasMetering { funcB() }，其中 funcB 也使用了 noGasMetering。
+        // funcA 中的 `gasStartedOff` 为 false，funcB 中的为 true，
+        // 因此我们只会在 funcA 结束时重新打开 gas 计量
         bool gasStartedOff = gasMeteringOff;
         gasMeteringOff = true;
 
         _;
 
-        // if gas metering was on when this modifier was called, turn it back on at the end
+        // 如果调用此 modifier 时 gas 计量是开启的，则在结束时将其重新打开
         if (!gasStartedOff) {
             gasMeteringOff = false;
             vm.resumeGasMetering();
         }
     }
 
-    // We use this complex approach of `_viewChainId` and `_pureChainId` to ensure there are no
-    // compiler warnings when accessing chain ID in any solidity version supported by forge-std. We
-    // can't simply access the chain ID in a normal view or pure function because the solc View Pure
-    // Checker changed `chainid` from pure to view in 0.8.0.
+    // 我们采用 `_viewChainId` 和 `_pureChainId` 这种复杂的方式，是为了确保在 forge-std 支持的
+    // 任意 solidity 版本中访问 chain ID 时都不会产生编译器警告。我们
+    // 不能直接在普通的 view 或 pure 函数中访问 chain ID，因为 solc 的 View Pure
+    // 检查器在 0.8.0 中把 `chainid` 从 pure 改成了 view。
     function _viewChainId() private view returns (uint256 chainId) {
-        // Assembly required since `block.chainid` was introduced in 0.8.0.
+        // 需要使用汇编，因为 `block.chainid` 是在 0.8.0 中才引入的。
         assembly {
             chainId := chainid()
         }
 
-        address(this); // Silence warnings in older Solc versions.
+        address(this); // 消除旧版本 Solc 中的警告。
     }
 
     function _pureChainId() private pure returns (uint256 chainId) {
@@ -635,7 +635,7 @@ abstract contract StdCheatsSafe {
     }
 }
 
-// Wrappers around cheatcodes to avoid footguns
+// 对 cheatcode（作弊码）的封装，以避免踩坑
 abstract contract StdCheats is StdCheatsSafe {
     using stdStorage for StdStorage;
 
@@ -643,7 +643,7 @@ abstract contract StdCheats is StdCheatsSafe {
     Vm private constant vm = Vm(address(uint160(uint256(keccak256("hevm cheat code")))));
     address private constant CONSOLE2_ADDRESS = 0x000000000000000000636F6e736F6c652e6c6f67;
 
-    // Skip forward or rewind time by the specified number of seconds
+    // 将时间向前跳过或向后回退指定的秒数
     function skip(uint256 time) internal virtual {
         vm.warp(block.timestamp + time);
     }
@@ -652,7 +652,7 @@ abstract contract StdCheats is StdCheatsSafe {
         vm.warp(block.timestamp - time);
     }
 
-    // Setup a prank from an address that has some ether
+    // 从一个持有一些 ether 的地址发起 prank
     function hoax(address msgSender) internal virtual {
         vm.deal(msgSender, 1 << 128);
         vm.prank(msgSender);
@@ -673,7 +673,7 @@ abstract contract StdCheats is StdCheatsSafe {
         vm.prank(msgSender, origin);
     }
 
-    // Start perpetual prank from an address that has some ether
+    // 从一个持有一些 ether 的地址开始持续性的 prank
     function startHoax(address msgSender) internal virtual {
         vm.deal(msgSender, 1 << 128);
         vm.startPrank(msgSender);
@@ -684,8 +684,8 @@ abstract contract StdCheats is StdCheatsSafe {
         vm.startPrank(msgSender);
     }
 
-    // Start perpetual prank from an address that has some ether
-    // tx.origin is set to the origin parameter
+    // 从一个持有一些 ether 的地址开始持续性的 prank
+    // tx.origin 会被设置为 origin 参数
     function startHoax(address msgSender, address origin) internal virtual {
         vm.deal(msgSender, 1 << 128);
         vm.startPrank(msgSender, origin);
@@ -707,33 +707,33 @@ abstract contract StdCheats is StdCheatsSafe {
         vm.startPrank(msgSender, txOrigin);
     }
 
-    // The same as Vm's `deal`
-    // Use the alternative signature for ERC20 tokens
+    // 与 Vm 的 `deal` 相同
+    // ERC20 代币请使用另一个重载签名
     function deal(address to, uint256 give) internal virtual {
         vm.deal(to, give);
     }
 
-    // Set the balance of an account for any ERC20 token
-    // Use the alternative signature to update `totalSupply`
+    // 为任意 ERC20 代币设置某账户的余额
+    // 使用另一个重载签名来同时更新 `totalSupply`
     function deal(address token, address to, uint256 give) internal virtual {
         deal(token, to, give, false);
     }
 
-    // Set the balance of an account for any ERC1155 token
-    // Use the alternative signature to update `totalSupply`
+    // 为任意 ERC1155 代币设置某账户的余额
+    // 使用另一个重载签名来同时更新 `totalSupply`
     function dealERC1155(address token, address to, uint256 id, uint256 give) internal virtual {
         dealERC1155(token, to, id, give, false);
     }
 
     function deal(address token, address to, uint256 give, bool adjust) internal virtual {
-        // get current balance
+        // 获取当前余额
         (, bytes memory balData) = token.staticcall(abi.encodeWithSelector(0x70a08231, to));
         uint256 prevBal = abi.decode(balData, (uint256));
 
-        // update balance
+        // 更新余额
         stdstore.target(token).sig(0x70a08231).with_key(to).checked_write(give);
 
-        // update total supply
+        // 更新总供应量
         if (adjust) {
             (, bytes memory totSupData) = token.staticcall(abi.encodeWithSelector(0x18160ddd));
             uint256 totSup = abi.decode(totSupData, (uint256));
@@ -747,14 +747,14 @@ abstract contract StdCheats is StdCheatsSafe {
     }
 
     function dealERC1155(address token, address to, uint256 id, uint256 give, bool adjust) internal virtual {
-        // get current balance
+        // 获取当前余额
         (, bytes memory balData) = token.staticcall(abi.encodeWithSelector(0x00fdd58e, to, id));
         uint256 prevBal = abi.decode(balData, (uint256));
 
-        // update balance
+        // 更新余额
         stdstore.target(token).sig(0x00fdd58e).with_key(to).with_key(id).checked_write(give);
 
-        // update total supply
+        // 更新总供应量
         if (adjust) {
             (, bytes memory totSupData) = token.staticcall(abi.encodeWithSelector(0xbd85b039, id));
             require(
@@ -772,24 +772,24 @@ abstract contract StdCheats is StdCheatsSafe {
     }
 
     function dealERC721(address token, address to, uint256 id) internal virtual {
-        // check if token id is already minted and the actual owner.
+        // 检查该 token id 是否已被铸造，以及其实际所有者。
         (bool successMinted, bytes memory ownerData) = token.staticcall(abi.encodeWithSelector(0x6352211e, id));
         require(successMinted, "StdCheats deal(address,address,uint,bool): id not minted.");
 
-        // get owner current balance
+        // 获取原所有者当前的余额
         (, bytes memory fromBalData) =
             token.staticcall(abi.encodeWithSelector(0x70a08231, abi.decode(ownerData, (address))));
         uint256 fromPrevBal = abi.decode(fromBalData, (uint256));
 
-        // get new user current balance
+        // 获取新用户当前的余额
         (, bytes memory toBalData) = token.staticcall(abi.encodeWithSelector(0x70a08231, to));
         uint256 toPrevBal = abi.decode(toBalData, (uint256));
 
-        // update balances
+        // 更新余额
         stdstore.target(token).sig(0x70a08231).with_key(abi.decode(ownerData, (address))).checked_write(--fromPrevBal);
         stdstore.target(token).sig(0x70a08231).with_key(to).checked_write(++toPrevBal);
 
-        // update owner
+        // 更新所有者
         stdstore.target(token).sig(0x6352211e).with_key(id).checked_write(to);
     }
 
@@ -809,7 +809,7 @@ abstract contract StdCheats is StdCheatsSafe {
         vm.etch(where, runtimeBytecode);
     }
 
-    // Used to prevent the compilation of console, which shortens the compilation time when console is not used elsewhere.
+    // 用于避免编译 console，当其他地方没有用到 console 时可以缩短编译时间。
     function console2_log_StdCheats(string memory p0) private view {
         (bool status,) = address(CONSOLE2_ADDRESS).staticcall(abi.encodeWithSignature("log(string)", p0));
         status;

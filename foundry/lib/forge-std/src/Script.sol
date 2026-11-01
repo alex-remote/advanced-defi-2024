@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.6.2 <0.9.0;
 
-// 💬 ABOUT
-// Forge Std's default Script.
+// 💬 简介
+// Forge Std 的默认 Script。
 
-// 🧩 MODULES
+// 🧩 模块
 import {console} from "./console.sol";
 import {console2} from "./console2.sol";
 import {safeconsole} from "./safeconsole.sol";
@@ -17,11 +17,11 @@ import {StdStyle} from "./StdStyle.sol";
 import {StdUtils} from "./StdUtils.sol";
 import {VmSafe} from "./Vm.sol";
 
-// 📦 BOILERPLATE
+// 📦 样板代码
 import {ScriptBase} from "./Base.sol";
 
-// ⭐️ SCRIPT
+// ⭐️ 脚本
 abstract contract Script is ScriptBase, StdChains, StdCheatsSafe, StdUtils {
-    // Note: IS_SCRIPT() must return true.
+    // 注意：IS_SCRIPT() 必须返回 true。
     bool public IS_SCRIPT = true;
 }

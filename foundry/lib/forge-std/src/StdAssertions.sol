@@ -200,7 +200,7 @@ abstract contract StdAssertions {
         vm.assertEq(left, right, err);
     }
 
-    // Legacy helper
+    // 旧版辅助函数
     function assertEqUint(uint256 left, uint256 right) internal pure virtual {
         assertEq(left, right);
     }
@@ -530,7 +530,7 @@ abstract contract StdAssertions {
     function assertApproxEqRel(
         uint256 left,
         uint256 right,
-        uint256 maxPercentDelta // An 18 decimal fixed point number, where 1e18 == 100%
+        uint256 maxPercentDelta // 18 位小数的定点数，其中 1e18 == 100%
     ) internal pure virtual {
         vm.assertApproxEqRel(left, right, maxPercentDelta);
     }
@@ -538,7 +538,7 @@ abstract contract StdAssertions {
     function assertApproxEqRel(
         uint256 left,
         uint256 right,
-        uint256 maxPercentDelta, // An 18 decimal fixed point number, where 1e18 == 100%
+        uint256 maxPercentDelta, // 18 位小数的定点数，其中 1e18 == 100%
         string memory err
     ) internal pure virtual {
         vm.assertApproxEqRel(left, right, maxPercentDelta, err);
@@ -547,7 +547,7 @@ abstract contract StdAssertions {
     function assertApproxEqRelDecimal(
         uint256 left,
         uint256 right,
-        uint256 maxPercentDelta, // An 18 decimal fixed point number, where 1e18 == 100%
+        uint256 maxPercentDelta, // 18 位小数的定点数，其中 1e18 == 100%
         uint256 decimals
     ) internal pure virtual {
         vm.assertApproxEqRelDecimal(left, right, maxPercentDelta, decimals);
@@ -556,7 +556,7 @@ abstract contract StdAssertions {
     function assertApproxEqRelDecimal(
         uint256 left,
         uint256 right,
-        uint256 maxPercentDelta, // An 18 decimal fixed point number, where 1e18 == 100%
+        uint256 maxPercentDelta, // 18 位小数的定点数，其中 1e18 == 100%
         uint256 decimals,
         string memory err
     ) internal pure virtual {
@@ -570,7 +570,7 @@ abstract contract StdAssertions {
     function assertApproxEqRel(
         int256 left,
         int256 right,
-        uint256 maxPercentDelta, // An 18 decimal fixed point number, where 1e18 == 100%
+        uint256 maxPercentDelta, // 18 位小数的定点数，其中 1e18 == 100%
         string memory err
     ) internal pure virtual {
         vm.assertApproxEqRel(left, right, maxPercentDelta, err);
@@ -579,7 +579,7 @@ abstract contract StdAssertions {
     function assertApproxEqRelDecimal(
         int256 left,
         int256 right,
-        uint256 maxPercentDelta, // An 18 decimal fixed point number, where 1e18 == 100%
+        uint256 maxPercentDelta, // 18 位小数的定点数，其中 1e18 == 100%
         uint256 decimals
     ) internal pure virtual {
         vm.assertApproxEqRelDecimal(left, right, maxPercentDelta, decimals);
@@ -588,14 +588,14 @@ abstract contract StdAssertions {
     function assertApproxEqRelDecimal(
         int256 left,
         int256 right,
-        uint256 maxPercentDelta, // An 18 decimal fixed point number, where 1e18 == 100%
+        uint256 maxPercentDelta, // 18 位小数的定点数，其中 1e18 == 100%
         uint256 decimals,
         string memory err
     ) internal pure virtual {
         vm.assertApproxEqRelDecimal(left, right, maxPercentDelta, decimals, err);
     }
 
-    // Inhertied from DSTest, not used but kept for backwards-compatibility
+    // 继承自 DSTest，未被使用，但为了向后兼容而保留
     function checkEq0(bytes memory left, bytes memory right) internal pure returns (bool) {
         return keccak256(left) == keccak256(right);
     }

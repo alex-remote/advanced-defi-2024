@@ -23,10 +23,10 @@ contract UniswapV2Router01 is IUniswapV2Router01 {
     }
 
     receive() external payable {
-        assert(msg.sender == WETH); // only accept ETH via fallback from the WETH contract
+        assert(msg.sender == WETH); // 只接受 WETH 合约通过 fallback 发来的 ETH
     }
 
-    // **** ADD LIQUIDITY ****
+    // **** 添加流动性 ****
     function _addLiquidity(
         address tokenA,
         address tokenB,
@@ -35,7 +35,7 @@ contract UniswapV2Router01 is IUniswapV2Router01 {
         uint amountAMin,
         uint amountBMin
     ) private returns (uint amountA, uint amountB) {
-        // create the pair if it doesn't exist yet
+        // 如果交易对尚不存在则创建它
         if (IUniswapV2Factory(factory).getPair(tokenA, tokenB) == address(0)) {
             IUniswapV2Factory(factory).createPair(tokenA, tokenB);
         }
@@ -92,10 +92,10 @@ contract UniswapV2Router01 is IUniswapV2Router01 {
         IWETH(WETH).deposit{value: amountETH}();
         assert(IWETH(WETH).transfer(pair, amountETH));
         liquidity = IUniswapV2Pair(pair).mint(to);
-        if (msg.value > amountETH) TransferHelper.safeTransferETH(msg.sender, msg.value - amountETH); // refund dust eth, if any
+        if (msg.value > amountETH) TransferHelper.safeTransferETH(msg.sender, msg.value - amountETH); // 如有剩余的零头 ETH，则退还
     }
 
-    // **** REMOVE LIQUIDITY ****
+    // **** 移除流动性 ****
     function removeLiquidity(
         address tokenA,
         address tokenB,
@@ -106,7 +106,7 @@ contract UniswapV2Router01 is IUniswapV2Router01 {
         uint deadline
     ) public override ensure(deadline) returns (uint amountA, uint amountB) {
         address pair = UniswapV2Library.pairFor(factory, tokenA, tokenB);
-        IUniswapV2Pair(pair).transferFrom(msg.sender, pair, liquidity); // send liquidity to pair
+        IUniswapV2Pair(pair).transferFrom(msg.sender, pair, liquidity); // 将流动性（LP 代币）发送到交易对
         (uint amount0, uint amount1) = IUniswapV2Pair(pair).burn(to);
         (address token0,) = UniswapV2Library.sortTokens(tokenA, tokenB);
         (amountA, amountB) = tokenA == token0 ? (amount0, amount1) : (amount1, amount0);
@@ -164,8 +164,8 @@ contract UniswapV2Router01 is IUniswapV2Router01 {
         (amountToken, amountETH) = removeLiquidityETH(token, liquidity, amountTokenMin, amountETHMin, to, deadline);
     }
 
-    // **** SWAP ****
-    // requires the initial amount to have already been sent to the first pair
+    // **** 兑换 ****
+    // 要求初始数量已经发送到第一个交易对
     function _swap(uint[] memory amounts, address[] memory path, address _to) private {
         for (uint i; i < path.length - 1; i++) {
             (address input, address output) = (path[i], path[i + 1]);
@@ -255,7 +255,7 @@ contract UniswapV2Router01 is IUniswapV2Router01 {
         IWETH(WETH).deposit{value: amounts[0]}();
         assert(IWETH(WETH).transfer(UniswapV2Library.pairFor(factory, path[0], path[1]), amounts[0]));
         _swap(amounts, path, to);
-        if (msg.value > amounts[0]) TransferHelper.safeTransferETH(msg.sender, msg.value - amounts[0]); // refund dust eth, if any
+        if (msg.value > amounts[0]) TransferHelper.safeTransferETH(msg.sender, msg.value - amounts[0]); // 如有剩余的零头 ETH，则退还
     }
 
     function quote(uint amountA, uint reserveA, uint reserveB) public pure override returns (uint amountB) {

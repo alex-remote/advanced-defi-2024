@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Panics work for versions >=0.8.0, but we lowered the pragma to make this compatible with Test
+// Panic 仅在 >=0.8.0 版本中有效，但我们放宽了 pragma 版本要求，以便与 Test 兼容
 pragma solidity >=0.6.2 <0.9.0;
 
 library stdError {

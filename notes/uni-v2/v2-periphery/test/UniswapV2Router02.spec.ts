@@ -142,7 +142,7 @@ describe('fee-on-transfer tokens', () => {
 
     DTT = await deployContract(wallet, DeflatingERC20, [expandTo18Decimals(10000)])
 
-    // make a DTT<>WETH pair
+    // 创建一个 DTT<>WETH 交易对
     await fixture.factoryV2.createPair(DTT.address, WETH.address)
     const pairAddress = await fixture.factoryV2.getPair(DTT.address, WETH.address)
     pair = new Contract(pairAddress, JSON.stringify(IUniswapV2Pair.abi), provider).connect(wallet)
@@ -251,7 +251,7 @@ describe('fee-on-transfer tokens', () => {
 
     // WETH -> DTT
     it('WETH -> DTT', async () => {
-      await WETH.deposit({ value: amountIn }) // mint WETH
+      await WETH.deposit({ value: amountIn }) // 铸造 WETH
       await WETH.approve(router.address, MaxUint256)
 
       await router.swapExactTokensForTokensSupportingFeeOnTransferTokens(
@@ -328,7 +328,7 @@ describe('fee-on-transfer tokens: reloaded', () => {
     DTT = await deployContract(wallet, DeflatingERC20, [expandTo18Decimals(10000)])
     DTT2 = await deployContract(wallet, DeflatingERC20, [expandTo18Decimals(10000)])
 
-    // make a DTT<>WETH pair
+    // 创建一个 DTT<>WETH 交易对
     await fixture.factoryV2.createPair(DTT.address, DTT2.address)
     const pairAddress = await fixture.factoryV2.getPair(DTT.address, DTT2.address)
   })

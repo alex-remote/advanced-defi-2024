@@ -351,7 +351,7 @@ describe('UniswapV2Router{01,02}', () => {
         })
 
         it('gas', async () => {
-          // ensure that setting price{0,1}CumulativeLast for the first time doesn't affect our gas math
+          // 确保首次设置 price{0,1}CumulativeLast 不会影响我们的 gas 计算
           await mineBlock(provider, (await provider.getBlock('latest')).timestamp + 1)
           await pair.sync(overrides)
 
@@ -498,7 +498,7 @@ describe('UniswapV2Router{01,02}', () => {
           await WETH.transfer(WETHPair.address, ETHAmount)
           await WETHPair.mint(wallet.address, overrides)
 
-          // ensure that setting price{0,1}CumulativeLast for the first time doesn't affect our gas math
+          // 确保首次设置 price{0,1}CumulativeLast 不会影响我们的 gas 计算
           await mineBlock(provider, (await provider.getBlock('latest')).timestamp + 1)
           await pair.sync(overrides)
 

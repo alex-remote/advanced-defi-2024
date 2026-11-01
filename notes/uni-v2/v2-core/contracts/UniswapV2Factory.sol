@@ -22,27 +22,27 @@ contract UniswapV2Factory is IUniswapV2Factory {
 
     function createPair(address tokenA, address tokenB) external returns (address pair) {
         require(tokenA != tokenB, 'UniswapV2: IDENTICAL_ADDRESSES');
-        // NOTE: sort tokens by address
-        // address <-> 20 bytes hexadecimal <-> 160 bit number
+        // 注意：按地址对代币排序
+        // address <-> 20 字节十六进制数 <-> 160 位整数
         // 0x4838B106FCe9647Bdf1E7877BF73cE8B0BAD5f97 <-> 412311598482915581890913355723629879470649597847
         // address(1), address(2)
         (address token0, address token1) = tokenA < tokenB ? (tokenA, tokenB) : (tokenB, tokenA);
         require(token0 != address(0), 'UniswapV2: ZERO_ADDRESS');
-        require(getPair[token0][token1] == address(0), 'UniswapV2: PAIR_EXISTS'); // single check is sufficient
-        // NOTE: creation code = runtime code + constructor args
+        require(getPair[token0][token1] == address(0), 'UniswapV2: PAIR_EXISTS'); // 只检查一个方向就足够了
+        // 注意：创建代码（creation code）= 运行时代码（runtime code）+ 构造函数参数
         bytes memory bytecode = type(UniswapV2Pair).creationCode;
-        // NOTE: deploy with create2 - UniswapV2Library.pairFor
-        // NOTE: create2 addr <- keccak256(creation bytecode) <- constructor args
-        // create2 addr = keccak256(0xff, deployer, salt, keccak256(creation bytecode))
+        // 注意：使用 create2 部署 - 参见 UniswapV2Library.pairFor
+        // 注意：create2 地址 <- keccak256(创建字节码) <- 构造函数参数
+        // create2 地址 = keccak256(0xff, deployer, salt, keccak256(创建字节码))
         bytes32 salt = keccak256(abi.encodePacked(token0, token1));
         assembly {
-            // NOTE: pair = address(new UniswapV2Pair{salt: salt}());
+            // 注意：pair = address(new UniswapV2Pair{salt: salt}());
             pair := create2(0, add(bytecode, 32), mload(bytecode), salt)
         }
-        // NOTE: call initialize to initialize contract without constructor args
+        // 注意：调用 initialize 来初始化合约，从而无需构造函数参数
         IUniswapV2Pair(pair).initialize(token0, token1);
         getPair[token0][token1] = pair;
-        getPair[token1][token0] = pair; // populate mapping in the reverse direction
+        getPair[token1][token0] = pair; // 同时填充反方向的映射
         allPairs.push(pair);
         emit PairCreated(token0, token1, pair, allPairs.length);
     }

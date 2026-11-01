@@ -5,14 +5,14 @@ pragma experimental ABIEncoderV2;
 
 import {VmSafe} from "./Vm.sol";
 
-// Helpers for parsing and writing JSON files
-// To parse:
+// 用于解析和写入 JSON 文件的辅助工具
+// 解析示例：
 // ```
 // using stdJson for string;
 // string memory json = vm.readFile("<some_path>");
 // json.readUint("<json_path>");
 // ```
-// To write:
+// 写入示例：
 // ```
 // using stdJson for string;
 // string memory json = "json";

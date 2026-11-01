@@ -12,7 +12,7 @@
 | 其中含英文的注释 / 文本行（估算） | 约 5,502 行 |
 | 不在翻译范围内的文件 | 202 个（见第四节） |
 | 子代理批次数 | 27 个（B01–B27） |
-| **当前进度** | **141 / 189** 个文件，批次 18 / 27 |
+| **当前进度** | **185 / 189** 个文件，批次 22 / 27 |
 
 行数说明：按编辑器显示的行数统计（最后一行没有换行符时也计为一行）。“注释行”为脚本估算的含英文单词的注释行数（已排除 `SPDX-License-Identifier` 等不需翻译的行），Markdown 文件为含英文的文本行数。
 
@@ -37,7 +37,7 @@
 | B09 | 3 | forge-std safeconsole / console / console2 | ✅ 已完成 |
 | B10 | 5 | forge-std IERC4626 / IERC20 / IERC165 / mocks | ✅ 已完成 |
 | B11 | 2 | forge-std IERC721 / IERC1155 | ✅ 已完成 |
-| B12 | 13 | forge-std src 其余 Std* 合约 | ⏳ 进行中 |
+| B12 | 13 | forge-std src 其余 Std* 合约 | ✅ 已完成 |
 | B13 | 12 | forge-std test | ✅ 已完成 |
 | B14 | 16 | foundry/src 与 notes/uni-v3/src（FullMath、TickMath 等） | ✅ 已完成 |
 | B15 | 15 | notes/uni-v3 test 与 py、notebook/arb、utils、两个 notebook | ✅ 已完成 |
@@ -45,9 +45,9 @@
 | B17 | 8 | foundry/test uniswap-v2 练习/答案合约 | ✅ 已完成 |
 | B18 | 30 | foundry/test uniswap-v2 测试、aave-v3、dai、curve-v1/v2 测试 | ✅ 已完成 |
 | B19 | 12 | foundry/test uniswap-v3 | ✅ 已完成 |
-| B20 | 15 | notes/uni-v2 v2-core 全部与 v2-periphery 核心合约 | ⏳ 进行中 |
-| B21 | 8 | v2-periphery libraries 与 examples | ⏳ 进行中 |
-| B22 | 8 | v2-periphery test | ⏳ 进行中 |
+| B20 | 15 | notes/uni-v2 v2-core 全部与 v2-periphery 核心合约 | ✅ 已完成 |
+| B21 | 8 | v2-periphery libraries 与 examples | ✅ 已完成 |
+| B22 | 8 | v2-periphery test | ✅ 已完成 |
 | B23 | 2 | StableSwap3Pool.vy、CurveCryptoViews3Optimized.vy | ⏳ 进行中 |
 | B24 | 1 | CurveTricryptoMathOptimized.vy | ⏳ 进行中 |
 | B25 | 1 | CurveTricryptoOptimizedWETH.vy 第 1–859 行 | ⏳ 进行中 |
@@ -131,25 +131,25 @@
 - [x] 65. `foundry/test/uniswap-v3/solutions/UniswapV3Swap.test.sol` — 132 行 · 注释 27 行 · B19
 - [x] 66. `foundry/test/uniswap-v3/solutions/UniswapV3Twap.sol` — 86 行 · 注释 14 行 · B19
 
-### foundry/lib/forge-std（27 / 40）
+### foundry/lib/forge-std（40 / 40）
 
 - [x] 67. `foundry/lib/forge-std/.github/workflows/ci.yml` — 134 行 · 注释 4 行 · B05
 - [x] 68. `foundry/lib/forge-std/README.md` → `foundry/lib/forge-std/README_zh.md` — 250 行 · 文本 157 行 · B05
 - [x] 69. `foundry/lib/forge-std/foundry.toml` — 21 行 · 注释 5 行 · B05
 - [x] 70. `foundry/lib/forge-std/scripts/vm.py` — 635 行 · 注释 10 行 · B05
-- [ ] 71. `foundry/lib/forge-std/src/Base.sol` — 35 行 · 注释 7 行 · B12
-- [ ] 72. `foundry/lib/forge-std/src/Script.sol` — 27 行 · 注释 6 行 · B12
-- [ ] 73. `foundry/lib/forge-std/src/StdAssertions.sol` — 669 行 · 注释 9 行 · B12
-- [ ] 74. `foundry/lib/forge-std/src/StdChains.sol` — 250 行 · 注释 42 行 · B12
-- [ ] 75. `foundry/lib/forge-std/src/StdCheats.sol` — 817 行 · 注释 94 行 · B12
-- [ ] 76. `foundry/lib/forge-std/src/StdError.sol` — 15 行 · 注释 1 行 · B12
-- [ ] 77. `foundry/lib/forge-std/src/StdInvariant.sol` — 107 行 · 注释 4 行 · B12
-- [ ] 78. `foundry/lib/forge-std/src/StdJson.sol` — 179 行 · 注释 12 行 · B12
-- [ ] 79. `foundry/lib/forge-std/src/StdMath.sol` — 43 行 · 注释 4 行 · B12
-- [ ] 80. `foundry/lib/forge-std/src/StdStorage.sol` — 473 行 · 注释 22 行 · B12
-- [ ] 81. `foundry/lib/forge-std/src/StdToml.sol` — 179 行 · 注释 12 行 · B12
-- [ ] 82. `foundry/lib/forge-std/src/StdUtils.sol` — 226 行 · 注释 35 行 · B12
-- [ ] 83. `foundry/lib/forge-std/src/Test.sol` — 33 行 · 注释 6 行 · B12
+- [x] 71. `foundry/lib/forge-std/src/Base.sol` — 35 行 · 注释 7 行 · B12
+- [x] 72. `foundry/lib/forge-std/src/Script.sol` — 27 行 · 注释 6 行 · B12
+- [x] 73. `foundry/lib/forge-std/src/StdAssertions.sol` — 669 行 · 注释 9 行 · B12
+- [x] 74. `foundry/lib/forge-std/src/StdChains.sol` — 250 行 · 注释 42 行 · B12
+- [x] 75. `foundry/lib/forge-std/src/StdCheats.sol` — 817 行 · 注释 94 行 · B12
+- [x] 76. `foundry/lib/forge-std/src/StdError.sol` — 15 行 · 注释 1 行 · B12
+- [x] 77. `foundry/lib/forge-std/src/StdInvariant.sol` — 107 行 · 注释 4 行 · B12
+- [x] 78. `foundry/lib/forge-std/src/StdJson.sol` — 179 行 · 注释 12 行 · B12
+- [x] 79. `foundry/lib/forge-std/src/StdMath.sol` — 43 行 · 注释 4 行 · B12
+- [x] 80. `foundry/lib/forge-std/src/StdStorage.sol` — 473 行 · 注释 22 行 · B12
+- [x] 81. `foundry/lib/forge-std/src/StdToml.sol` — 179 行 · 注释 12 行 · B12
+- [x] 82. `foundry/lib/forge-std/src/StdUtils.sol` — 226 行 · 注释 35 行 · B12
+- [x] 83. `foundry/lib/forge-std/src/Test.sol` — 33 行 · 注释 6 行 · B12
 - [x] 84. `foundry/lib/forge-std/src/Vm.sol` — 1638 行 · 注释 653 行 · B06✅ / B07✅ / B08✅
 - [x] 85. `foundry/lib/forge-std/src/console.sol` — 1533 行 · 注释 1 行 · B09
 - [x] 86. `foundry/lib/forge-std/src/console2.sol` — 1558 行 · 注释 6 行 · B09
@@ -195,42 +195,42 @@
 - [x] 123. `notebook/uniswap_v3_tick_bitmap.ipynb` — 179 行 · 注释 9 行 · B16
 - [x] 124. `notebook/uniswap_v3_twap.ipynb` — 109 行 · 注释 3 行 · B16
 
-### notes/uni-v2（3 / 34）
+### notes/uni-v2（34 / 34）
 
 - [x] 125. `notes/uni-v2/v2-core/README.md` → `notes/uni-v2/v2-core/README_zh.md` — 24 行 · 文本 13 行 · B05
-- [ ] 126. `notes/uni-v2/v2-core/contracts/UniswapV2ERC20.sol` — 94 行 · 注释 1 行 · B20
-- [ ] 127. `notes/uni-v2/v2-core/contracts/UniswapV2Factory.sol` — 59 行 · 注释 12 行 · B20
-- [ ] 128. `notes/uni-v2/v2-core/contracts/UniswapV2Pair.sol` — 253 行 · 注释 79 行 · B20
-- [ ] 129. `notes/uni-v2/v2-core/contracts/libraries/Math.sol` — 23 行 · 注释 2 行 · B20
-- [ ] 130. `notes/uni-v2/v2-core/contracts/libraries/SafeMath.sol` — 17 行 · 注释 1 行 · B20
-- [ ] 131. `notes/uni-v2/v2-core/contracts/libraries/UQ112x112.sol` — 21 行 · 注释 7 行 · B20
-- [ ] 132. `notes/uni-v2/v2-core/test/UniswapV2ERC20.spec.ts` — 116 行 · 注释 2 行 · B20
-- [ ] 133. `notes/uni-v2/v2-core/test/UniswapV2Factory.spec.ts` — 86 行 · 注释 2 行 · B20
-- [ ] 134. `notes/uni-v2/v2-core/test/UniswapV2Pair.spec.ts` — 284 行 · 注释 7 行 · B20
+- [x] 126. `notes/uni-v2/v2-core/contracts/UniswapV2ERC20.sol` — 94 行 · 注释 1 行 · B20
+- [x] 127. `notes/uni-v2/v2-core/contracts/UniswapV2Factory.sol` — 59 行 · 注释 12 行 · B20
+- [x] 128. `notes/uni-v2/v2-core/contracts/UniswapV2Pair.sol` — 253 行 · 注释 79 行 · B20
+- [x] 129. `notes/uni-v2/v2-core/contracts/libraries/Math.sol` — 23 行 · 注释 2 行 · B20
+- [x] 130. `notes/uni-v2/v2-core/contracts/libraries/SafeMath.sol` — 17 行 · 注释 1 行 · B20
+- [x] 131. `notes/uni-v2/v2-core/contracts/libraries/UQ112x112.sol` — 21 行 · 注释 7 行 · B20
+- [x] 132. `notes/uni-v2/v2-core/test/UniswapV2ERC20.spec.ts` — 116 行 · 注释 2 行 · B20
+- [x] 133. `notes/uni-v2/v2-core/test/UniswapV2Factory.spec.ts` — 86 行 · 注释 2 行 · B20
+- [x] 134. `notes/uni-v2/v2-core/test/UniswapV2Pair.spec.ts` — 284 行 · 注释 7 行 · B20
 - [x] 135. `notes/uni-v2/v2-periphery/README.md` → `notes/uni-v2/v2-periphery/README_zh.md` — 24 行 · 文本 13 行 · B05
-- [ ] 136. `notes/uni-v2/v2-periphery/contracts/UniswapV2Migrator.sol` — 49 行 · 注释 4 行 · B20
-- [ ] 137. `notes/uni-v2/v2-periphery/contracts/UniswapV2Router01.sol` — 280 行 · 注释 9 行 · B20
-- [ ] 138. `notes/uni-v2/v2-periphery/contracts/UniswapV2Router02.sol` — 470 行 · 注释 38 行 · B20
-- [ ] 139. `notes/uni-v2/v2-periphery/contracts/examples/ExampleComputeLiquidityValue.sol` — 90 行 · 注释 4 行 · B21
-- [ ] 140. `notes/uni-v2/v2-periphery/contracts/examples/ExampleFlashSwap.sol` — 67 行 · 注释 16 行 · B21
-- [ ] 141. `notes/uni-v2/v2-periphery/contracts/examples/ExampleOracleSimple.sol` — 67 行 · 注释 10 行 · B21
-- [ ] 142. `notes/uni-v2/v2-periphery/contracts/examples/ExampleSlidingWindowOracle.sol` — 125 行 · 注释 29 行 · B21
-- [ ] 143. `notes/uni-v2/v2-periphery/contracts/examples/ExampleSwapToPrice.sol` — 77 行 · 注释 7 行 · B21
+- [x] 136. `notes/uni-v2/v2-periphery/contracts/UniswapV2Migrator.sol` — 49 行 · 注释 4 行 · B20
+- [x] 137. `notes/uni-v2/v2-periphery/contracts/UniswapV2Router01.sol` — 280 行 · 注释 9 行 · B20
+- [x] 138. `notes/uni-v2/v2-periphery/contracts/UniswapV2Router02.sol` — 470 行 · 注释 38 行 · B20
+- [x] 139. `notes/uni-v2/v2-periphery/contracts/examples/ExampleComputeLiquidityValue.sol` — 90 行 · 注释 4 行 · B21
+- [x] 140. `notes/uni-v2/v2-periphery/contracts/examples/ExampleFlashSwap.sol` — 67 行 · 注释 16 行 · B21
+- [x] 141. `notes/uni-v2/v2-periphery/contracts/examples/ExampleOracleSimple.sol` — 67 行 · 注释 10 行 · B21
+- [x] 142. `notes/uni-v2/v2-periphery/contracts/examples/ExampleSlidingWindowOracle.sol` — 125 行 · 注释 29 行 · B21
+- [x] 143. `notes/uni-v2/v2-periphery/contracts/examples/ExampleSwapToPrice.sol` — 77 行 · 注释 7 行 · B21
 - [x] 144. `notes/uni-v2/v2-periphery/contracts/examples/README.md` → `notes/uni-v2/v2-periphery/contracts/examples/README_zh.md` — 14 行 · 文本 11 行 · B05
-- [ ] 145. `notes/uni-v2/v2-periphery/contracts/libraries/SafeMath.sol` — 17 行 · 注释 1 行 · B20
-- [ ] 146. `notes/uni-v2/v2-periphery/contracts/libraries/UniswapV2Library.sol` — 187 行 · 注释 96 行 · B21
-- [ ] 147. `notes/uni-v2/v2-periphery/contracts/libraries/UniswapV2LiquidityMathLibrary.sol` — 139 行 · 注释 15 行 · B21
-- [ ] 148. `notes/uni-v2/v2-periphery/contracts/libraries/UniswapV2OracleLibrary.sol` — 35 行 · 注释 8 行 · B21
-- [ ] 149. `notes/uni-v2/v2-periphery/contracts/test/DeflatingERC20.sol` — 97 行 · 注释 1 行 · B20
-- [ ] 150. `notes/uni-v2/v2-periphery/contracts/test/ERC20.sol` — 94 行 · 注释 1 行 · B20
-- [ ] 151. `notes/uni-v2/v2-periphery/test/ExampleComputeLiquidityValue.spec.ts` — 454 行 · 注释 13 行 · B22
-- [ ] 152. `notes/uni-v2/v2-periphery/test/ExampleFlashSwap.spec.ts` — 153 行 · 注释 20 行 · B22
-- [ ] 153. `notes/uni-v2/v2-periphery/test/ExampleSlidingWindowOracle.spec.ts` — 294 行 · 注释 31 行 · B22
-- [ ] 154. `notes/uni-v2/v2-periphery/test/ExampleSwapToPrice.spec.ts` — 198 行 · 注释 1 行 · B22
-- [ ] 155. `notes/uni-v2/v2-periphery/test/UniswapV2Migrator.spec.ts` — 70 行 · 注释 1 行 · B22
-- [ ] 156. `notes/uni-v2/v2-periphery/test/UniswapV2Router01.spec.ts` — 734 行 · 注释 2 行 · B22
-- [ ] 157. `notes/uni-v2/v2-periphery/test/UniswapV2Router02.spec.ts` — 380 行 · 注释 6 行 · B22
-- [ ] 158. `notes/uni-v2/v2-periphery/test/shared/fixtures.ts` — 100 行 · 注释 9 行 · B22
+- [x] 145. `notes/uni-v2/v2-periphery/contracts/libraries/SafeMath.sol` — 17 行 · 注释 1 行 · B20
+- [x] 146. `notes/uni-v2/v2-periphery/contracts/libraries/UniswapV2Library.sol` — 187 行 · 注释 96 行 · B21
+- [x] 147. `notes/uni-v2/v2-periphery/contracts/libraries/UniswapV2LiquidityMathLibrary.sol` — 139 行 · 注释 15 行 · B21
+- [x] 148. `notes/uni-v2/v2-periphery/contracts/libraries/UniswapV2OracleLibrary.sol` — 35 行 · 注释 8 行 · B21
+- [x] 149. `notes/uni-v2/v2-periphery/contracts/test/DeflatingERC20.sol` — 97 行 · 注释 1 行 · B20
+- [x] 150. `notes/uni-v2/v2-periphery/contracts/test/ERC20.sol` — 94 行 · 注释 1 行 · B20
+- [x] 151. `notes/uni-v2/v2-periphery/test/ExampleComputeLiquidityValue.spec.ts` — 454 行 · 注释 13 行 · B22
+- [x] 152. `notes/uni-v2/v2-periphery/test/ExampleFlashSwap.spec.ts` — 153 行 · 注释 20 行 · B22
+- [x] 153. `notes/uni-v2/v2-periphery/test/ExampleSlidingWindowOracle.spec.ts` — 294 行 · 注释 31 行 · B22
+- [x] 154. `notes/uni-v2/v2-periphery/test/ExampleSwapToPrice.spec.ts` — 198 行 · 注释 1 行 · B22
+- [x] 155. `notes/uni-v2/v2-periphery/test/UniswapV2Migrator.spec.ts` — 70 行 · 注释 1 行 · B22
+- [x] 156. `notes/uni-v2/v2-periphery/test/UniswapV2Router01.spec.ts` — 734 行 · 注释 2 行 · B22
+- [x] 157. `notes/uni-v2/v2-periphery/test/UniswapV2Router02.spec.ts` — 380 行 · 注释 6 行 · B22
+- [x] 158. `notes/uni-v2/v2-periphery/test/shared/fixtures.ts` — 100 行 · 注释 9 行 · B22
 
 ### notes/uni-v3（15 / 15）
 
@@ -538,3 +538,7 @@
 - 2026-11-01 15:09 B15 完成（15 项，校验通过）
 - 2026-11-01 15:09 B08 完成（1 项，校验通过）
 - 2026-11-01 15:09 B10 完成（5 项，校验通过）
+- 2026-11-01 15:09 B12 完成（13 项，校验通过）
+- 2026-11-01 15:09 B20 完成（15 项，校验通过）
+- 2026-11-01 15:09 B22 完成（8 项，校验通过）
+- 2026-11-01 15:10 B21 完成（8 项，校验通过）：NOTE 统一译为“注意：”（含 B20 三个文件）

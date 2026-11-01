@@ -91,10 +91,10 @@ describe('UniswapV2Pair', () => {
   })
 
   const optimisticTestCases: BigNumber[][] = [
-    ['997000000000000000', 5, 10, 1], // given amountIn, amountOut = floor(amountIn * .997)
+    ['997000000000000000', 5, 10, 1], // 给定 amountIn，amountOut = floor(amountIn * .997)
     ['997000000000000000', 10, 5, 1],
     ['997000000000000000', 5, 5, 1],
-    [1, 5, 5, '1003009027081243732'] // given amountOut, amountIn = ceiling(amountOut / .997)
+    [1, 5, 5, '1003009027081243732'] // 给定 amountOut，amountIn = ceiling(amountOut / .997)
   ].map(a => a.map(n => (typeof n === 'string' ? bigNumberify(n) : expandTo18Decimals(n))))
   optimisticTestCases.forEach((optimisticTestCase, i) => {
     it(`optimistic:${i}`, async () => {
@@ -167,7 +167,7 @@ describe('UniswapV2Pair', () => {
     const token1Amount = expandTo18Decimals(10)
     await addLiquidity(token0Amount, token1Amount)
 
-    // ensure that setting price{0,1}CumulativeLast for the first time doesn't affect our gas math
+    // 确保首次设置 price{0,1}CumulativeLast 不会影响我们的 gas 计算
     await mineBlock(provider, (await provider.getBlock('latest')).timestamp + 1)
     await pair.sync(overrides)
 
@@ -226,8 +226,8 @@ describe('UniswapV2Pair', () => {
     const swapAmount = expandTo18Decimals(3)
     await token0.transfer(pair.address, swapAmount)
     await mineBlock(provider, blockTimestamp + 10)
-    // swap to a new price eagerly instead of syncing
-    await pair.swap(0, expandTo18Decimals(1), wallet.address, '0x', overrides) // make the price nice
+    // 主动兑换到新价格，而不是调用 sync 同步
+    await pair.swap(0, expandTo18Decimals(1), wallet.address, '0x', overrides) // 让价格变成整齐好算的数
 
     expect(await pair.price0CumulativeLast()).to.eq(initialPrice[0].mul(10))
     expect(await pair.price1CumulativeLast()).to.eq(initialPrice[1].mul(10))
@@ -276,8 +276,8 @@ describe('UniswapV2Pair', () => {
     expect(await pair.totalSupply()).to.eq(MINIMUM_LIQUIDITY.add('249750499251388'))
     expect(await pair.balanceOf(other.address)).to.eq('249750499251388')
 
-    // using 1000 here instead of the symbolic MINIMUM_LIQUIDITY because the amounts only happen to be equal...
-    // ...because the initial liquidity amounts were equal
+    // 这里使用 1000 而不是符号常量 MINIMUM_LIQUIDITY，因为两者只是碰巧相等……
+    // ……之所以相等，是因为初始的两种流动性数量相同
     expect(await token0.balanceOf(pair.address)).to.eq(bigNumberify(1000).add('249501683697445'))
     expect(await token1.balanceOf(pair.address)).to.eq(bigNumberify(1000).add('250000187312969'))
   })

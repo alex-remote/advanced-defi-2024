@@ -8,12 +8,12 @@ import '@uniswap/lib/contracts/libraries/FullMath.sol';
 import './SafeMath.sol';
 import './UniswapV2Library.sol';
 
-// library containing some math for dealing with the liquidity shares of a pair, e.g. computing their exact value
-// in terms of the underlying tokens
+// 该库包含一些处理交易对流动性份额的数学运算，例如计算这些份额以底层代币
+// 计价的精确价值
 library UniswapV2LiquidityMathLibrary {
     using SafeMath for uint256;
 
-    // computes the direction and magnitude of the profit-maximizing trade
+    // 计算利润最大化交易的方向和规模
     function computeProfitMaximizingTrade(
         uint256 truePriceTokenA,
         uint256 truePriceTokenB,
@@ -35,11 +35,11 @@ library UniswapV2LiquidityMathLibrary {
 
         if (leftSide < rightSide) return (false, 0);
 
-        // compute the amount that must be sent to move the price to the profit-maximizing price
+        // 计算将价格推动到利润最大化价格所需发送的数量
         amountIn = leftSide.sub(rightSide);
     }
 
-    // gets the reserves after an arbitrage moves the price to the profit-maximizing ratio given an externally observed true price
+    // 给定外部观测到的真实价格，获取套利将价格推动到利润最大化比率之后的储备量
     function getReservesAfterArbitrage(
         address factory,
         address tokenA,
@@ -47,19 +47,19 @@ library UniswapV2LiquidityMathLibrary {
         uint256 truePriceTokenA,
         uint256 truePriceTokenB
     ) view internal returns (uint256 reserveA, uint256 reserveB) {
-        // first get reserves before the swap
+        // 先获取兑换前的储备量
         (reserveA, reserveB) = UniswapV2Library.getReserves(factory, tokenA, tokenB);
 
         require(reserveA > 0 && reserveB > 0, 'UniswapV2ArbitrageLibrary: ZERO_PAIR_RESERVES');
 
-        // then compute how much to swap to arb to the true price
+        // 再计算需要兑换多少才能套利到真实价格
         (bool aToB, uint256 amountIn) = computeProfitMaximizingTrade(truePriceTokenA, truePriceTokenB, reserveA, reserveB);
 
         if (amountIn == 0) {
             return (reserveA, reserveB);
         }
 
-        // now affect the trade to the reserves
+        // 现在把这笔交易作用到储备量上
         if (aToB) {
             uint amountOut = UniswapV2Library.getAmountOut(amountIn, reserveA, reserveB);
             reserveA += amountIn;
@@ -71,7 +71,7 @@ library UniswapV2LiquidityMathLibrary {
         }
     }
 
-    // computes liquidity value given all the parameters of the pair
+    // 根据交易对的全部参数计算流动性价值
     function computeLiquidityValue(
         uint256 reservesA,
         uint256 reservesB,
@@ -94,9 +94,9 @@ library UniswapV2LiquidityMathLibrary {
         return (reservesA.mul(liquidityAmount) / totalSupply, reservesB.mul(liquidityAmount) / totalSupply);
     }
 
-    // get all current parameters from the pair and compute value of a liquidity amount
-    // **note this is subject to manipulation, e.g. sandwich attacks**. prefer passing a manipulation resistant price to
-    // #getLiquidityValueAfterArbitrageToPrice
+    // 从交易对获取当前所有参数，并计算一定数量流动性的价值
+    // **注意：这容易受到操纵，例如三明治攻击**。更推荐把抗操纵的价格传给
+    // #getLiquidityValueAfterArbitrageToPrice 来计算
     function getLiquidityValue(
         address factory,
         address tokenA,
@@ -111,8 +111,8 @@ library UniswapV2LiquidityMathLibrary {
         return computeLiquidityValue(reservesA, reservesB, totalSupply, liquidityAmount, feeOn, kLast);
     }
 
-    // given two tokens, tokenA and tokenB, and their "true price", i.e. the observed ratio of value of token A to token B,
-    // and a liquidity amount, returns the value of the liquidity in terms of tokenA and tokenB
+    // 给定两个代币 tokenA 和 tokenB 及其“真实价格”（即观测到的 token A 与 token B 的价值比率），
+    // 以及流动性数量，返回该流动性以 tokenA 和 tokenB 计的价值
     function getLiquidityValueAfterArbitrageToPrice(
         address factory,
         address tokenA,
@@ -129,7 +129,7 @@ library UniswapV2LiquidityMathLibrary {
         uint kLast = feeOn ? pair.kLast() : 0;
         uint totalSupply = pair.totalSupply();
 
-        // this also checks that totalSupply > 0
+        // 这同时也检查了 totalSupply > 0
         require(totalSupply >= liquidityAmount && liquidityAmount > 0, 'ComputeLiquidityValue: LIQUIDITY_AMOUNT');
 
         (uint reservesA, uint reservesB) = getReservesAfterArbitrage(factory, tokenA, tokenB, truePriceTokenA, truePriceTokenB);

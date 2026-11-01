@@ -27,8 +27,8 @@ abstract contract StdInvariant {
 
     FuzzInterface[] private _targetedInterfaces;
 
-    // Functions for users:
-    // These are intended to be called in tests.
+    // 供用户使用的函数：
+    // 这些函数旨在测试中调用。
 
     function excludeContract(address newExcludedContract_) internal {
         _excludedContracts.push(newExcludedContract_);
@@ -66,8 +66,8 @@ abstract contract StdInvariant {
         _targetedInterfaces.push(newTargetedInterface_);
     }
 
-    // Functions for forge:
-    // These are called by forge to run invariant tests and don't need to be called in tests.
+    // 供 forge 使用的函数：
+    // 这些函数由 forge 调用以运行不变量测试，无需在测试中调用。
 
     function excludeArtifacts() public view returns (string[] memory excludedArtifacts_) {
         excludedArtifacts_ = _excludedArtifacts;

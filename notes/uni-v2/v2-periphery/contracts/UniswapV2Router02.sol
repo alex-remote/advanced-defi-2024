@@ -26,10 +26,10 @@ contract UniswapV2Router02 is IUniswapV2Router02 {
     }
 
     receive() external payable {
-        assert(msg.sender == WETH); // only accept ETH via fallback from the WETH contract
+        assert(msg.sender == WETH); // 只接受 WETH 合约通过 fallback 发来的 ETH
     }
 
-    // **** ADD LIQUIDITY ****
+    // **** 添加流动性 ****
     function _addLiquidity(
         address tokenA,
         address tokenB,
@@ -38,7 +38,7 @@ contract UniswapV2Router02 is IUniswapV2Router02 {
         uint amountAMin,
         uint amountBMin
     ) internal virtual returns (uint amountA, uint amountB) {
-        // create the pair if it doesn't exist yet
+        // 如果交易对尚不存在则创建它
         if (IUniswapV2Factory(factory).getPair(tokenA, tokenB) == address(0)) {
             IUniswapV2Factory(factory).createPair(tokenA, tokenB);
         }
@@ -52,14 +52,14 @@ contract UniswapV2Router02 is IUniswapV2Router02 {
                 (amountA, amountB) = (amountADesired, amountBOptimal);
             } else {
                 uint amountAOptimal = UniswapV2Library.quote(amountBDesired, reserveB, reserveA);
-                // NOTE: amountBOptimal > amountBDesired so amountAOptimal <= amountADesired
+                // 注意：amountBOptimal > amountBDesired，所以 amountAOptimal <= amountADesired
                 assert(amountAOptimal <= amountADesired);
                 require(amountAOptimal >= amountAMin, 'UniswapV2Router: INSUFFICIENT_A_AMOUNT');
                 (amountA, amountB) = (amountAOptimal, amountBDesired);
             }
         }
     }
-    // NOTE: addLiquidityETH to deposit ERC20 + ETH
+    // 注意：存入 ERC20 + ETH 请使用 addLiquidityETH
     function addLiquidity(
         address tokenA,
         address tokenB,
@@ -72,7 +72,7 @@ contract UniswapV2Router02 is IUniswapV2Router02 {
     ) external virtual override ensure(deadline) returns (uint amountA, uint amountB, uint liquidity) {
         (amountA, amountB) = _addLiquidity(tokenA, tokenB, amountADesired, amountBDesired, amountAMin, amountBMin);
         address pair = UniswapV2Library.pairFor(factory, tokenA, tokenB);
-        // NOTE: trasfer of tokens before mint
+        // 注意：在 mint 之前先转入代币
         TransferHelper.safeTransferFrom(tokenA, msg.sender, pair, amountA);
         TransferHelper.safeTransferFrom(tokenB, msg.sender, pair, amountB);
         liquidity = IUniswapV2Pair(pair).mint(to);
@@ -98,11 +98,11 @@ contract UniswapV2Router02 is IUniswapV2Router02 {
         IWETH(WETH).deposit{value: amountETH}();
         assert(IWETH(WETH).transfer(pair, amountETH));
         liquidity = IUniswapV2Pair(pair).mint(to);
-        // refund dust eth, if any
+        // 如有剩余的零头 ETH，则退还
         if (msg.value > amountETH) TransferHelper.safeTransferETH(msg.sender, msg.value - amountETH);
     }
 
-    // **** REMOVE LIQUIDITY ****
+    // **** 移除流动性 ****
     function removeLiquidity(
         address tokenA,
         address tokenB,
@@ -113,8 +113,8 @@ contract UniswapV2Router02 is IUniswapV2Router02 {
         uint deadline
     ) public virtual override ensure(deadline) returns (uint amountA, uint amountB) {
         address pair = UniswapV2Library.pairFor(factory, tokenA, tokenB);
-        // NOTE: transfer LP shares
-        IUniswapV2Pair(pair).transferFrom(msg.sender, pair, liquidity); // send liquidity to pair
+        // 注意：转移 LP 份额
+        IUniswapV2Pair(pair).transferFrom(msg.sender, pair, liquidity); // 将流动性（LP 代币）发送到交易对
         (uint amount0, uint amount1) = IUniswapV2Pair(pair).burn(to);
         (address token0,) = UniswapV2Library.sortTokens(tokenA, tokenB);
         (amountA, amountB) = tokenA == token0 ? (amount0, amount1) : (amount1, amount0);
@@ -172,7 +172,7 @@ contract UniswapV2Router02 is IUniswapV2Router02 {
         (amountToken, amountETH) = removeLiquidityETH(token, liquidity, amountTokenMin, amountETHMin, to, deadline);
     }
 
-    // **** REMOVE LIQUIDITY (supporting fee-on-transfer tokens) ****
+    // **** 移除流动性（支持 fee-on-transfer 转账扣费代币） ****
     function removeLiquidityETHSupportingFeeOnTransferTokens(
         address token,
         uint liquidity,
@@ -211,10 +211,10 @@ contract UniswapV2Router02 is IUniswapV2Router02 {
         );
     }
 
-    // **** SWAP ****
-    // requires the initial amount to have already been sent to the first pair
+    // **** 兑换 ****
+    // 要求初始数量已经发送到第一个交易对
     function _swap(uint[] memory amounts, address[] memory path, address _to) internal virtual {
-        // NOTE:
+        // 注意：
         //   i | path[i]   | path[i + 1]
         //   0 | path[0]   | path[1]
         //   1 | path[1]   | path[2]
@@ -225,18 +225,18 @@ contract UniswapV2Router02 is IUniswapV2Router02 {
             (address token0,) = UniswapV2Library.sortTokens(input, output);
             uint amountOut = amounts[i + 1];
             (uint amount0Out, uint amount1Out) = input == token0 ? (uint(0), amountOut) : (amountOut, uint(0));
-            // NOTE: last swap -> send token out to "to" address
-            //       otherwise -> send to next pair contract
+            // 注意：最后一次兑换 -> 把输出代币发送到 "to" 地址
+            //       否则 -> 发送到下一个交易对合约
             address to = i < path.length - 2 ? UniswapV2Library.pairFor(factory, output, path[i + 2]) : _to;
-            // NOTE: swap doesn't ask for amount in, only amounts out
+            // 注意：swap 不需要传入输入数量，只需要输出数量
             IUniswapV2Pair(UniswapV2Library.pairFor(factory, input, output)).swap(
                 amount0Out, amount1Out, to, new bytes(0)
             );
         }
     }
-    // NOTE: swap all input for max output
-    // in =  1000 DAI
-    // out = max WETH
+    // 注意：用全部输入换取尽可能多的输出
+    // 输入 = 1000 DAI
+    // 输出 = 尽可能多的 WETH
     function swapExactTokensForTokens(
         uint amountIn,
         uint amountOutMin,
@@ -244,20 +244,20 @@ contract UniswapV2Router02 is IUniswapV2Router02 {
         address to,
         uint deadline
     ) external virtual override ensure(deadline) returns (uint[] memory amounts) {
-        // NOTE: calculates swap outputs
-        // amounts[0] = input, amounts[last] = output, amounts[rest] = intermediate outputs
+        // 注意：计算兑换的输出数量
+        // amounts[0] = 输入，amounts[last] = 输出，amounts[rest] = 中间输出
         amounts = UniswapV2Library.getAmountsOut(factory, amountIn, path);
         require(amounts[amounts.length - 1] >= amountOutMin, 'UniswapV2Router: INSUFFICIENT_OUTPUT_AMOUNT');
-        // NOTE: create2 pair address
-        // NOTE: directly send token in to pair
+        // 注意：用 create2 计算交易对地址
+        // 注意：直接把输入代币发送到交易对
         TransferHelper.safeTransferFrom(
             path[0], msg.sender, UniswapV2Library.pairFor(factory, path[0], path[1]), amounts[0]
         );
         _swap(amounts, path, to);
     }
-    // NOTE: swap min input for specified output
-    // max in = 3000 DAI
-    // out =  1 WETH
+    // 注意：用最少的输入换取指定数量的输出
+    // 最大输入 = 3000 DAI
+    // 输出 = 1 WETH
     function swapTokensForExactTokens(
         uint amountOut,
         uint amountInMax,
@@ -265,7 +265,7 @@ contract UniswapV2Router02 is IUniswapV2Router02 {
         address to,
         uint deadline
     ) external virtual override ensure(deadline) returns (uint[] memory amounts) {
-        // NOTE: calculates amount in
+        // 注意：计算所需的输入数量
         amounts = UniswapV2Library.getAmountsIn(factory, amountOut, path);
         require(amounts[0] <= amountInMax, 'UniswapV2Router: EXCESSIVE_INPUT_AMOUNT');
         TransferHelper.safeTransferFrom(
@@ -336,12 +336,12 @@ contract UniswapV2Router02 is IUniswapV2Router02 {
         IWETH(WETH).deposit{value: amounts[0]}();
         assert(IWETH(WETH).transfer(UniswapV2Library.pairFor(factory, path[0], path[1]), amounts[0]));
         _swap(amounts, path, to);
-        // refund dust eth, if any
+        // 如有剩余的零头 ETH，则退还
         if (msg.value > amounts[0]) TransferHelper.safeTransferETH(msg.sender, msg.value - amounts[0]);
     }
 
-    // **** SWAP (supporting fee-on-transfer tokens) ****
-    // requires the initial amount to have already been sent to the first pair
+    // **** 兑换（支持 fee-on-transfer 转账扣费代币） ****
+    // 要求初始数量已经发送到第一个交易对
     function _swapSupportingFeeOnTransferTokens(address[] memory path, address _to) internal virtual {
         for (uint i; i < path.length - 1; i++) {
             (address input, address output) = (path[i], path[i + 1]);
@@ -349,7 +349,7 @@ contract UniswapV2Router02 is IUniswapV2Router02 {
             IUniswapV2Pair pair = IUniswapV2Pair(UniswapV2Library.pairFor(factory, input, output));
             uint amountInput;
             uint amountOutput;
-            { // scope to avoid stack too deep errors
+            { // 限定作用域以避免 stack too deep 错误
             (uint reserve0, uint reserve1,) = pair.getReserves();
             (uint reserveInput, uint reserveOutput) = input == token0 ? (reserve0, reserve1) : (reserve1, reserve0);
             amountInput = IERC20(input).balanceOf(address(pair)).sub(reserveInput);
@@ -423,7 +423,7 @@ contract UniswapV2Router02 is IUniswapV2Router02 {
         TransferHelper.safeTransferETH(to, amountOut);
     }
 
-    // **** LIBRARY FUNCTIONS ****
+    // **** 库函数 ****
     function quote(uint amountA, uint reserveA, uint reserveB) public pure virtual override returns (uint amountB) {
         return UniswapV2Library.quote(amountA, reserveA, reserveB);
     }
