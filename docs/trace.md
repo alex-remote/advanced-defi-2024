@@ -12,7 +12,7 @@
 | 其中含英文的注释 / 文本行（估算） | 约 5,502 行 |
 | 不在翻译范围内的文件 | 202 个（见第四节） |
 | 子代理批次数 | 27 个（B01–B27） |
-| **当前进度** | **187 / 189** 个文件，批次 23 / 27 |
+| **当前进度** | **188 / 189** 个文件，批次 24 / 27 |
 
 行数说明：按编辑器显示的行数统计（最后一行没有换行符时也计为一行）。“注释行”为脚本估算的含英文单词的注释行数（已排除 `SPDX-License-Identifier` 等不需翻译的行），Markdown 文件为含英文的文本行数。
 
@@ -49,7 +49,7 @@
 | B21 | 8 | v2-periphery libraries 与 examples | ✅ 已完成 |
 | B22 | 8 | v2-periphery test | ✅ 已完成 |
 | B23 | 2 | StableSwap3Pool.vy、CurveCryptoViews3Optimized.vy | ✅ 已完成 |
-| B24 | 1 | CurveTricryptoMathOptimized.vy | ⏳ 进行中 |
+| B24 | 1 | CurveTricryptoMathOptimized.vy | ✅ 已完成 |
 | B25 | 1 | CurveTricryptoOptimizedWETH.vy 第 1–859 行 | ⏳ 进行中 |
 | B26 | 1 | CurveTricryptoOptimizedWETH.vy 第 860–1574 行 | ⏳ 进行中 |
 | B27 | 1 | CurveTricryptoOptimizedWETH.vy 第 1575–2347 行 | ⏳ 进行中 |
@@ -250,12 +250,12 @@
 - [x] 172. `notes/uni-v3/test/Py.sol` — 26 行 · 注释 1 行 · B15
 - [x] 173. `notes/uni-v3/test/Sim.sol` — 249 行 · 注释 18 行 · B15
 
-### topics（8 / 10）
+### topics（9 / 10）
 
 - [x] 174. `topics/amm/curve-v1/StableSwap3Pool.vy` — 897 行 · 注释 140 行 · B23
 - [x] 175. `topics/amm/curve-v1/comparisons.md` → `topics/amm/curve-v1/comparisons_zh.md` — 10 行 · 文本 8 行 · B03
 - [x] 176. `topics/amm/curve-v2/CurveCryptoViews3Optimized.vy` — 414 行 · 注释 17 行 · B23
-- [ ] 177. `topics/amm/curve-v2/CurveTricryptoMathOptimized.vy` — 878 行 · 注释 198 行 · B24
+- [x] 177. `topics/amm/curve-v2/CurveTricryptoMathOptimized.vy` — 878 行 · 注释 198 行 · B24
 - [ ] 178. `topics/amm/curve-v2/CurveTricryptoOptimizedWETH.vy` — 2347 行 · 注释 654 行 · B25⏳ / B26⏳ / B27⏳
 - [x] 179. `topics/amm/intro/amm_equations.md` → `topics/amm/intro/amm_equations_zh.md` — 8 行 · 文本 6 行 · B02
 - [x] 180. `topics/amm/intro/amm_order_book.md` → `topics/amm/intro/amm_order_book_zh.md` — 62 行 · 文本 42 行 · B02
@@ -543,3 +543,4 @@
 - 2026-11-01 15:09 B22 完成（8 项，校验通过）
 - 2026-11-01 15:10 B21 完成（8 项，校验通过）：NOTE 统一译为“注意：”（含 B20 三个文件）
 - 2026-11-01 15:10 B23 完成（2 项，校验通过）：Vyper 的 # dev: revert 注释保留 dev: 前缀、翻译说明
+- 2026-11-01 15:11 B24 完成（1 项，校验通过）

@@ -1,7 +1,7 @@
 # @version 0.3.9
 
 # (c) Curve.Fi, 2020-2023
-# AMM Math for 3-coin Curve Cryptoswap Pools
+# 3 币 Curve Cryptoswap 池子的 AMM 数学库
 #
 # Unless otherwise agreed on, only contracts owned by Curve DAO or
 # Swiss Stake GmbH are allowed to call this contract.
@@ -10,7 +10,7 @@
 @title CurveTricryptoMathOptimized
 @author Curve.Fi
 @license Copyright (c) Curve.Fi, 2020-2023 - all rights reserved
-@notice Curve AMM Math for 3 unpegged assets (e.g. ETH, BTC, USD).
+@notice 适用于 3 种非锚定资产（例如 ETH、BTC、USD）的 Curve AMM 数学库。
 """
 
 N_COINS: constant(uint256) = 3
@@ -25,7 +25,7 @@ MAX_A: constant(uint256) = N_COINS**N_COINS * A_MULTIPLIER * 1000
 version: public(constant(String[8])) = "v2.0.0"
 
 
-# ------------------------ AMM math functions --------------------------------
+# ------------------------ AMM 数学函数 --------------------------------
 
 
 @external
@@ -34,26 +34,26 @@ def get_y(
     _ANN: uint256, _gamma: uint256, x: uint256[N_COINS], _D: uint256, i: uint256
 ) -> uint256[2]:
     """
-    @notice Calculate x[i] given other balances x[0..N_COINS-1] and invariant D.
+    @notice 在给定其他余额 x[0..N_COINS-1] 和不变量 D 的情况下计算 x[i]。
     @dev ANN = A * N**N.
-    @param _ANN AMM.A() value.
-    @param _gamma AMM.gamma() value.
-    @param x Balances multiplied by prices and precisions of all coins.
-    @param _D Invariant.
-    @param i Index of coin to calculate y.
+    @param _ANN AMM.A() 的值。
+    @param _gamma AMM.gamma() 的值。
+    @param x 所有币种的余额乘以各自价格和精度后的值。
+    @param _D 不变量。
+    @param i 要计算 y 的币种索引。
     """
 
-    # Safety checks
-    assert _ANN > MIN_A - 1 and _ANN < MAX_A + 1  # dev: unsafe values A
-    assert _gamma > MIN_GAMMA - 1 and _gamma < MAX_GAMMA + 1  # dev: unsafe values gamma
-    assert _D > 10**17 - 1 and _D < 10**15 * 10**18 + 1  # dev: unsafe values D
+    # 安全检查
+    assert _ANN > MIN_A - 1 and _ANN < MAX_A + 1  # dev: A 值不安全
+    assert _gamma > MIN_GAMMA - 1 and _gamma < MAX_GAMMA + 1  # dev: gamma 值不安全
+    assert _D > 10**17 - 1 and _D < 10**15 * 10**18 + 1  # dev: D 值不安全
 
     frac: uint256 = 0
     for k in range(3):
         if k != i:
             frac = x[k] * 10**18 / _D
             assert frac > 10**16 - 1 and frac < 10**20 + 1, "Unsafe values x[i]"
-            # if above conditions are met, x[k] > 0
+            # 如果满足上述条件，则 x[k] > 0
 
     j: uint256 = 0
     k: uint256 = 0
@@ -95,7 +95,7 @@ def get_y(
             ),
             x_k,
         )
-    )  # <------- The first two expressions can be unsafe, and unsafely added.
+    )  # <------- 前两个表达式可以用 unsafe 运算，并以 unsafe 方式相加。
 
     # 10**36/9 + gamma*(gamma + 4*10**18)/27 + gamma**2*(x_j+x_k-D)/D*ANN/27/convert(A_MULTIPLIER, int256)
     c: int256 = (
@@ -113,15 +113,15 @@ def get_y(
             ),
             convert(A_MULTIPLIER, int256),
         )
-    )  # <--------- Same as above with the first two expressions. In the third
-    #   expression, x_j + x_k will not overflow since we know their range from
-    #                                              previous assert statements.
+    )  # <--------- 前两个表达式同上。在第三个
+    #   表达式中，x_j + x_k 不会上溢，因为我们已经从
+    #                                              前面的 assert 语句得知它们的取值范围。
 
     # (10**18 + gamma)**2/27
     d: int256 = unsafe_div(unsafe_add(10**18, gamma)**2, 27)
 
     # abs(3*a*c/b - b)
-    d0: int256 = abs(unsafe_mul(3, a) * c / b - b)  # <------------ a is smol.
+    d0: int256 = abs(unsafe_mul(3, a) * c / b - b)  # <------------ a 很小。
 
     divider: int256 = 0
     if d0 > 10**48:
@@ -224,7 +224,7 @@ def get_y(
 
     frac = unsafe_div(out[0] * 10**18, _D)
     assert frac >= 10**16 - 1 and frac < 10**20 + 1,  "Unsafe value for y"
-    # due to precision issues, get_y can be off by 2 wei or so wrt _newton_y
+    # 由于精度问题，get_y 的结果与 _newton_y 相比可能相差 2 wei 左右
 
     return out
 
@@ -235,11 +235,11 @@ def _newton_y(
     ANN: uint256, gamma: uint256, x: uint256[N_COINS], D: uint256, i: uint256
 ) -> uint256:
 
-    # Calculate x[i] given A, gamma, xp and D using newton's method.
-    # This is the original method; get_y replaces it, but defaults to
-    # this version conditionally.
+    # 在给定 A、gamma、xp 和 D 的情况下，用牛顿法计算 x[i]。
+    # 这是最初的方法；get_y 取代了它，但在特定条件下
+    # 仍会回退到这个版本。
 
-    # We can ignore safuty checks since they are already done in get_y
+    # 这里可以跳过安全检查，因为 get_y 中已经做过了
 
     frac: uint256 = 0
     for k in range(3):
@@ -253,19 +253,19 @@ def _newton_y(
 
     x_sorted: uint256[N_COINS] = x
     x_sorted[i] = 0
-    x_sorted = self._sort(x_sorted)  # From high to low
+    x_sorted = self._sort(x_sorted)  # 从大到小
 
     convergence_limit: uint256 = max(max(x_sorted[0] / 10**14, D / 10**14), 100)
 
     for j in range(2, N_COINS + 1):
         _x: uint256 = x_sorted[N_COINS - j]
-        y = y * D / (_x * N_COINS)  # Small _x first
+        y = y * D / (_x * N_COINS)  # 先处理较小的 _x
         S_i += _x
 
     for j in range(N_COINS - 1):
-        K0_i = K0_i * x_sorted[j] * N_COINS / D  # Large _x first
+        K0_i = K0_i * x_sorted[j] * N_COINS / D  # 先处理较大的 _x
 
-    # initialise variables:
+    # 初始化变量：
     diff: uint256 = 0
     y_prev: uint256 = 0
     K0: uint256 = 0
@@ -339,26 +339,26 @@ def newton_D(
     K0_prev: uint256 = 0,
 ) -> uint256:
     """
-    @notice Finding the invariant via newtons method using good initial guesses.
-    @dev ANN is higher by the factor A_MULTIPLIER
-    @dev ANN is already A * N**N
-    @param ANN the A * N**N value
-    @param gamma the gamma value
-    @param x_unsorted the array of coin balances (not sorted)
-    @param K0_prev apriori for newton's method derived from get_y_int. Defaults
-           to zero (no apriori)
+    @notice 借助良好的初始猜测值，用牛顿法求解不变量。
+    @dev ANN 已放大了 A_MULTIPLIER 倍
+    @dev ANN 已经是 A * N**N
+    @param ANN A * N**N 的值
+    @param gamma gamma 值
+    @param x_unsorted 币种余额数组（未排序）
+    @param K0_prev 牛顿法的先验值，由 get_y_int 推导得出。默认
+           为零（即无先验值）
     """
     x: uint256[N_COINS] = self._sort(x_unsorted)
-    assert x[0] < max_value(uint256) / 10**18 * N_COINS**N_COINS  # dev: out of limits
-    assert x[0] > 0  # dev: empty pool
+    assert x[0] < max_value(uint256) / 10**18 * N_COINS**N_COINS  # dev: 超出限制
+    assert x[0] > 0  # dev: 池子为空
 
-    # Safe to do unsafe add since we checked largest x's bounds previously
+    # 可以安全地使用 unsafe add，因为前面已经检查过最大 x 的边界
     S: uint256 = unsafe_add(unsafe_add(x[0], x[1]), x[2])
     D: uint256 = 0
 
     if K0_prev == 0:
-        # Geometric mean of 3 numbers cannot be larger than the largest number
-        # so the following is safe to do:
+        # 3 个数的几何平均值不可能大于其中最大的数，
+        # 所以下面的操作是安全的：
         D = unsafe_mul(N_COINS, self._geometric_mean(x))
     else:
         if S > 10**36:
@@ -383,9 +383,9 @@ def newton_D(
                 ) * 27
             )
 
-        # D not zero here if K0_prev > 0, and we checked if x[0] is gt 0.
+        # 若 K0_prev > 0，此处 D 不为零，而且我们已检查过 x[0] 大于 0。
 
-    # initialise variables:
+    # 初始化变量：
     K0: uint256 = 0
     _g1k0: uint256 = 0
     mul1: uint256 = 0
@@ -426,15 +426,15 @@ def newton_D(
                 N_COINS,
             ),
             D,
-        )  # <-------- We can convert the entire expression using unsafe math.
-        #   since x_i is not too far from D, so overflow is not expected. Also
-        #      D > 0, since we proved that already. unsafe_div is safe. K0 > 0
-        #        since we can safely assume that D < 10**18 * x[0]. K0 is also
-        #                            in the range of 10**18 (it's a property).
+        )  # <-------- 整个表达式都可以改用 unsafe 数学运算，
+        #   因为 x_i 与 D 相差不大，所以预计不会上溢。此外
+        #      D > 0，这一点前面已经证明过，所以 unsafe_div 是安全的。K0 > 0，
+        #        因为可以放心地假设 D < 10**18 * x[0]。K0 也
+        #                            处于 10**18 量级（这是它的性质）。
 
-        _g1k0 = unsafe_add(gamma, 10**18)  # <--------- safe to do unsafe_add.
+        _g1k0 = unsafe_add(gamma, 10**18)  # <--------- 可以安全地使用 unsafe_add。
 
-        if _g1k0 > K0:  #       The following operations can safely be unsafe.
+        if _g1k0 > K0:  #       下面的运算可以安全地使用 unsafe 方式。
             _g1k0 = unsafe_add(unsafe_sub(_g1k0, K0), 1)
         else:
             _g1k0 = unsafe_add(unsafe_sub(K0, _g1k0), 1)
@@ -455,17 +455,17 @@ def newton_D(
                 A_MULTIPLIER,
             ),
             ANN,
-        )  # <------ Since D > 0, gamma is small, _g1k0 is small, the rest are
-        #        non-zero and small constants, and D has a cap in this method,
-        #                    we can safely convert everything to unsafe maths.
+        )  # <------ 由于 D > 0，gamma 很小，_g1k0 很小，其余各项都是
+        #        非零的小常数，并且 D 在此方法中有上限，
+        #                    所以可以安全地把所有运算都改为 unsafe 数学运算。
 
         # 2*N*K0 / _g1k0
         # mul2 = (2 * 10**18) * N_COINS * K0 / _g1k0
         mul2 = unsafe_div(
             unsafe_mul(2 * 10**18 * N_COINS, K0), _g1k0
-        )  # <--------------- K0 is approximately around D, which has a cap of
-        #      10**15 * 10**18 + 1, since we get that in get_y which is called
-        #    with newton_D. _g1k0 > 0, so the entire expression can be unsafe.
+        )  # <--------------- K0 大致在 D 附近，而 D 的上限为
+        #      10**15 * 10**18 + 1，这是由与 newton_D 配合调用的
+        #    get_y 保证的。_g1k0 > 0，因此整个表达式都可以用 unsafe 运算。
 
         # neg_fprime: uint256 = (S + S * mul2 / 10**18) + mul1 * N_COINS / K0 - mul2 * D / 10**18
         neg_fprime = unsafe_sub(
@@ -474,12 +474,12 @@ def newton_D(
                 unsafe_div(unsafe_mul(mul1, N_COINS), K0),
             ),
             unsafe_div(unsafe_mul(mul2, D), 10**18),
-        )  # <--- mul1 is a big number but not huge: safe to unsafely multiply
-        # with N_coins. neg_fprime > 0 if this expression executes.
-        # mul2 is in the range of 10**18, since K0 is in that range, S * mul2
-        # is safe. The first three sums can be done using unsafe math safely
-        # and since the final expression will be small since mul2 is small, we
-        # can safely do the entire expression unsafely.
+        )  # <--- mul1 是个大数但不算巨大：可以安全地以 unsafe 方式
+        # 与 N_coins 相乘。若该表达式得以执行，则 neg_fprime > 0。
+        # mul2 处于 10**18 量级（因为 K0 处于该量级），所以 S * mul2
+        # 是安全的。前三项求和可以安全地用 unsafe 数学运算完成，
+        # 并且由于 mul2 很小，最终表达式的值也会很小，因此
+        # 整个表达式都可以安全地以 unsafe 方式计算。
 
         # D -= f / fprime
         # D * (neg_fprime + S) / neg_fprime
@@ -488,9 +488,9 @@ def newton_D(
         # D*D / neg_fprime
         D_minus = unsafe_div(D * D, neg_fprime)
 
-        # Since we know K0 > 0, and neg_fprime > 0, several unsafe operations
-        # are possible in the following. Also, (10**18 - K0) is safe to mul.
-        # So the only expressions we keep safe are (D_minus + ...) and (D * ...)
+        # 由于已知 K0 > 0 且 neg_fprime > 0，下面有若干运算
+        # 可以用 unsafe 方式。此外，(10**18 - K0) 可以安全地参与乘法。
+        # 因此只有 (D_minus + ...) 和 (D * ...) 这两个表达式保留安全运算
         if 10**18 > K0:
             # D_minus += D * (mul1 / neg_fprime) / 10**18 * (10**18 - K0) / K0
             D_minus += unsafe_div(
@@ -511,7 +511,7 @@ def newton_D(
             )
 
         if D_plus > D_minus:
-            D = unsafe_sub(D_plus, D_minus)  # <--------- Safe since we check.
+            D = unsafe_sub(D_plus, D_minus)  # <--------- 安全，因为前面已做了检查。
         else:
             D = unsafe_div(unsafe_sub(D_minus, D_plus), 2)
 
@@ -520,10 +520,10 @@ def newton_D(
         else:
             diff = unsafe_sub(D_prev, D)
 
-        # Could reduce precision for gas efficiency here:
+        # 此处可以降低精度以节省 gas：
         if unsafe_mul(diff, 10**14) < max(10**16, D):
 
-            # Test that we are safe with the next get_y
+            # 检查下一次调用 get_y 是否安全
             for _x in x:
                 frac = unsafe_div(unsafe_mul(_x, 10**18), D)
                 assert frac >= 10**16 - 1 and frac < 10**20 + 1, "Unsafe values x[i]"
@@ -538,29 +538,29 @@ def get_p(
     _xp: uint256[N_COINS], _D: uint256, _A_gamma: uint256[N_COINS-1]
 ) -> uint256[N_COINS-1]:
     """
-    @notice Calculates dx/dy.
-    @dev Output needs to be multiplied with price_scale to get the actual value.
-    @param _xp Balances of the pool.
-    @param _D Current value of D.
-    @param _A_gamma Amplification coefficient and gamma.
+    @notice 计算 dx/dy。
+    @dev 输出值需要乘以 price_scale 才能得到实际值。
+    @param _xp 池子的余额。
+    @param _D D 的当前值。
+    @param _A_gamma 放大系数 A 和 gamma。
     """
 
-    assert _D > 10**17 - 1 and _D < 10**15 * 10**18 + 1  # dev: unsafe D values
+    assert _D > 10**17 - 1 and _D < 10**15 * 10**18 + 1  # dev: D 值不安全
 
     # K0 = P * N**N / D**N.
-    # K0 is dimensionless and has 10**36 precision:
+    # K0 是无量纲的，精度为 10**36：
     K0: uint256 = unsafe_div(
         unsafe_div(unsafe_div(27 * _xp[0] * _xp[1], _D) * _xp[2], _D) * 10**36,
         _D
     )
 
-    # GK0 is in 10**36 precision and is dimensionless.
+    # GK0 的精度为 10**36，且是无量纲的。
     # GK0 = (
     #     2 * _K0 * _K0 / 10**36 * _K0 / 10**36
     #     + (gamma + 10**18)**2
     #     - (_K0 * _K0 / 10**36 * (2 * gamma + 3 * 10**18) / 10**18)
     # )
-    # GK0 is always positive. So the following should never revert:
+    # GK0 始终为正，因此下面的运算永远不会回滚（revert）：
     GK0: uint256 = (
         unsafe_div(unsafe_div(2 * K0 * K0, 10**36) * K0, 10**36)
         + pow_mod256(unsafe_add(_A_gamma[1], 10**18), 2)
@@ -578,7 +578,7 @@ def get_p(
 
     # p_xy = x * (GK0 + NNAG2 * y / D * K0 / 10**36) / y * 10**18 / denominator
     # p_xz = x * (GK0 + NNAG2 * z / D * K0 / 10**36) / z * 10**18 / denominator
-    # p is in 10**18 precision.
+    # p 的精度为 10**18。
     return [
         unsafe_div(
             _xp[0] * ( GK0 + unsafe_div(unsafe_div(NNAG2 * _xp[1], _D) * K0, 10**36) ) / _xp[1] * 10**18,
@@ -591,16 +591,16 @@ def get_p(
     ]
 
 
-# --------------------------- Math Utils -------------------------------------
+# --------------------------- 数学工具函数 -------------------------------------
 
 
 @external
 @view
 def cbrt(x: uint256) -> uint256:
     """
-    @notice Calculate the cubic root of a number in 1e18 precision
-    @dev Consumes around 1500 gas units
-    @param x The number to calculate the cubic root of
+    @notice 以 1e18 精度计算一个数的立方根
+    @dev 大约消耗 1500 单位 gas
+    @param x 要计算立方根的数
     """
     return self._cbrt(x)
 
@@ -609,8 +609,8 @@ def cbrt(x: uint256) -> uint256:
 @view
 def geometric_mean(_x: uint256[3]) -> uint256:
     """
-    @notice Calculate the geometric mean of a list of numbers in 1e18 precision.
-    @param _x list of 3 numbers to sort
+    @notice 以 1e18 精度计算一组数的几何平均值。
+    @param _x 待排序的 3 个数组成的列表
     """
     return self._geometric_mean(_x)
 
@@ -619,10 +619,10 @@ def geometric_mean(_x: uint256[3]) -> uint256:
 @view
 def reduction_coefficient(x: uint256[N_COINS], fee_gamma: uint256) -> uint256:
     """
-    @notice Calculates the reduction coefficient for the given x and fee_gamma
-    @dev This method is used for calculating fees.
-    @param x The x values
-    @param fee_gamma The fee gamma value
+    @notice 根据给定的 x 和 fee_gamma 计算缩减系数（reduction coefficient）
+    @dev 该方法用于计算手续费。
+    @param x x 值
+    @param fee_gamma 手续费 gamma 值
     """
     return self._reduction_coefficient(x, fee_gamma)
 
@@ -631,8 +631,8 @@ def reduction_coefficient(x: uint256[N_COINS], fee_gamma: uint256) -> uint256:
 @view
 def wad_exp(_power: int256) -> uint256:
     """
-    @notice Calculates the e**x with 1e18 precision
-    @param _power The number to calculate the exponential of
+    @notice 以 1e18 精度计算 e**x
+    @param _power 要计算指数函数值的数（即 e**x 中的 x）
     """
     return self._snekmate_wad_exp(_power)
 
@@ -641,16 +641,16 @@ def wad_exp(_power: int256) -> uint256:
 @pure
 def _reduction_coefficient(x: uint256[N_COINS], fee_gamma: uint256) -> uint256:
 
-    # reduction coefficient = fee_gamma / (fee_gamma + 1 - K)
+    # 缩减系数 = fee_gamma / (fee_gamma + 1 - K)
     # K = x[0] ... x[N-1] / ((x[0] + ... + x[N-1]) / N)**N
     # 0 <= K <= 1
-    # fee_gamma / (fee_gamma + 1) <= reduction coefficient <= 1
+    # fee_gamma / (fee_gamma + 1) <= 缩减系数 <= 1
 
     S: uint256 = x[0] + x[1] + x[2]
 
-    # Could be good to pre-sort x, but it is used only for dynamic fee
+    # 预先对 x 排序可能更好，但这里只用于计算动态手续费
     K: uint256 = 10**18 * N_COINS * x[0] / S
-    K = unsafe_div(K * N_COINS * x[1], S)  # <- unsafe div is safu.
+    K = unsafe_div(K * N_COINS * x[1], S)  # <- 这里的 unsafe div 是安全的。
     K = unsafe_div(K * N_COINS * x[2], S)
 
     if fee_gamma > 0:
@@ -664,69 +664,69 @@ def _reduction_coefficient(x: uint256[N_COINS], fee_gamma: uint256) -> uint256:
 def _snekmate_wad_exp(x: int256) -> uint256:
 
     """
-    @dev Calculates the natural exponential function of a signed integer with
-         a precision of 1e18.
-    @notice Note that this function consumes about 810 gas units. The implementation
-            is inspired by Remco Bloemen's implementation under the MIT license here:
+    @dev 计算有符号整数的自然指数函数，
+         精度为 1e18。
+    @notice 注意，该函数大约消耗 810 单位 gas。其实现
+            参考了 Remco Bloemen 以 MIT 许可证发布的实现，见：
             https://xn--2-umb.com/22/exp-ln.
-    @dev This implementation is derived from Snekmate, which is authored
-         by pcaversaccio (Snekmate), distributed under the AGPL-3.0 license.
+    @dev 本实现源自 Snekmate，其作者为
+         pcaversaccio (Snekmate)，以 AGPL-3.0 许可证发布。
          https://github.com/pcaversaccio/snekmate
-    @param x The 32-byte variable.
-    @return int256 The 32-byte calculation result.
+    @param x 32 字节的变量。
+    @return int256 32 字节的计算结果。
     """
     value: int256 = x
 
-    # If the result is `< 0.5`, we return zero. This happens when we have the following:
+    # 如果结果 `< 0.5`，则返回零。当满足以下条件时就会出现这种情况：
     # "x <= floor(log(0.5e18) * 1e18) ~ -42e18".
     if (x <= -42139678854452767551):
         return empty(uint256)
 
-    # When the result is "> (2 ** 255 - 1) / 1e18" we cannot represent it as a signed integer.
-    # This happens when "x >= floor(log((2 ** 255 - 1) / 1e18) * 1e18) ~ 135".
+    # 当结果 "> (2 ** 255 - 1) / 1e18" 时，无法将其表示为有符号整数。
+    # 当 "x >= floor(log((2 ** 255 - 1) / 1e18) * 1e18) ~ 135" 时就会出现这种情况。
     assert x < 135305999368893231589, "wad_exp overflow"
 
-    # `x` is now in the range "(-42, 136) * 1e18". Convert to "(-42, 136) * 2 ** 96" for higher
-    # intermediate precision and a binary base. This base conversion is a multiplication with
+    # 此时 `x` 处于 "(-42, 136) * 1e18" 范围内。将其转换为 "(-42, 136) * 2 ** 96"，以获得更高的
+    # 中间精度并使用二进制基数。这一基数转换相当于乘以
     # "1e18 / 2 ** 96 = 5 ** 18 / 2 ** 78".
     value = unsafe_div(x << 78, 5 ** 18)
 
-    # Reduce the range of `x` to "(-½ ln 2, ½ ln 2) * 2 ** 96" by factoring out powers of two
-    # so that "exp(x) = exp(x') * 2 ** k", where `k` is a signer integer. Solving this gives
-    # "k = round(x / log(2))" and "x' = x - k * log(2)". Thus, `k` is in the range "[-61, 195]".
+    # 通过提取 2 的幂次，将 `x` 的范围缩小到 "(-½ ln 2, ½ ln 2) * 2 ** 96"，
+    # 使得 "exp(x) = exp(x') * 2 ** k"，其中 `k` 是有符号整数。求解可得
+    # "k = round(x / log(2))" 以及 "x' = x - k * log(2)"。因此，`k` 的范围是 "[-61, 195]"。
     k: int256 = unsafe_add(unsafe_div(value << 96, 54916777467707473351141471128), 2 ** 95) >> 96
     value = unsafe_sub(value, unsafe_mul(k, 54916777467707473351141471128))
 
-    # Evaluate using a "(6, 7)"-term rational approximation. Since `p` is monic,
-    # we will multiply by a scaling factor later.
+    # 使用 "(6, 7)" 项有理函数逼近进行求值。由于 `p` 是首一多项式，
+    # 稍后我们会再乘以一个缩放因子。
     y: int256 = unsafe_add(unsafe_mul(unsafe_add(value, 1346386616545796478920950773328), value) >> 96, 57155421227552351082224309758442)
     p: int256 = unsafe_add(unsafe_mul(unsafe_add(unsafe_mul(unsafe_sub(unsafe_add(y, value), 94201549194550492254356042504812), y) >> 96,\
                            28719021644029726153956944680412240), value), 4385272521454847904659076985693276 << 96)
 
-    # We leave `p` in the "2 ** 192" base so that we do not have to scale it up
-    # again for the division.
+    # 我们让 `p` 保持在 "2 ** 192" 基数下，这样做除法时
+    # 就不必再次放大它。
     q: int256 = unsafe_add(unsafe_mul(unsafe_sub(value, 2855989394907223263936484059900), value) >> 96, 50020603652535783019961831881945)
     q = unsafe_sub(unsafe_mul(q, value) >> 96, 533845033583426703283633433725380)
     q = unsafe_add(unsafe_mul(q, value) >> 96, 3604857256930695427073651918091429)
     q = unsafe_sub(unsafe_mul(q, value) >> 96, 14423608567350463180887372962807573)
     q = unsafe_add(unsafe_mul(q, value) >> 96, 26449188498355588339934803723976023)
 
-    # The polynomial `q` has no zeros in the range because all its roots are complex.
-    # No scaling is required, as `p` is already "2 ** 96" too large. Also,
-    # `r` is in the range "(0.09, 0.25) * 2**96" after the division.
+    # 多项式 `q` 在该范围内没有零点，因为它的所有根都是复数。
+    # 无需缩放，因为 `p` 已经大了 "2 ** 96" 倍。此外，
+    # 除法之后 `r` 处于 "(0.09, 0.25) * 2**96" 范围内。
     r: int256 = unsafe_div(p, q)
 
-    # To finalise the calculation, we have to multiply `r` by:
-    #   - the scale factor "s = ~6.031367120",
-    #   - the factor "2 ** k" from the range reduction, and
-    #   - the factor "1e18 / 2 ** 96" for the base conversion.
-    # We do this all at once, with an intermediate result in "2**213" base,
-    # so that the final right shift always gives a positive value.
+    # 为完成计算，我们需要将 `r` 乘以：
+    #   - 缩放因子 "s = ~6.031367120"，
+    #   - 范围缩减带来的因子 "2 ** k"，以及
+    #   - 基数转换所需的因子 "1e18 / 2 ** 96"。
+    # 我们一次性完成这些乘法，中间结果采用 "2**213" 基数，
+    # 这样最后的右移总能得到正值。
 
-    # Note that to circumvent Vyper's safecast feature for the potentially
-    # negative parameter value `r`, we first convert `r` to `bytes32` and
-    # subsequently to `uint256`. Remember that the EVM default behaviour is
-    # to use two's complement representation to handle signed integers.
+    # 注意，为了绕过 Vyper 对可能为负的参数值 `r` 的 safecast（安全类型转换）
+    # 检查，我们先将 `r` 转换为 `bytes32`，
+    # 再转换为 `uint256`。请记住，EVM 的默认行为是
+    # 使用二进制补码表示来处理有符号整数。
     return unsafe_mul(convert(convert(r, bytes32), uint256), 3822833074963236453042738258902158003155416615667) >> convert(unsafe_sub(195, k), uint256)
 
 
@@ -734,24 +734,24 @@ def _snekmate_wad_exp(x: int256) -> uint256:
 @pure
 def _snekmate_log_2(x: uint256, roundup: bool) -> uint256:
     """
-    @notice An `internal` helper function that returns the log in base 2
-         of `x`, following the selected rounding direction.
-    @dev This implementation is derived from Snekmate, which is authored
-         by pcaversaccio (Snekmate), distributed under the AGPL-3.0 license.
+    @notice 一个 `internal` 辅助函数，按所选的取整方向
+         返回 `x` 以 2 为底的对数。
+    @dev 本实现源自 Snekmate，其作者为
+         pcaversaccio (Snekmate)，以 AGPL-3.0 许可证发布。
          https://github.com/pcaversaccio/snekmate
-    @dev Note that it returns 0 if given 0. The implementation is
-         inspired by OpenZeppelin's implementation here:
+    @dev 注意，输入为 0 时返回 0。其实现
+         参考了 OpenZeppelin 的实现，见：
          https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/utils/math/Math.sol.
-    @param x The 32-byte variable.
-    @param roundup The Boolean variable that specifies whether
-           to round up or not. The default `False` is round down.
-    @return uint256 The 32-byte calculation result.
+    @param x 32 字节的变量。
+    @param roundup 布尔变量，用于指定是否
+           向上取整。默认值 `False` 表示向下取整。
+    @return uint256 32 字节的计算结果。
     """
     value: uint256 = x
     result: uint256 = empty(uint256)
 
-    # The following lines cannot overflow because we have the well-known
-    # decay behaviour of `log_2(max_value(uint256)) < max_value(uint256)`.
+    # 下面几行不会上溢，因为存在众所周知的
+    # 衰减性质：`log_2(max_value(uint256)) < max_value(uint256)`。
     if x >> 128 != empty(uint256):
         value = x >> 128
         result = 128
@@ -796,15 +796,15 @@ def _cbrt(x: uint256) -> uint256:
 
     log2x: int256 = convert(self._snekmate_log_2(xx, False), int256)
 
-    # When we divide log2x by 3, the remainder is (log2x % 3).
-    # So if we just multiply 2**(log2x/3) and discard the remainder to calculate our
-    # guess, the newton method will need more iterations to converge to a solution,
-    # since it is missing that precision. It's a few more calculations now to do less
-    # calculations later:
+    # 将 log2x 除以 3 时，余数为 (log2x % 3)。
+    # 因此，如果我们只乘以 2**(log2x/3) 而丢弃余数来计算初始
+    # 猜测值，那么牛顿法需要更多次迭代才能收敛到解，
+    # 因为缺少了这部分精度。现在多做几步计算，可以换来之后更少的
+    # 计算量：
     # pow = log2(x) // 3
     # remainder = log2(x) % 3
     # initial_guess = 2 ** pow * cbrt(2) ** remainder
-    # substituting -> 2 = 1.26 ≈ 1260 / 1000, we get:
+    # 代入 -> 2 = 1.26 ≈ 1260 / 1000，可得：
     #
     # initial_guess = 2 ** pow * 1260 ** remainder // 1000 ** remainder
 
@@ -817,11 +817,11 @@ def _cbrt(x: uint256) -> uint256:
         pow_mod256(1000, remainder),
     )
 
-    # Because we chose good initial values for cube roots, 7 newton raphson iterations
-    # are just about sufficient. 6 iterations would result in non-convergences, and 8
-    # would be one too many iterations. Without initial values, the iteration count
-    # can go up to 20 or greater. The iterations are unrolled. This reduces gas costs
-    # but takes up more bytecode:
+    # 由于我们为立方根选取了良好的初始值，7 次牛顿-拉弗森（Newton-Raphson）迭代
+    # 刚好足够。6 次迭代会导致不收敛，而 8 次
+    # 则多了一次。如果没有好的初始值，迭代次数
+    # 可能达到 20 次甚至更多。这些迭代已被展开，这样可以降低 gas 成本，
+    # 但会占用更多字节码：
     a = unsafe_div(unsafe_add(unsafe_mul(2, a), unsafe_div(xx, unsafe_mul(a, a))), 3)
     a = unsafe_div(unsafe_add(unsafe_mul(2, a), unsafe_div(xx, unsafe_mul(a, a))), 3)
     a = unsafe_div(unsafe_add(unsafe_mul(2, a), unsafe_div(xx, unsafe_mul(a, a))), 3)
@@ -842,7 +842,7 @@ def _cbrt(x: uint256) -> uint256:
 @pure
 def _sort(unsorted_x: uint256[3]) -> uint256[3]:
 
-    # Sorts a three-array number in a descending order:
+    # 将包含三个数的数组按降序排序：
 
     x: uint256[N_COINS] = unsorted_x
     temp_var: uint256 = x[0]
@@ -865,7 +865,7 @@ def _sort(unsorted_x: uint256[3]) -> uint256[3]:
 @view
 def _geometric_mean(_x: uint256[3]) -> uint256:
 
-    # calculates a geometric mean for three numbers.
+    # 计算三个数的几何平均值。
 
     prod: uint256 = unsafe_div(
         unsafe_div(_x[0] * _x[1], 10**18) * _x[2],
