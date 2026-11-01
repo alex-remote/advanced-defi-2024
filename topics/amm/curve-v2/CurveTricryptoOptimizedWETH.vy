@@ -4,14 +4,14 @@
 @title CurveTricryptoOptimizedWETH
 @author Curve.Fi
 @license Copyright (c) Curve.Fi, 2020-2023 - all rights reserved
-@notice A Curve AMM pool for 3 unpegged assets (e.g. ETH, BTC, USD).
-@dev All prices in the AMM are with respect to the first token in the pool.
+@notice 一个用于 3 种非锚定资产（例如 ETH、BTC、USD）的 Curve AMM 池子。
+@dev AMM 中的所有价格都以池子中的第一个代币为计价基准。
 """
 
 from vyper.interfaces import ERC20
-implements: ERC20  # <--------------------- AMM contract is also the LP token.
+implements: ERC20  # <----------------------------- AMM 合约本身也是 LP 代币。
 
-# --------------------------------- Interfaces -------------------------------
+# --------------------------------- 接口 -------------------------------------
 
 interface Math:
     def geometric_mean(_x: uint256[N_COINS]) -> uint256: view
@@ -58,7 +58,7 @@ interface Views:
     ) -> uint256: view
 
 
-# ------------------------------- Events -------------------------------------
+# ------------------------------- 事件 ---------------------------------------
 
 event Transfer:
     sender: indexed(address)
@@ -134,12 +134,12 @@ event ClaimAdminFee:
     tokens: uint256
 
 
-# ----------------------- Storage/State Variables ----------------------------
+# ----------------------- 存储/状态变量 --------------------------------------
 
 WETH20: public(immutable(address))
 
 N_COINS: constant(uint256) = 3
-PRECISION: constant(uint256) = 10**18  # <------- The precision to convert to.
+PRECISION: constant(uint256) = 10**18  # <--------------- 要转换到的目标精度。
 A_MULTIPLIER: constant(uint256) = 10000
 packed_precisions: uint256
 
@@ -147,8 +147,8 @@ MATH: public(immutable(Math))
 coins: public(immutable(address[N_COINS]))
 factory: public(address)
 
-price_scale_packed: uint256  # <------------------------ Internal price scale.
-price_oracle_packed: uint256  # <------- Price target given by moving average.
+price_scale_packed: uint256  # <---------------- 内部价格尺度（price scale）。
+price_oracle_packed: uint256  # <------------------ 由移动平均给出的目标价格。
 
 last_prices_packed: uint256
 last_prices_timestamp: public(uint256)
@@ -157,39 +157,39 @@ initial_A_gamma: public(uint256)
 initial_A_gamma_time: public(uint256)
 
 future_A_gamma: public(uint256)
-future_A_gamma_time: public(uint256)  # <------ Time when ramping is finished.
-#         This value is 0 (default) when pool is first deployed, and only gets
-#        populated by block.timestamp + future_time in `ramp_A_gamma` when the
-#                      ramping process is initiated. After ramping is finished
-#      (i.e. self.future_A_gamma_time < block.timestamp), the variable is left
-#                                                            and not set to 0.
+future_A_gamma_time: public(uint256)  # <---------------- 渐变调整结束的时间。
+#                                     池子首次部署时该值为 0（默认值），只有在
+#                            `ramp_A_gamma` 中启动渐变调整流程时，才会被赋值为
+#                                block.timestamp + future_time。渐变调整结束后
+#          （即 self.future_A_gamma_time < block.timestamp），该变量保持原值，
+#                                                             不会被重置为 0。
 
 balances: public(uint256[N_COINS])
 D: public(uint256)
 xcp_profit: public(uint256)
-xcp_profit_a: public(uint256)  # <--- Full profit at last claim of admin fees.
+xcp_profit_a: public(uint256)  # <------------- 上次领取管理费时的累计总利润。
 
-virtual_price: public(uint256)  # <------ Cached (fast to read) virtual price.
-#                          The cached `virtual_price` is also used internally.
+virtual_price: public(uint256)  # <------------ 缓存的（读取快速的）虚拟价格。
+#                                    缓存的 `virtual_price` 也在合约内部使用。
 
-# -------------- Params that affect how price_scale get adjusted -------------
+# -------------- 影响 price_scale 如何调整的参数 -----------------------------
 
-packed_rebalancing_params: public(uint256)  # <---------- Contains rebalancing
-#               parameters allowed_extra_profit, adjustment_step, and ma_time.
+packed_rebalancing_params: public(uint256)  # <-------------------- 包含再平衡
+#                      参数 allowed_extra_profit、adjustment_step 和 ma_time。
 
 future_packed_rebalancing_params: uint256
 
-# ---------------- Fee params that determine dynamic fees --------------------
+# ---------------- 决定动态手续费的手续费参数 --------------------------------
 
-packed_fee_params: public(uint256)  # <---- Packs mid_fee, out_fee, fee_gamma.
+packed_fee_params: public(uint256)  # <-- 打包了 mid_fee、out_fee、fee_gamma。
 future_packed_fee_params: uint256
 
-ADMIN_FEE: public(constant(uint256)) = 5 * 10**9  # <----- 50% of earned fees.
-MIN_FEE: constant(uint256) = 5 * 10**5  # <-------------------------- 0.5 BPS.
+ADMIN_FEE: public(constant(uint256)) = 5 * 10**9  # <---- 所赚取手续费的 50%。
+MIN_FEE: constant(uint256) = 5 * 10**5  # <----------------- 0.5 BPS（基点）。
 MAX_FEE: constant(uint256) = 10 * 10**9
-NOISE_FEE: constant(uint256) = 10**5  # <---------------------------- 0.1 BPS.
+NOISE_FEE: constant(uint256) = 10**5  # <------------------- 0.1 BPS（基点）。
 
-# ----------------------- Admin params ---------------------------------------
+# ----------------------- 管理员参数 -----------------------------------------
 
 admin_actions_deadline: public(uint256)
 
@@ -205,7 +205,7 @@ MAX_GAMMA: constant(uint256) = 5 * 10**16
 PRICE_SIZE: constant(uint128) = 256 / (N_COINS - 1)
 PRICE_MASK: constant(uint256) = 2**PRICE_SIZE - 1
 
-# ----------------------- ERC20 Specific vars --------------------------------
+# ----------------------- ERC20 专用变量 -------------------------------------
 
 name: public(immutable(String[64]))
 symbol: public(immutable(String[32]))
@@ -230,7 +230,7 @@ salt: public(immutable(bytes32))
 CACHED_DOMAIN_SEPARATOR: immutable(bytes32)
 
 
-# ----------------------- Contract -------------------------------------------
+# ----------------------- 合约 -----------------------------------------------
 
 @external
 def __init__(
@@ -256,18 +256,18 @@ def __init__(
     symbol = _symbol
     coins = _coins
 
-    self.packed_precisions = packed_precisions  # <------- Precisions of coins
-    #                            are calculated as 10**(18 - coin.decimals()).
+    self.packed_precisions = packed_precisions  # <-------------- 各代币的精度
+    #                                     按 10**(18 - coin.decimals()) 计算。
 
-    self.initial_A_gamma = packed_A_gamma  # <------------------- A and gamma.
+    self.initial_A_gamma = packed_A_gamma  # <------------------- A 和 gamma。
     self.future_A_gamma = packed_A_gamma
 
-    self.packed_rebalancing_params = packed_rebalancing_params  # <-- Contains
-    #               rebalancing params: allowed_extra_profit, adjustment_step,
-    #                                                         and ma_exp_time.
+    self.packed_rebalancing_params = packed_rebalancing_params  # <------ 包含
+    #                        再平衡参数：allowed_extra_profit、adjustment_step
+    #                                                       以及 ma_exp_time。
 
-    self.packed_fee_params = packed_fee_params  # <-------------- Contains Fee
-    #                                  params: mid_fee, out_fee and fee_gamma.
+    self.packed_fee_params = packed_fee_params  # <---------------- 包含手续费
+    #                                    参数：mid_fee、out_fee 和 fee_gamma。
 
     self.price_scale_packed = packed_prices
     self.price_oracle_packed = packed_prices
@@ -275,10 +275,10 @@ def __init__(
     self.last_prices_timestamp = block.timestamp
     self.xcp_profit_a = 10**18
 
-    #         Cache DOMAIN_SEPARATOR. If chain.id is not CACHED_CHAIN_ID, then
-    #     DOMAIN_SEPARATOR will be re-calculated each time `permit` is called.
-    #                   Otherwise, it will always use CACHED_DOMAIN_SEPARATOR.
-    #                       see: `_domain_separator()` for its implementation.
+    #            缓存 DOMAIN_SEPARATOR。如果 chain.id 不等于 CACHED_CHAIN_ID，
+    #                  那么每次调用 `permit` 时都会重新计算 DOMAIN_SEPARATOR。
+    #                                 否则将始终使用 CACHED_DOMAIN_SEPARATOR。
+    #                                      具体实现见：`_domain_separator()`。
     NAME_HASH = keccak256(name)
     salt = _salt
     CACHED_CHAIN_ID = chain.id
@@ -293,11 +293,11 @@ def __init__(
         )
     )
 
-    log Transfer(empty(address), self, 0)  # <------- Fire empty transfer from
-    #                                       0x0 to self for indexers to catch.
+    log Transfer(empty(address), self, 0)  # <--------------------- 触发一次从
+    #                                     0x0 到 self 的空转账，供索引器捕获。
 
 
-# ------------------- Token transfers in and out of the AMM ------------------
+# ------------------- 代币转入与转出 AMM -------------------------------------
 
 
 @payable
@@ -320,29 +320,29 @@ def _transfer_in(
     use_eth: bool
 ):
     """
-    @notice Transfers `_coin` from `sender` to `self` and calls `callback_sig`
-            if it is not empty.
-    @dev The callback sig must have the following args:
+    @notice 将 `_coin` 从 `sender` 转入 `self`，并在 `callback_sig`
+            非空时调用它。
+    @dev 回调签名必须具有以下参数：
          sender: address
          receiver: address
          coin: address
          dx: uint256
          dy: uint256
-    @params _coin address of the coin to transfer in.
-    @params dx amount of `_coin` to transfer into the pool.
-    @params dy amount of `_coin` to transfer out of the pool.
-    @params mvalue msg.value if the transfer is ETH, 0 otherwise.
-    @params callbacker address to call `callback_sig` on.
-    @params callback_sig signature of the callback function.
-    @params sender address to transfer `_coin` from.
-    @params receiver address to transfer `_coin` to.
-    @params use_eth True if the transfer is ETH, False otherwise.
+    @params _coin 要转入的代币地址。
+    @params dx 转入池子的 `_coin` 数量。
+    @params dy 转出池子的 `_coin` 数量。
+    @params mvalue 若转账的是 ETH 则为 msg.value，否则为 0。
+    @params callbacker 在其上调用 `callback_sig` 的地址。
+    @params callback_sig 回调函数的签名。
+    @params sender 转出 `_coin` 的来源地址。
+    @params receiver 接收 `_coin` 的目标地址。
+    @params use_eth 若转账的是 ETH 则为 True，否则为 False。
     """
 
     if use_eth and _coin == WETH20:
-        assert mvalue == dx  # dev: incorrect eth amount
+        assert mvalue == dx  # dev: ETH 数量不正确
     else:
-        assert mvalue == 0  # dev: nonzero eth amount
+        assert mvalue == 0  # dev: ETH 数量不为零
 
         if callback_sig == empty(bytes32):
 
@@ -352,11 +352,11 @@ def _transfer_in(
 
         else:
 
-            # --------- This part of the _transfer_in logic is only accessible
-            #                                                    by _exchange.
+            # -------------------------------- _transfer_in 中的这部分逻辑只能
+            #                                              由 _exchange 访问。
 
-            #                 First call callback logic and then check if pool
-            #                  gets dx amounts of _coins[i], revert otherwise.
+            #                                 先调用回调逻辑，然后检查池子是否
+            #                 收到了 dx 数量的 _coins[i]，否则回滚（revert）。
             b: uint256 = ERC20(_coin).balanceOf(self)
             raw_call(
                 callbacker,
@@ -365,13 +365,13 @@ def _transfer_in(
                     _abi_encode(sender, receiver, _coin, dx, dy)
                 )
             )
-            assert ERC20(_coin).balanceOf(self) - b == dx  # dev: callback didn't give us coins
-            #                                          ^------ note: dx cannot
-            #                   be 0, so the contract MUST receive some _coin.
+            assert ERC20(_coin).balanceOf(self) - b == dx  # dev: 回调没有给我们代币
+            #                                          ^------ 注意：dx 不能
+            #                               为 0，因此合约必须收到一些 _coin。
 
         if _coin == WETH20:
-            WETH(WETH20).withdraw(dx)  # <--------- if WETH was transferred in
-            #           previous step and `not use_eth`, withdraw WETH to ETH.
+            WETH(WETH20).withdraw(dx)  # <------------ 如果上一步转入的是 WETH
+            #                         且 `not use_eth`，则将 WETH 提取为 ETH。
 
 
 @internal
@@ -379,13 +379,13 @@ def _transfer_out(
     _coin: address, _amount: uint256, use_eth: bool, receiver: address
 ):
     """
-    @notice Transfer a single token from the pool to receiver.
-    @dev This function is called by `remove_liquidity` and
-         `remove_liquidity_one` and `_exchange` methods.
-    @params _coin Address of the token to transfer out
-    @params _amount Amount of token to transfer out
-    @params use_eth Whether to transfer ETH or not
-    @params receiver Address to send the tokens to
+    @notice 从池子向 receiver 转出单个代币。
+    @dev 该函数由 `remove_liquidity`、
+         `remove_liquidity_one` 和 `_exchange` 方法调用。
+    @params _coin 要转出的代币地址
+    @params _amount 要转出的代币数量
+    @params use_eth 是否转出 ETH
+    @params receiver 接收代币的地址
     """
 
     if use_eth and _coin == WETH20:
@@ -399,7 +399,7 @@ def _transfer_out(
         )
 
 
-# -------------------------- AMM Main Functions ------------------------------
+# -------------------------- AMM 主要函数 ------------------------------------
 
 
 @payable
@@ -414,14 +414,14 @@ def exchange(
     receiver: address = msg.sender
 ) -> uint256:
     """
-    @notice Exchange using wrapped native token by default
-    @param i Index value for the input coin
-    @param j Index value for the output coin
-    @param dx Amount of input coin being swapped in
-    @param min_dy Minimum amount of output coin to receive
-    @param use_eth True if the input coin is native token, False otherwise
-    @param receiver Address to send the output coin to. Default is msg.sender
-    @return uint256 Amount of tokens at index j received by the `receiver
+    @notice 执行兑换，默认使用包装后的原生代币
+    @param i 输入代币的索引值
+    @param j 输出代币的索引值
+    @param dx 换入的输入代币数量
+    @param min_dy 至少应收到的输出代币数量
+    @param use_eth 若输入代币为原生代币则为 True，否则为 False
+    @param receiver 接收输出代币的地址，默认为 msg.sender
+    @return uint256 `receiver 收到的索引 j 对应代币的数量
     """
     return self._exchange(
         msg.sender,
@@ -448,13 +448,13 @@ def exchange_underlying(
     receiver: address = msg.sender
 ) -> uint256:
     """
-    @notice Exchange using native token transfers.
-    @param i Index value for the input coin
-    @param j Index value for the output coin
-    @param dx Amount of input coin being swapped in
-    @param min_dy Minimum amount of output coin to receive
-    @param receiver Address to send the output coin to. Default is msg.sender
-    @return uint256 Amount of tokens at index j received by the `receiver
+    @notice 使用原生代币转账进行兑换。
+    @param i 输入代币的索引值
+    @param j 输出代币的索引值
+    @param dx 换入的输入代币数量
+    @param min_dy 至少应收到的输出代币数量
+    @param receiver 接收输出代币的地址，默认为 msg.sender
+    @return uint256 `receiver 收到的索引 j 对应代币的数量
     """
     return self._exchange(
         msg.sender,
@@ -483,27 +483,27 @@ def exchange_extended(
     cb: bytes32
 ) -> uint256:
     """
-    @notice Exchange with callback method.
-    @dev This method does not allow swapping in native token, but does allow
-         swaps that transfer out native token from the pool.
-    @dev Does not allow flashloans
-    @dev One use-case is to reduce the number of redundant ERC20 token
-         transfers in zaps.
-    @param i Index value for the input coin
-    @param j Index value for the output coin
-    @param dx Amount of input coin being swapped in
-    @param min_dy Minimum amount of output coin to receive
-    @param use_eth True if output is native token, False otherwise
-    @param sender Address to transfer input coin from
-    @param receiver Address to send the output coin to
-    @param cb Callback signature
-    @return uint256 Amount of tokens at index j received by the `receiver`
+    @notice 带回调方法的兑换。
+    @dev 该方法不允许换入原生代币，但允许
+         从池子中转出原生代币的兑换。
+    @dev 不允许闪电贷
+    @dev 一个用例是减少 zap 中冗余的 ERC20 代币
+         转账次数。
+    @param i 输入代币的索引值
+    @param j 输出代币的索引值
+    @param dx 换入的输入代币数量
+    @param min_dy 至少应收到的输出代币数量
+    @param use_eth 若输出为原生代币则为 True，否则为 False
+    @param sender 转出输入代币的来源地址
+    @param receiver 接收输出代币的地址
+    @param cb 回调签名
+    @return uint256 `receiver` 收到的索引 j 对应代币的数量
     """
 
-    assert cb != empty(bytes32)  # dev: No callback specified
+    assert cb != empty(bytes32)  # dev: 未指定回调
     return self._exchange(
         sender, 0, i, j, dx, min_dy, use_eth, receiver, msg.sender, cb
-    )  # callbacker should never be self ------------------^
+    )  # callbacker 绝不应是 self -------------------------^
 
 
 @payable
@@ -516,16 +516,16 @@ def add_liquidity(
     receiver: address = msg.sender
 ) -> uint256:
     """
-    @notice Adds liquidity into the pool.
-    @param amounts Amounts of each coin to add.
-    @param min_mint_amount Minimum amount of LP to mint.
-    @param use_eth True if native token is being added to the pool.
-    @param receiver Address to send the LP tokens to. Default is msg.sender
-    @return uint256 Amount of LP tokens received by the `receiver
+    @notice 向池子添加流动性。
+    @param amounts 要添加的各代币数量。
+    @param min_mint_amount 至少应铸造的 LP 数量。
+    @param use_eth 若向池子添加的是原生代币则为 True。
+    @param receiver 接收 LP 代币的地址，默认为 msg.sender
+    @return uint256 `receiver 收到的 LP 代币数量
     """
 
     A_gamma: uint256[2] = self._A_gamma()
-    # transformed balances
+    # 变换后的余额
     xp: uint256[N_COINS] = self.balances
     # amountsp = xp - xp_old
     amountsp: uint256[N_COINS] = empty(uint256[N_COINS])
@@ -534,15 +534,15 @@ def add_liquidity(
     d_token_fee: uint256 = 0
     old_D: uint256 = 0
 
-    assert amounts[0] + amounts[1] + amounts[2] > 0  # dev: no coins to add
+    assert amounts[0] + amounts[1] + amounts[2] > 0  # dev: 没有要添加的代币
 
-    # --------------------- Get prices, balances -----------------------------
+    # --------------------- 获取价格、余额 -----------------------------------
 
     precisions: uint256[N_COINS] = self._unpack(self.packed_precisions)
     packed_price_scale: uint256 = self.price_scale_packed
     price_scale: uint256[N_COINS-1] = self._unpack_prices(packed_price_scale)
 
-    # -------------------------------------- Update balances and calculate xp.
+    # ---------------------------------------------------- 更新余额并计算 xp。
     xp_old: uint256[N_COINS] = xp
     for i in range(N_COINS):
         bal: uint256 = xp[i] + amounts[i]
@@ -560,7 +560,7 @@ def add_liquidity(
             PRECISION
         )
 
-    # ---------------- transferFrom token into the pool ----------------------
+    # ---------------- 将代币 transferFrom 转入池子 --------------------------
 
     for i in range(N_COINS):
         if amounts[i] > 0:
@@ -569,9 +569,9 @@ def add_liquidity(
                     coins[i],
                     amounts[i],
                     0,  # <-----------------------------------
-                    msg.value,  #                             | No callbacks
-                    empty(address),  # <----------------------| for
-                    empty(bytes32),  # <----------------------| add_liquidity.
+                    msg.value,  #                             | add_liquidity
+                    empty(address),  # <----------------------| 不使用
+                    empty(bytes32),  # <----------------------| 回调。
                     msg.sender,  #                            |
                     empty(address),  # <-----------------------
                     use_eth
@@ -581,23 +581,23 @@ def add_liquidity(
                     coins[i],
                     amounts[i],
                     0,
-                    0,  # <----------------- mvalue = 0 if coin is not WETH20.
+                    0,  # <---------------- 若代币不是 WETH20，则 mvalue = 0。
                     empty(address),
                     empty(bytes32),
                     msg.sender,
                     empty(address),
-                    False  # <-------- use_eth is False if coin is not WETH20.
+                    False  # <------- 若代币不是 WETH20，则 use_eth 为 False。
                 )
             amountsp[i] = xp[i] - xp_old[i]
 
-    # -------------------- Calculate LP tokens to mint -----------------------
-    if self.future_A_gamma_time > block.timestamp:  # <--- A_gamma is ramping.
-        # ----- Recalculate the invariant if A or gamma are undergoing a ramp.
+    # -------------------- 计算要铸造的 LP 代币 ------------------------------
+    if self.future_A_gamma_time > block.timestamp:  # <-- A_gamma 正在渐变调整中。
+        # ------------------- 如果 A 或 gamma 正在渐变调整，则重新计算不变量。
         old_D = MATH.newton_D(A_gamma[0], A_gamma[1], xp_old, 0)
     else:
         old_D = self.D
 
-    # new D after token balance updates
+    # 代币余额更新后的新 D
     D: uint256 = MATH.newton_D(A_gamma[0], A_gamma[1], xp, 0)
 
     token_supply: uint256 = self.totalSupply
@@ -605,10 +605,10 @@ def add_liquidity(
         d_token = token_supply * D / old_D - token_supply
     else:
         # (D/(N*p0) * D/(N*p1) ... * D/(N*p(N-1))) ** (1/N)
-        d_token = self.get_xcp(D)  # <------------------------- Making initial
-        #                                            virtual price equal to 1.
+        d_token = self.get_xcp(D)  # <--------------------------------- 使初始
+        #                                                     虚拟价格等于 1。
 
-    assert d_token > 0  # dev: nothing minted
+    assert d_token > 0  # dev: 未铸造任何代币
 
     if old_D > 0:
         d_token_fee = (
@@ -631,7 +631,7 @@ def add_liquidity(
         receiver, amounts, d_token_fee, token_supply, packed_price_scale
     )
 
-    self._claim_admin_fees()  # <--------------------------- Claim admin fees.
+    self._claim_admin_fees()  # <-------------------------------- 领取管理费。
 
     return d_token
 
@@ -646,57 +646,57 @@ def remove_liquidity(
     claim_admin_fees: bool = True,
 ) -> uint256[N_COINS]:
     """
-    @notice This withdrawal method is very safe, does no complex math since
-            tokens are withdrawn in balanced proportions. No fees are charged.
-    @param _amount Amount of LP tokens to burn
-    @param min_amounts Minimum amounts of tokens to withdraw
-    @param use_eth Whether to withdraw ETH or not
-    @param receiver Address to send the withdrawn tokens to
-    @param claim_admin_fees If True, call self._claim_admin_fees(). Default is True.
-    @return uint256[3] Amount of pool tokens received by the `receiver`
+    @notice 这种取出方式非常安全，不涉及复杂的数学运算，因为
+            代币是按均衡比例取出的。不收取手续费。
+    @param _amount 要销毁的 LP 代币数量
+    @param min_amounts 至少应取出的各代币数量
+    @param use_eth 是否取出 ETH
+    @param receiver 接收所取出代币的地址
+    @param claim_admin_fees 若为 True，则调用 self._claim_admin_fees()。默认为 True。
+    @return uint256[3] `receiver` 收到的池中代币数量
     """
     amount: uint256 = _amount
     balances: uint256[N_COINS] = self.balances
     d_balances: uint256[N_COINS] = empty(uint256[N_COINS])
 
     if claim_admin_fees:
-        self._claim_admin_fees()  # <------ We claim fees so that the DAO gets
-        #         paid before withdrawal. In emergency cases, set it to False.
+        self._claim_admin_fees()  # <----------- 我们先领取手续费，以便 DAO 在
+        #                       取出之前拿到收益。紧急情况下可将其设为 False。
 
-    # -------------------------------------------------------- Burn LP tokens.
+    # --------------------------------------------------------- 销毁 LP 代币。
 
-    total_supply: uint256 = self.totalSupply  # <------ Get totalSupply before
-    self.burnFrom(msg.sender, _amount)  # ---- reducing it with self.burnFrom.
+    total_supply: uint256 = self.totalSupply  # <-------- 先获取 totalSupply，
+    self.burnFrom(msg.sender, _amount)  # ---- 再用 self.burnFrom 减少它。
 
-    # There are two cases for withdrawing tokens from the pool.
-    #   Case 1. Withdrawal does not empty the pool.
-    #           In this situation, D is adjusted proportional to the amount of
-    #           LP tokens burnt. ERC20 tokens transferred is proportional
-    #           to : (AMM balance * LP tokens in) / LP token total supply
-    #   Case 2. Withdrawal empties the pool.
-    #           In this situation, all tokens are withdrawn and the invariant
-    #           is reset.
+    # 从池子取出代币有两种情况。
+    #   情况 1：取出后池子未被清空。
+    #           这种情况下，D 按销毁的 LP 代币数量
+    #           按比例调整。转出的 ERC20 代币数量与
+    #           (AMM 余额 * 转入的 LP 代币) / LP 代币总供应量 成正比
+    #   情况 2：取出后池子被清空。
+    #           这种情况下，所有代币都会被取出，并且不变量
+    #           会被重置。
 
-    if amount == total_supply:  # <----------------------------------- Case 2.
+    if amount == total_supply:  # <---------------------------------- 情况 2。
         for i in range(N_COINS):
             d_balances[i] = balances[i]
-            self.balances[i] = 0  # <------------------------- Empty the pool.
-    else:  # <-------------------------------------------------------- Case 1.
-        amount -= 1  # <---- To prevent rounding errors, favor LPs a tiny bit.
+            self.balances[i] = 0  # <------------------------------ 清空池子。
+    else:  # <------------------------------------------------------- 情况 1。
+        amount -= 1  # <------------------- 为防止取整误差，稍微偏向 LP 一点。
         for i in range(N_COINS):
             d_balances[i] = balances[i] * amount / total_supply
             assert d_balances[i] >= min_amounts[i]
             self.balances[i] = balances[i] - d_balances[i]
-            balances[i] = d_balances[i]  # <-- Now it's the amounts going out.
+            balances[i] = d_balances[i]  # <--------- 现在它表示要转出的数量。
 
     D: uint256 = self.D
     # D1 / D0 = (total_supply - amount) / total_supply
-    self.D = D - unsafe_div(D * amount, total_supply)  # <----------- Reduce D
-    #      proportional to the amount of tokens leaving. Since withdrawals are
-    #       balanced, this is a simple subtraction. If amount == total_supply,
-    #                                                             D will be 0.
+    self.D = D - unsafe_div(D * amount, total_supply)  # <----------- 减少 D，
+    #                         减少量与离开的代币数量成正比。由于取出是均衡的，
+    #                            这只是简单的减法。若 amount == total_supply，
+    #                                                             D 将变为 0。
 
-    # ---------------------------------- Transfers ---------------------------
+    # ---------------------------------- 转账 --------------------------------
 
     for i in range(N_COINS):
         self._transfer_out(coins[i], d_balances[i], use_eth, receiver)
@@ -716,15 +716,15 @@ def remove_liquidity_one_coin(
     receiver: address = msg.sender
 ) -> uint256:
     """
-    @notice Withdraw liquidity in a single token.
-            Involves fees (lower than swap fees).
-    @dev This operation also involves an admin fee claim.
-    @param token_amount Amount of LP tokens to burn
-    @param i Index of the token to withdraw
-    @param min_amount Minimum amount of token to withdraw.
-    @param use_eth Whether to withdraw ETH or not
-    @param receiver Address to send the withdrawn tokens to
-    @return Amount of tokens at index i received by the `receiver`
+    @notice 以单一代币取出流动性。
+            会收取手续费（低于兑换手续费）。
+    @dev 该操作同时会领取管理费。
+    @param token_amount 要销毁的 LP 代币数量
+    @param i 要取出的代币索引
+    @param min_amount 至少应取出的代币数量。
+    @param use_eth 是否取出 ETH
+    @param receiver 接收所取出代币的地址
+    @return `receiver` 收到的索引 i 对应代币的数量
     """
 
     A_gamma: uint256[2] = self._A_gamma()
@@ -735,7 +735,7 @@ def remove_liquidity_one_coin(
     xp: uint256[N_COINS] = empty(uint256[N_COINS])
     approx_fee: uint256 = 0
 
-    # ---------------------------- Claim admin fees before removing liquidity.
+    # ------------------------------------------- 移除流动性之前先领取管理费。
     self._claim_admin_fees()
 
     # ------------------------------------------------------------------------
@@ -744,19 +744,19 @@ def remove_liquidity_one_coin(
         A_gamma,
         token_amount,
         i,
-        (self.future_A_gamma_time > block.timestamp),  # <------- During ramps
-    )  #                                                  we need to update D.
+        (self.future_A_gamma_time > block.timestamp),  # <----- 在渐变调整期间
+    )  #                                                      我们需要更新 D。
 
     assert dy >= min_amount, "Slippage"
 
-    # ------------------------- Transfers ------------------------------------
+    # ------------------------- 转账 -----------------------------------------
 
     self.balances[i] -= dy
     self.burnFrom(msg.sender, token_amount)
     self._transfer_out(coins[i], dy, use_eth, receiver)
 
     packed_price_scale: uint256 = self.tweak_price(A_gamma, xp, D, 0)
-    #        Safe to use D from _calc_withdraw_one_coin here ---^
+    #        此处可以安全使用来自 _calc_withdraw_one_coin 的 D --^
 
     log RemoveLiquidityOne(
         msg.sender, token_amount, i, dy, approx_fee, packed_price_scale
@@ -769,23 +769,23 @@ def remove_liquidity_one_coin(
 @nonreentrant("lock")
 def claim_admin_fees():
     """
-    @notice Claim admin fees. Callable by anyone.
+    @notice 领取管理费。任何人都可以调用。
     """
     self._claim_admin_fees()
 
 
-# -------------------------- Packing functions -------------------------------
+# -------------------------- 打包函数 ----------------------------------------
 
 
 @internal
 @view
 def _pack(x: uint256[3]) -> uint256:
     """
-    @notice Packs 3 integers with values <= 10**18 into a uint256
-    @param x The uint256[3] to pack
-    @return uint256 Integer with packed values
+    @notice 将 3 个值 <= 10**18 的整数打包进一个 uint256
+    @param x 要打包的 uint256[3]
+    @return uint256 打包后的整数
     """
-    #      | 128 bits | 64 bits | 64 bits |
+    #      | 128 位   | 64 位   | 64 位   |
     #          x[0]      x[1]      x[2]
     return (x[0] << 128) | (x[1] << 64) | x[2]
 
@@ -794,9 +794,9 @@ def _pack(x: uint256[3]) -> uint256:
 @view
 def _unpack(_packed: uint256) -> uint256[3]:
     """
-    @notice Unpacks a uint256 into 3 integers (values must be <= 10**18)
-    @param val The uint256 to unpack
-    @return uint256[3] A list of length 3 with unpacked integers
+    @notice 将一个 uint256 解包为 3 个整数（值必须 <= 10**18）
+    @param val 要解包的 uint256
+    @return uint256[3] 由解包所得整数组成的长度为 3 的列表
     """
     return [
         #                  2**64 - 1
@@ -810,9 +810,9 @@ def _unpack(_packed: uint256) -> uint256[3]:
 @view
 def _pack_prices(prices_to_pack: uint256[N_COINS-1]) -> uint256:
     """
-    @notice Packs N_COINS-1 prices into a uint256.
-    @param prices_to_pack The prices to pack
-    @return uint256 An integer that packs prices
+    @notice 将 N_COINS-1 个价格打包进一个 uint256。
+    @param prices_to_pack 要打包的价格
+    @return uint256 打包了价格的整数
     """
     packed_prices: uint256 = 0
     p: uint256 = 0
@@ -821,7 +821,7 @@ def _pack_prices(prices_to_pack: uint256[N_COINS-1]) -> uint256:
     # PRICE_MASK: constant(uint256) = 2**PRICE_SIZE - 1
 
     for k in range(N_COINS - 1):
-        # Shift 128 bits to the left
+        # 左移 128 位
         packed_prices = packed_prices << PRICE_SIZE
         #                  k | 3 - 2 - k | prices
         #                  0 | 1         | prices[1]
@@ -836,28 +836,28 @@ def _pack_prices(prices_to_pack: uint256[N_COINS-1]) -> uint256:
 @internal
 @view
 def _unpack_prices(_packed_prices: uint256) -> uint256[2]:
-    # Returns uint256[2], price scale of coin[0] is 1 so no need to store
+    # 返回 uint256[2]，coin[0] 的价格尺度为 1，因此无需存储
     """
-    @notice Unpacks N_COINS-1 prices from a uint256.
-    @param _packed_prices The packed prices
-    @return uint256[2] Unpacked prices
+    @notice 从一个 uint256 中解包出 N_COINS-1 个价格。
+    @param _packed_prices 打包后的价格
+    @return uint256[2] 解包后的价格
     """
     unpacked_prices: uint256[N_COINS-1] = empty(uint256[N_COINS-1])
     packed_prices: uint256 = _packed_prices
     for k in range(N_COINS - 1):
         # PRICE_SIZE: constant(uint128) = 256 / (N_COINS - 1)
         # PRICE_MASK: constant(uint256) = 2**PRICE_SIZE - 1
-        #                                    128 bits mask
-        # packed_prices = 128 bits | 128 bits
+        #                                       128 位掩码
+        # packed_prices = 128 位 | 128 位
         unpacked_prices[k] = packed_prices & PRICE_MASK
-        #               shift packed prices by 128 bits to the right
+        #                                    将打包的价格右移 128 位
         packed_prices = packed_prices >> PRICE_SIZE
-    # unpacked prices = 128 bits |  128 bits
+    # 解包后的价格    = 128 位   |  128 位
     #                  prices[1] | prices[0]
     return unpacked_prices
 
 
-# ---------------------- AMM Internal Functions -------------------------------
+# ---------------------- AMM 内部函数 -------------------------------
 
 
 @internal
@@ -865,9 +865,9 @@ def _exchange(
     sender: address,
     # msg.value
     mvalue: uint256,
-    # token in
+    # 输入代币
     i: uint256,
-    # token out
+    # 输出代币
     j: uint256,
     dx: uint256,
     min_dy: uint256,
@@ -877,16 +877,16 @@ def _exchange(
     callback_sig: bytes32
 ) -> uint256:
 
-    assert i != j  # dev: coin index out of range
-    assert dx > 0  # dev: do not exchange 0 coins
+    assert i != j  # dev: 币种索引越界
+    assert dx > 0  # dev: 不能兑换 0 个币
 
     A_gamma: uint256[2] = self._A_gamma()
     xp: uint256[N_COINS] = self.balances
     precisions: uint256[N_COINS] = self._unpack(self.packed_precisions)
     dy: uint256 = 0
 
-    y: uint256 = xp[j]  # <----------------- if j > N_COINS, this will revert.
-    x0: uint256 = xp[i]  # <--------------- if i > N_COINS, this will  revert.
+    y: uint256 = xp[j]  # <----------------- 若 j > N_COINS，这里会回滚（revert）。
+    x0: uint256 = xp[i]  # <--------------- 若 i > N_COINS，这里会回滚（revert）。
     xp[i] = x0 + dx
     self.balances[i] = xp[i]
 
@@ -896,18 +896,18 @@ def _exchange(
     )
 
     """
-    transformed balance = token balance * price scale * precision / PRECISION
+    变换后的余额 = 代币余额 * 价格尺度 * 精度 / PRECISION
     """
     xp[0] *= precisions[0]
     for k in range(1, N_COINS):
         xp[k] = unsafe_div(
             xp[k] * price_scale[k - 1] * precisions[k],
             PRECISION
-        )  # <-------- Safu to do unsafe_div here since PRECISION is not zero.
+        )  # <-------- 由于 PRECISION 不为零，这里使用 unsafe_div 是安全的。
 
     prec_i: uint256 = precisions[i]
 
-    # ----------- Update invariant if A, gamma are undergoing ramps ---------
+    # ----------- 若 A、gamma 正在渐变调整，则更新不变量 ---------
 
     t: uint256 = self.future_A_gamma_time
     if t > block.timestamp:
@@ -916,12 +916,12 @@ def _exchange(
         if i > 0:
             x0 = unsafe_div(x0 * price_scale[i - 1], PRECISION)
 
-        x1: uint256 = xp[i]  # <------------------ Back up old value in xp ...
+        x1: uint256 = xp[i]  # <------------------ 备份 xp 中的旧值 ...
         xp[i] = x0                                                         # |
         self.D = MATH.newton_D(A_gamma[0], A_gamma[1], xp, 0)              # |
-        xp[i] = x1  # <-------------------------------------- ... and restore.
+        xp[i] = x1  # <-------------------------------------- ... 然后恢复。
 
-    # ----------------------- Calculate dy and fees --------------------------
+    # ----------------------- 计算 dy 和手续费 --------------------------
 
     D: uint256 = self.D
     prec_j: uint256 = precisions[j]
@@ -936,31 +936,31 @@ def _exchange(
 
     fee: uint256 = unsafe_div(self._fee(xp) * dy, 10**10)
 
-    dy -= fee  # <--------------------- Subtract fee from the outgoing amount.
+    dy -= fee  # <--------------------- 从转出数量中扣除手续费。
     assert dy >= min_dy, "Slippage"
 
     # y = y - (dy - fee)
     y -= dy
-    self.balances[j] = y  # <----------- Update pool balance of outgoing coin.
+    self.balances[j] = y  # <----------- 更新转出币种在池子中的余额。
 
     y *= prec_j
     if j > 0:
         y = unsafe_div(y * price_scale[j - 1], PRECISION)
-    xp[j] = y  # <------------------------------------------------- Update xp.
+    xp[j] = y  # <------------------------------------------------- 更新 xp。
 
-    # ---------------------- Do Transfers in and out -------------------------
+    # ---------------------- 执行转入和转出 -------------------------
 
-    ########################## TRANSFER IN <-------
+    ########################## 转入 <-------
     self._transfer_in(
         coins[i], dx, dy, mvalue,
-        callbacker, callback_sig,  # <-------- Callback method is called here.
+        callbacker, callback_sig,  # <-------- 回调方法在这里被调用。
         sender, receiver, use_eth,
     )
 
-    ########################## -------> TRANSFER OUT
+    ########################## -------> 转出
     self._transfer_out(coins[j], dy, use_eth, receiver)
 
-    # ------ Tweak price_scale with good initial guess for newton_D ----------
+    # ------ 微调 price_scale（并为 newton_D 提供良好的初始猜测值） ----------
 
     packed_price_scale = self.tweak_price(A_gamma, xp, 0, y_out[1])
 
@@ -977,22 +977,22 @@ def tweak_price(
     K0_prev: uint256 = 0,
 ) -> uint256:
     """
-    @notice Tweaks price_oracle, last_price and conditionally adjusts
-            price_scale. This is called whenever there is an unbalanced
-            liquidity operation: _exchange, add_liquidity, or
-            remove_liquidity_one_coin.
-    @dev Contains main liquidity rebalancing logic, by tweaking `price_scale`.
-    @param A_gamma Array of A and gamma parameters.
-    @param _xp Array of current balances.
-    @param new_D New D value.
-    @param K0_prev Initial guess for `newton_D`.
+    @notice 微调 price_oracle、last_price，并在满足条件时调整
+            price_scale。每当发生非平衡的流动性操作时都会调用它：
+            _exchange、add_liquidity 或
+            remove_liquidity_one_coin。
+    @dev 包含主要的流动性再平衡逻辑，通过微调 `price_scale` 实现。
+    @param A_gamma 由 A 和 gamma 参数组成的数组。
+    @param _xp 当前余额数组。
+    @param new_D 新的 D 值。
+    @param K0_prev `newton_D` 的初始猜测值。
     """
 
-    # ---------------------------- Read storage ------------------------------
+    # ---------------------------- 读取 storage ------------------------------
 
     rebalancing_params: uint256[3] = self._unpack(
         self.packed_rebalancing_params
-    )  # <---------- Contains: allowed_extra_profit, adjustment_step, ma_time.
+    )  # <---------- 包含：allowed_extra_profit、adjustment_step、ma_time。
     price_oracle: uint256[N_COINS - 1] = self._unpack_prices(
         self.price_oracle_packed
     )
@@ -1009,15 +1009,15 @@ def tweak_price(
     old_virtual_price: uint256 = self.virtual_price
     last_prices_timestamp: uint256 = self.last_prices_timestamp
 
-    # ----------------------- Update MA if needed ----------------------------
+    # ----------------------- 如有需要，更新移动平均（MA） ----------------------------
 
     if last_prices_timestamp < block.timestamp:
 
-        #   The moving average price oracle is calculated using the last_price
-        #      of the trade at the previous block, and the price oracle logged
-        #              before that trade. This can happen only once per block.
+        #   移动平均价格预言机的计算使用上一个区块中交易的 last_price，
+        #      以及在该交易之前记录的价格预言机值。
+        #              每个区块只会发生一次。
 
-        # ------------------ Calculate moving average params -----------------
+        # ------------------ 计算移动平均参数 -----------------
 
         alpha: uint256 = MATH.wad_exp(
             -convert(
@@ -1031,37 +1031,37 @@ def tweak_price(
 
         for k in range(N_COINS - 1):
 
-            # ----------------- We cap state price that goes into the EMA with
-            #                                                 2 x price_scale.
-            # new EMA = min(last price, 2 * price scale) * (1 - alpha) + old EMA * alpha
+            # ----------------- 进入 EMA 的状态价格被限制为不超过
+            #                                                 2 x price_scale。
+            # 新 EMA = min(最新价格, 2 * 价格尺度) * (1 - alpha) + 旧 EMA * alpha
             price_oracle[k] = unsafe_div(
                 min(last_prices[k], 2 * price_scale[k]) * (10**18 - alpha) +
-                price_oracle[k] * alpha,  # ^-------- Cap spot price into EMA.
+                price_oracle[k] * alpha,  # ^-------- 限制进入 EMA 的现货价格。
                 10**18
             )
 
         self.price_oracle_packed = self._pack_prices(price_oracle)
-        self.last_prices_timestamp = block.timestamp  # <---- Store timestamp.
+        self.last_prices_timestamp = block.timestamp  # <---- 存储时间戳。
 
-    #                  price_oracle is used further on to calculate its vector
-    #            distance from price_scale. This distance is used to calculate
-    #                  the amount of adjustment to be done to the price_scale.
+    #                  price_oracle 在后面用于计算它与 price_scale 之间的
+    #            向量距离。该距离用于计算
+    #                  需要对 price_scale 进行的调整量。
 
-    # ------------------ If new_D is set to 0, calculate it ------------------
-    # D before adjusting the price
-    # new_D = 0 during swaps
+    # ------------------ 若 new_D 被设为 0，则计算它 ------------------
+    # 调整价格之前的 D
+    # 兑换期间 new_D = 0
     D_unadjusted: uint256 = new_D
-    if new_D == 0:  #  <--------------------------- _exchange sets new_D to 0.
+    if new_D == 0:  #  <--------------------------- _exchange 会将 new_D 设为 0。
         D_unadjusted = MATH.newton_D(A_gamma[0], A_gamma[1], _xp, K0_prev)
 
-    # ----------------------- Calculate last_prices --------------------------
+    # ----------------------- 计算 last_prices（最新价格） --------------------------
 
     last_prices = MATH.get_p(_xp, D_unadjusted, A_gamma)
     for k in range(N_COINS - 1):
         last_prices[k] = unsafe_div(last_prices[k] * price_scale[k], 10**18)
     self.last_prices_packed = self._pack_prices(last_prices)
 
-    # ---------- Update profit numbers without price adjustment first --------
+    # ---------- 先在不调整价格的情况下更新利润数据 --------
 
     """
     xp = [D/(N*p0), D/(N*p1), D/(N*p2)]
@@ -1071,7 +1071,7 @@ def tweak_price(
     for k in range(N_COINS - 1):
         xp[k + 1] = D_unadjusted * 10**18 / (N_COINS * price_scale[k])
 
-    # ------------------------- Update xcp_profit ----------------------------
+    # ------------------------- 更新 xcp_profit ----------------------------
 
     xcp_profit: uint256 = 10**18
     virtual_price: uint256 = 10**18
@@ -1082,47 +1082,47 @@ def tweak_price(
         virtual_price = 10**18 * xcp / total_supply
 
         """"
-        xcp_profit = initial virtual price * (accumulated profit / loss rate of virtual price before repeg)
-                     initial virtual price = 1
+        xcp_profit = 初始虚拟价格 * (repeg 之前虚拟价格累计的盈利 / 亏损比率)
+                     初始虚拟价格 = 1
 
-        v_old[i] = virtual price stored in state variable at time i
-        v_new[i] = virtual price calculated at time i
+        v_old[i] = 时刻 i 存储在状态变量中的虚拟价格
+        v_new[i] = 时刻 i 计算得到的虚拟价格
         v_old[0] = 1
 
         xcp_profit = 1 * (v_new[0] / v_old[0]) * (v_new[1] / v_old[1]) * (v_new[2] / v_old[2]) * .. * (v_new[n] / v_old[n])
 
-        Virtual price is updated
-        - here, further down in the code
+        虚拟价格在以下位置更新
+        - 此处（代码更下方）
         - claim_admin_fees
 
-        (1) Simple example without updates from claim_admin_fees
-        Imagine self.virtual_price doesn't change in between calls to tweak_price
+        (1) 不考虑 claim_admin_fees 更新的简单示例
+        假设 self.virtual_price 在两次调用 tweak_price 之间不发生变化
         v_new[i] = v_old[i + 1]
 
         xcp_profit = v_new[n] / v_old[0]
                    = v_new[n]
 
-        (2) Example with updates from claim_admin_fees
-        self.virtual_price may change in between calls to tweak_price
+        (2) 考虑 claim_admin_fees 更新的示例
+        self.virtual_price 可能在两次调用 tweak_price 之间发生变化
 
         xcp_profit = 1 * (v_new[0] / v_old[0]) * (v_new[1] / v_old[1]) * (v_new[2] / v_old[2]) * .. * (v_new[n] / v_old[n])
         """
         xcp_profit = unsafe_div(
             old_xcp_profit * virtual_price,
             old_virtual_price
-        )  # <---------------- Safu to do unsafe_div as old_virtual_price > 0.
+        )  # <---------------- 由于 old_virtual_price > 0，使用 unsafe_div 是安全的。
 
-        #       If A and gamma are not undergoing ramps (t < block.timestamp),
-        #         ensure new virtual_price is not less than old virtual_price,
-        #                                        else the pool suffers a loss.
+        #       若 A 和 gamma 没有在渐变调整（t < block.timestamp），
+        #         则确保新的 virtual_price 不低于旧的 virtual_price，
+        #                                        否则池子就遭受了损失。
         if self.future_A_gamma_time < block.timestamp:
             assert virtual_price > old_virtual_price, "Loss"
 
     self.xcp_profit = xcp_profit
 
-    # ------------ Rebalance liquidity if there's enough profits to adjust it:
+    # ------------ 若利润足以支撑调整，则对流动性进行再平衡：
     """
-    when allowed_extra_profit = 0
+    当 allowed_extra_profit = 0 时
 
     virtual_price > (1 + xcp_profit) / 2
 
@@ -1137,16 +1137,16 @@ def tweak_price(
     if virtual_price * 2 - 10**18 > xcp_profit + 2 * rebalancing_params[0]:
         #                          allowed_extra_profit --------^
 
-        # ------------------- Get adjustment step ----------------------------
+        # ------------------- 获取调整步长 ----------------------------
 
-        #                Calculate the vector distance between price_scale and
-        #                                                        price_oracle.
+        #                计算 price_scale 与 price_oracle 之间的
+        #                                                        向量距离。
         norm: uint256 = 0
         ratio: uint256 = 0
         for k in range(N_COINS - 1):
 
             ratio = unsafe_div(price_oracle[k] * 10**18, price_scale[k])
-            # unsafe_div because we did safediv before ----^
+            # 可用 unsafe_div，因为之前已做过安全除法 ----^
 
             if ratio > 10**18:
                 ratio = unsafe_sub(ratio, 10**18)
@@ -1154,19 +1154,19 @@ def tweak_price(
                 ratio = unsafe_sub(10**18, ratio)
             norm = unsafe_add(norm, ratio**2)
 
-        # norm = sqrt(sum(|1 - r|)), r = price oracle / price scale
-        norm = isqrt(norm)  # <-------------------- isqrt is not in base 1e18.
+        # norm = sqrt(sum(|1 - r|)), r = 价格预言机 / 价格尺度
+        norm = isqrt(norm)  # <-------------------- isqrt 的结果不以 1e18 为基数。
         adjustment_step: uint256 = max(
             rebalancing_params[1], unsafe_div(norm, 5)
         )  #           ^------------------------------------- adjustment_step.
 
-        if norm > adjustment_step:  # <---------- We only adjust prices if the
-            #          vector distance between price_oracle and price_scale is
-            #             large enough. This check ensures that no rebalancing
-            #           occurs if the distance is low i.e. the pool prices are
-            #                                     pegged to the oracle prices.
+        if norm > adjustment_step:  # <---------- 只有当 price_oracle 与 price_scale 之间的
+            #          向量距离足够大时，我们才调整价格。
+            #             此检查确保在距离较小，即池子价格
+            #           已锚定于预言机价格时，
+            #                                     不会发生再平衡。
 
-            # ------------------------------------- Calculate new price scale.
+            # ------------------------------------- 计算新的价格尺度。
 
             p_new: uint256[N_COINS - 1] = empty(uint256[N_COINS - 1])
             for k in range(N_COINS - 1):
@@ -1176,35 +1176,35 @@ def tweak_price(
                     price_scale[k] * unsafe_sub(norm, adjustment_step)
                     + adjustment_step * price_oracle[k],
                     norm
-                )  # <- norm is non-zero and gt adjustment_step; unsafe = safe
+                )  # <- norm 非零且大于 adjustment_step；此处 unsafe 也是安全的
 
-            # ---------------- Update stale xp (using price_scale) with p_new.
+            # ---------------- 用 p_new 更新过时的 xp（基于 price_scale 计算）。
             xp = _xp
             for k in range(N_COINS - 1):
-                # _xp = token balances * old price_scale
+                # _xp = 代币余额 * 旧的 price_scale
                 xp[k + 1] = unsafe_div(_xp[k + 1] * p_new[k], price_scale[k])
-                # unsafe_div because we did safediv before ----^
+                # 可用 unsafe_div，因为之前已做过安全除法 ----^
 
-            # ------------------------------------------ Update D with new xp.
+            # ------------------------------------------ 用新的 xp 更新 D。
             D: uint256 = MATH.newton_D(A_gamma[0], A_gamma[1], xp, 0)
 
             for k in range(N_COINS):
-                frac: uint256 = xp[k] * 10**18 / D  # <----- Check validity of
-                assert (frac > 10**16 - 1) and (frac < 10**20 + 1)  #   p_new.
+                frac: uint256 = xp[k] * 10**18 / D  # <----- 检查
+                assert (frac > 10**16 - 1) and (frac < 10**20 + 1)  #   p_new 的有效性。
 
             xp[0] = D / N_COINS
             for k in range(N_COINS - 1):
-                xp[k + 1] = D * 10**18 / (N_COINS * p_new[k])  # <---- Convert
-                #                                           xp to real prices.
+                xp[k + 1] = D * 10**18 / (N_COINS * p_new[k])  # <---- 将
+                #                                           xp 转换为真实价格。
 
-            # ---------- Calculate new virtual_price using new xp and D. Reuse
-            #              `old_virtual_price` (but it has new virtual_price).
+            # ---------- 用新的 xp 和 D 计算新的 virtual_price。复用
+            #              `old_virtual_price`（但其中存放的是新的 virtual_price）。
             old_virtual_price = unsafe_div(
                 10**18 * MATH.geometric_mean(xp), total_supply
-            )  # <----- unsafe_div because we did safediv before (if vp>1e18)
+            )  # <----- 可用 unsafe_div，因为之前已做过安全除法（若 vp>1e18）
 
-            # ---------------------------- Proceed if we've got enough profit.
-            # if new virtual_price > (1 + xcp_profit) / 2
+            # ---------------------------- 若利润足够则继续。
+            # 若新的 virtual_price > (1 + xcp_profit) / 2
             if (
                 old_virtual_price > 10**18 and
                 2 * old_virtual_price - 10**18 > xcp_profit
@@ -1213,13 +1213,13 @@ def tweak_price(
                 packed_price_scale = self._pack_prices(p_new)
 
                 self.D = D
-                # virtual_price = xcp / total_supply, xcp calculated with new price scales
+                # virtual_price = xcp / total_supply，其中 xcp 用新的价格尺度计算
                 self.virtual_price = old_virtual_price
                 self.price_scale_packed = packed_price_scale
 
                 return packed_price_scale
 
-    # --------- price_scale was not adjusted. Update the profit counter and D.
+    # --------- price_scale 未被调整。更新利润计数器和 D。
     self.D = D_unadjusted
     # virtual_price = xcp / total_supply
     self.virtual_price = virtual_price
@@ -1230,25 +1230,25 @@ def tweak_price(
 @internal
 def _claim_admin_fees():
     """
-    @notice Claims admin fees and sends it to fee_receiver set in the factory.
+    @notice 领取管理费，并将其发送给工厂合约（Factory）中设置的 fee_receiver。
     """
     A_gamma: uint256[2] = self._A_gamma()
 
-    xcp_profit: uint256 = self.xcp_profit  # <---------- Current pool profits.
-    xcp_profit_a: uint256 = self.xcp_profit_a  # <- Profits at previous claim.
+    xcp_profit: uint256 = self.xcp_profit  # <---------- 池子当前的利润。
+    xcp_profit_a: uint256 = self.xcp_profit_a  # <- 上次领取时的利润。
     total_supply: uint256 = self.totalSupply
 
-    # Do not claim admin fees if:
-    # 1. insufficient profits accrued since last claim, and
-    # 2. there are less than 10**18 (or 1 unit of) lp tokens, else it can lead
-    #    to manipulated virtual prices.
+    # 以下情况不领取管理费：
+    # 1. 自上次领取以来累积的利润不足；
+    # 2. LP 代币少于 10**18（即 1 个单位），否则可能导致
+    #    虚拟价格被操纵。
     if xcp_profit <= xcp_profit_a or total_supply < 10**18:
         return
 
-    #      Claim tokens belonging to the admin here. This is done by 'gulping'
-    #       pool tokens that have accrued as fees, but not accounted in pool's
-    #         `self.balances` yet: pool balances only account for incoming and
-    #                  outgoing tokens excluding fees. Following 'gulps' fees:
+    #      在这里领取属于管理员的代币。做法是“吞入”（gulp）那些作为手续费
+    #       累积下来、但尚未计入池子
+    #         `self.balances` 的池中代币：池子余额只记录转入和
+    #                  转出的代币，不包括手续费。下面的代码负责“吞入”手续费：
 
     for i in range(N_COINS):
         if coins[i] == WETH20:
@@ -1256,27 +1256,27 @@ def _claim_admin_fees():
         else:
             self.balances[i] = ERC20(coins[i]).balanceOf(self)
 
-    #            If the pool has made no profits, `xcp_profit == xcp_profit_a`
-    #                         and the pool gulps nothing in the previous step.
+    #            若池子没有产生利润，则 `xcp_profit == xcp_profit_a`，
+    #                         且池子在上一步中不会吞入任何代币。
 
     vprice: uint256 = self.virtual_price
 
-    #  Admin fees are calculated as follows.
-    #      1. Calculate accrued profit since last claim. `xcp_profit`
-    #         is the current profits. `xcp_profit_a` is the profits
-    #         at the previous claim.
-    #      2. Take out admin's share, which is hardcoded at 5 * 10**9.
-    #         (50% => half of 100% => 10**10 / 2 => 5 * 10**9).
-    #      3. Since half of the profits go to rebalancing the pool, we
-    #         are left with half; so divide by 2.
+    #  管理费按如下方式计算。
+    #      1. 计算自上次领取以来累积的利润。`xcp_profit`
+    #         是当前利润，`xcp_profit_a` 是
+    #         上次领取时的利润。
+    #      2. 取出管理员的份额，该份额硬编码为 5 * 10**9。
+    #         （50% => 100% 的一半 => 10**10 / 2 => 5 * 10**9）。
+    #      3. 由于一半的利润用于池子的再平衡，我们
+    #         只剩下一半；所以再除以 2。
 
     # ------- xcp_profit -------
     #                          |
     # --------------------------
     #                          |
-    # --------------------------- 50% of profit
+    # --------------------------- 利润的 50%
     #                          |
-    # --------------------------- 1/2 of 50% profit = admin's claim
+    # --------------------------- 50% 利润的 1/2 = 管理员可领取的部分
     #                          |
     # ------- xcp_profit_a -----
     #
@@ -1287,40 +1287,40 @@ def _claim_admin_fees():
         unsafe_sub(xcp_profit, xcp_profit_a) * ADMIN_FEE, 2 * 10**10
     )
 
-    # ------------------------------ Claim admin fees by minting admin's share
-    #                                                of the pool in LP tokens.
+    # ------------------------------ 通过以 LP 代币形式铸造管理员在池子中的
+    #                                                份额来领取管理费。
     receiver: address = Factory(self.factory).fee_receiver()
     if receiver != empty(address) and fees > 0:
         # v = vprice
         # f = fees
-        # T = total supply
-        # q = frac = % growth of vprice from v - f to v
-        # Similar to LP provider increasing liquidity from v - f to v.
-        # Increase total supply proportional to v / (v - f)
+        # T = 总供应量
+        # q = frac = vprice 从 v - f 增长到 v 的百分比
+        # 类似于 LP 提供者把流动性从 v - f 增加到 v。
+        # 按 v / (v - f) 的比例增加总供应量
         # T * (1 + q) / T = v / (v - f)
         # q = v / (v - f) - 1
         frac: uint256 = vprice * 10**18 / (vprice - fees) - 10**18
         claimed: uint256 = self.mint_relative(receiver, frac)
 
         # fees * 2 = (xcp_profit - xcp_profit_a) / 2
-        # TODO: why -= profit / 2?
+        # TODO: 为什么要 -= profit / 2？
         xcp_profit -= fees * 2
 
         self.xcp_profit = xcp_profit
 
         log ClaimAdminFee(receiver, claimed)
 
-    # ------------------------------------------- Recalculate D b/c we gulped.
+    # ------------------------------------------- 由于执行了吞入，重新计算 D。
     D: uint256 = MATH.newton_D(A_gamma[0], A_gamma[1], self.xp(), 0)
     self.D = D
 
-    # ------------------- Recalculate virtual_price following admin fee claim.
-    #     In this instance we do not check if current virtual price is greater
-    #               than old virtual price, since the claim process can result
-    #                                     in a small decrease in pool's value.
+    # ------------------- 领取管理费后重新计算 virtual_price。
+    #     此处我们不检查当前虚拟价格是否大于
+    #               旧的虚拟价格，因为领取过程可能导致
+    #                                     池子价值略微下降。
 
     self.virtual_price = 10**18 * self.get_xcp(D) / self.totalSupply
-    self.xcp_profit_a = xcp_profit  # <------------ Cache last claimed profit.
+    self.xcp_profit_a = xcp_profit  # <------------ 缓存上次领取时的利润。
 
 
 @internal
@@ -1332,7 +1332,7 @@ def xp() -> uint256[N_COINS]:
     precisions: uint256[N_COINS] = self._unpack(self.packed_precisions)
 
     """
-    transformed balance = token balance * precision * price scale
+    变换后的余额 = 代币余额 * 精度 * 价格尺度
     """
 
     result[0] *= precisions[0]
@@ -1350,14 +1350,14 @@ def _A_gamma() -> uint256[2]:
     t1: uint256 = self.future_A_gamma_time
 
     A_gamma_1: uint256 = self.future_A_gamma
-    # 128 bits | 128 bits
+    # 128 位   | 128 位
     #    A     | gamma
     gamma1: uint256 = A_gamma_1 & 2**128 - 1
     A1: uint256 = A_gamma_1 >> 128
 
     if block.timestamp < t1:
 
-        # --------------- Handle ramping up and down of A --------------------
+        # --------------- 处理 A 的渐变上调与下调 --------------------
 
         """
            |      _______ A1
@@ -1372,7 +1372,7 @@ def _A_gamma() -> uint256[2]:
         A_gamma_0: uint256 = self.initial_A_gamma
         t0: uint256 = self.initial_A_gamma_time
 
-        # Sliding t0 and t1 by - t0
+        # 将 t0 和 t1 都平移 - t0
         t1 -= t0
         t0 = block.timestamp - t0
         t2: uint256 = t1 - t0
@@ -1381,8 +1381,8 @@ def _A_gamma() -> uint256[2]:
         # t0 = b - t0
         # t2 = (t1 - t0) - (b - t0) = t1 - b
 
-        # A = A0 when b = t0
-        #   = A1 when b = t1
+        # A = A0（当 b = t0 时）
+        #   = A1（当 b = t1 时）
         #    (A0 * (t1 - b) + A1 * (b - t0)) / (t1 - t0)
         A1 = ((A_gamma_0 >> 128) * t2 + A1 * t0) / t1
         gamma1 = ((A_gamma_0 & 2**128 - 1) * t2 + gamma1 * t0) / t1
@@ -1396,9 +1396,9 @@ def _fee(xp: uint256[N_COINS]) -> uint256:
     fee_params: uint256[3] = self._unpack(self.packed_fee_params)
     # fee_params[0], fee_params[1], fee_params[2]
     #       mid_fee,       out_fee,     fee_gamma
-    # mid_fee = min fee multiplier
-    # out_fee = max fee multiplier
-    # fee_gamma = set how quick mid_fee increases to out_fee
+    # mid_fee = 最小手续费乘数
+    # out_fee = 最大手续费乘数
+    # fee_gamma = 设定 mid_fee 增长到 out_fee 的快慢
 
     f: uint256 = MATH.reduction_coefficient(xp, fee_params[2])
     # f = fee_gamma / (fee_gamma + 1 - K)
@@ -1407,8 +1407,8 @@ def _fee(xp: uint256[N_COINS]) -> uint256:
     # fee_gamma / (fee_gamma + 1) <= f <= 1
 
     # mid_fee * f + out_fee * (1 - f)
-    # balances pool   -> K = 1  -> f = 1  -> mid_fee
-    # imbalanced pool -> K -> 0 -> f -> 0 -> out_fee
+    # 平衡的池子      -> K = 1  -> f = 1  -> mid_fee
+    # 不平衡的池子    -> K -> 0 -> f -> 0 -> out_fee
     return unsafe_div(
         fee_params[0] * f + fee_params[1] * (10**18 - f),
         10**18
@@ -1416,10 +1416,10 @@ def _fee(xp: uint256[N_COINS]) -> uint256:
 
 
 """
-xcp = x of constant product
-    = liquidity L of constant product
+xcp = 恒定乘积中的 x
+    = 恒定乘积的流动性 L
 
-constant product
+恒定乘积
 x0*x1*x2*...x(N-1) = L**N = xcp**N
 """
 @internal
@@ -1433,8 +1433,8 @@ def get_xcp(D: uint256) -> uint256:
     """
     x: uint256[N_COINS] = empty(uint256[N_COINS])
     x[0] = D / N_COINS
-    packed_prices: uint256 = self.price_scale_packed  # <-- No precisions here
-    #                                 because we don't switch to "real" units.
+    packed_prices: uint256 = self.price_scale_packed  # <-- 这里不乘精度（precisions），
+    #                                 因为我们不切换到“真实”单位。
 
     # PRICE_SIZE: constant(uint128) = 256 / (N_COINS - 1)
     # PRICE_MASK: constant(uint256) = 2**PRICE_SIZE - 1
@@ -1446,7 +1446,7 @@ def get_xcp(D: uint256) -> uint256:
     """
     (D/(N*p0) * D/(N*p1) ... * D/(N*p(N-1))) ** (1/N)
 
-    Example
+    示例
     N = 3
     p0 = 1
     xcp = (D/3 * D/(3*p1) * D/(3*p2)) ** (1 / 3)
@@ -1478,7 +1478,7 @@ def _calc_token_fee(amounts: uint256[N_COINS], xp: uint256[N_COINS]) -> uint256:
             Sdiff += unsafe_sub(avg, _x)
 
     # fee = sum(|amounts[i] - avg(amounts)|) * fee / sum(amounts)
-    #     = 0 when amounts[0] = amounts[1] = amounts[2]
+    #     = 0（当 amounts[0] = amounts[1] = amounts[2] 时）
     return fee * Sdiff / S + NOISE_FEE
 
 
@@ -1492,15 +1492,15 @@ def _calc_withdraw_one_coin(
 ) -> (uint256, uint256, uint256[N_COINS], uint256):
 
     token_supply: uint256 = self.totalSupply
-    assert token_amount <= token_supply  # dev: token amount more than supply
-    assert i < N_COINS  # dev: coin out of range
+    assert token_amount <= token_supply  # dev: 代币数量超过总供应量
+    assert i < N_COINS  # dev: 币种索引越界
 
     xx: uint256[N_COINS] = self.balances
     precisions: uint256[N_COINS] = self._unpack(self.packed_precisions)
     xp: uint256[N_COINS] = precisions
     D0: uint256 = 0
 
-    # -------------------------- Calculate D0 and xp -------------------------
+    # -------------------------- 计算 D0 和 xp -------------------------
 
     price_scale_i: uint256 = PRECISION * precisions[0]
     packed_prices: uint256 = self.price_scale_packed
@@ -1508,57 +1508,57 @@ def _calc_withdraw_one_coin(
     for k in range(1, N_COINS):
         p: uint256 = (packed_prices & PRICE_MASK)
         if i == k:
-            #               price scale * precision
+            #               价格尺度 * 精度
             price_scale_i = p * xp[i]
         #       precision[k] * balances[k] * price_scale[k] / PRECISION
         xp[k] = unsafe_div(xp[k] * xx[k] * p, PRECISION)
         packed_prices = packed_prices >> PRICE_SIZE
 
-    if update_D:  # <-------------- D is updated if pool is undergoing a ramp.
+    if update_D:  # <-------------- 若池子正在渐变调整，则更新 D。
         D0 = MATH.newton_D(A_gamma[0], A_gamma[1], xp, 0)
     else:
         D0 = self.D
 
     D: uint256 = D0
 
-    # -------------------------------- Fee Calc ------------------------------
+    # -------------------------------- 手续费计算 ------------------------------
 
-    # Charge fees on D. Roughly calculate xp[i] after withdrawal and use that
-    # to calculate fee. Precision is not paramount here: we just want a
-    # behavior where the higher the imbalance caused the more fee the AMM
-    # charges.
+    # 对 D 收取手续费。粗略计算取出后的 xp[i]，并用它
+    # 来计算手续费。这里精度并不是最重要的：我们只希望
+    # 实现这样的行为：造成的不平衡越大，AMM 收取的
+    # 手续费就越多。
 
-    # xp is adjusted assuming xp[0] ~= xp[1] ~= x[2], which is usually not the
-    #  case. We charge self._fee(xp), where xp is an imprecise adjustment post
-    #  withdrawal in one coin. If the withdraw is too large: charge max fee by
-    #   default. This is because the fee calculation will otherwise underflow.
+    # 调整 xp 时假设 xp[0] ~= xp[1] ~= x[2]，但通常并非
+    #  如此。我们收取 self._fee(xp)，其中 xp 是单币取出后
+    #  的不精确调整值。如果取出数量过大：默认收取最高手续费。
+    #   这是因为否则手续费计算会发生下溢。
 
     xp_imprecise: uint256[N_COINS] = xp
-    # balanced withdrawal = from xp[0] -> xp[0] * token_amount / token_supply
-    #                       from xp[1] -> xp[1] * token_amount / token_supply
-    #                       from xp[2] -> xp[2] * token_amount / token_supply
-    # imbalanced withdrawal
-    # assumes xp[0] ~= xp[1] ~= xp[2]  -> xp[i] * N * token_amount / token_supply
+    # 平衡取出 = 从 xp[0] 取 -> xp[0] * token_amount / token_supply
+    #            从 xp[1] 取 -> xp[1] * token_amount / token_supply
+    #            从 xp[2] 取 -> xp[2] * token_amount / token_supply
+    # 非平衡取出
+    # 假设 xp[0] ~= xp[1] ~= xp[2]  -> xp[i] * N * token_amount / token_supply
     xp_correction: uint256 = xp[i] * N_COINS * token_amount / token_supply
     fee: uint256 = self._unpack(self.packed_fee_params)[1]  # <- self.out_fee.
 
-    # Deduct xp[i] * N * token_amount / token_supply from xp[i]
-    # and calculate fee
+    # 从 xp[i] 中扣除 xp[i] * N * token_amount / token_supply
+    # 并计算手续费
     if xp_correction < xp_imprecise[i]:
         xp_imprecise[i] -= xp_correction
         fee = self._fee(xp_imprecise)
 
     dD: uint256 = unsafe_div(token_amount * D, token_supply)
-    D_fee: uint256 = fee * dD / (2 * 10**10) + 1  # <------- Actual fee on D.
+    D_fee: uint256 = fee * dD / (2 * 10**10) + 1  # <------- 对 D 收取的实际手续费。
 
-    # --------- Calculate `approx_fee` (assuming balanced state) in ith token.
-    # -------------------------------- We only need this for fee in the event.
+    # --------- 以第 i 个代币计算 `approx_fee`（假设处于平衡状态）。
+    # -------------------------------- 只有事件中的手续费需要用到它。
     approx_fee: uint256 = N_COINS * D_fee * xx[i] / D
 
     # ------------------------------------------------------------------------
-    D -= (dD - D_fee)  # <----------------------------------- Charge fee on D.
-    # --------------------------------- Calculate `y_out`` with `(D - D_fee)`.
-    # D0 = D before -dD
+    D -= (dD - D_fee)  # <----------------------------------- 对 D 收取手续费。
+    # --------------------------------- 用 `(D - D_fee)` 计算 `y_out`。
+    # D0 = 减去 dD 之前的 D
     # y0 = xp[i]
     # y1 = MATH.get_y(A_gamma[0], A_gamma[1], xp, D0 - dD, i)[0]
     #
@@ -1572,7 +1572,7 @@ def _calc_withdraw_one_coin(
     return dy, D, xp, approx_fee
 
 
-# ------------------------ ERC20 functions -----------------------------------
+# ------------------------ ERC20 函数 -----------------------------------
 
 
 @internal
@@ -1612,11 +1612,11 @@ def _domain_separator() -> bytes32:
 @external
 def transferFrom(_from: address, _to: address, _value: uint256) -> bool:
     """
-    @dev Transfer tokens from one address to another.
-    @param _from address The address which you want to send tokens from
-    @param _to address The address which you want to transfer to
-    @param _value uint256 the amount of tokens to be transferred
-    @return bool True on successul transfer. Reverts otherwise.
+    @dev 将代币从一个地址转移到另一个地址。
+    @param _from address 代币转出的地址
+    @param _to address 代币转入的地址
+    @param _value uint256 要转移的代币数量
+    @return bool 转账成功时返回 True，否则回滚（revert）。
     """
     _allowance: uint256 = self.allowance[_from][msg.sender]
     if _allowance != max_value(uint256):
@@ -1629,10 +1629,10 @@ def transferFrom(_from: address, _to: address, _value: uint256) -> bool:
 @external
 def transfer(_to: address, _value: uint256) -> bool:
     """
-    @dev Transfer token for a specified address
-    @param _to The address to transfer to.
-    @param _value The amount to be transferred.
-    @return bool True on successful transfer. Reverts otherwise.
+    @dev 向指定地址转移代币
+    @param _to 转入的地址。
+    @param _value 要转移的数量。
+    @return bool 转账成功时返回 True，否则回滚（revert）。
     """
     self._transfer(msg.sender, _to, _value)
     return True
@@ -1641,15 +1641,15 @@ def transfer(_to: address, _value: uint256) -> bool:
 @external
 def approve(_spender: address, _value: uint256) -> bool:
     """
-    @notice Allow `_spender` to transfer up to `_value` amount
-            of tokens from the caller's account.
-    @dev Non-zero to non-zero approvals are allowed, but should
-         be used cautiously. The methods increaseAllowance + decreaseAllowance
-         are available to prevent any front-running that may occur.
-    @param _spender The account permitted to spend up to `_value` amount of
-                    caller's funds.
-    @param _value The amount of tokens `_spender` is allowed to spend.
-    @return bool Success
+    @notice 允许 `_spender` 从调用者账户中转移最多 `_value` 数量
+            的代币。
+    @dev 允许把非零授权额度直接改为另一个非零值，但应
+         谨慎使用。可以使用 increaseAllowance + decreaseAllowance 方法
+         来防止可能发生的抢跑。
+    @param _spender 被允许花费最多 `_value` 数量的
+                    调用者资金的账户。
+    @param _value 允许 `_spender` 花费的代币数量。
+    @return bool 是否成功
     """
     self._approve(msg.sender, _spender, _value)
     return True
@@ -1658,18 +1658,18 @@ def approve(_spender: address, _value: uint256) -> bool:
 @external
 def increaseAllowance(_spender: address, _add_value: uint256) -> bool:
     """
-    @notice Increase the allowance granted to `_spender`.
-    @dev This function will never overflow, and instead will bound
-         allowance to max_value(uint256). This has the potential to grant an
-         infinite approval.
-    @param _spender The account to increase the allowance of.
-    @param _add_value The amount to increase the allowance by.
-    @return bool Success
+    @notice 增加授予 `_spender` 的授权额度（allowance）。
+    @dev 此函数永远不会上溢，而是会将
+         授权额度限制在 max_value(uint256)。这有可能授予
+         无限授权。
+    @param _spender 要增加授权额度的账户。
+    @param _add_value 授权额度的增加量。
+    @return bool 是否成功
     """
     cached_allowance: uint256 = self.allowance[msg.sender][_spender]
     allowance: uint256 = unsafe_add(cached_allowance, _add_value)
 
-    if allowance < cached_allowance:  # <-------------- Check for an overflow.
+    if allowance < cached_allowance:  # <-------------- 检查是否上溢。
         allowance = max_value(uint256)
 
     if allowance != cached_allowance:
@@ -1681,17 +1681,17 @@ def increaseAllowance(_spender: address, _add_value: uint256) -> bool:
 @external
 def decreaseAllowance(_spender: address, _sub_value: uint256) -> bool:
     """
-    @notice Decrease the allowance granted to `_spender`.
-    @dev This function will never underflow, and instead will bound
-        allowance to 0.
-    @param _spender The account to decrease the allowance of.
-    @param _sub_value The amount to decrease the allowance by.
-    @return bool Success.
+    @notice 减少授予 `_spender` 的授权额度（allowance）。
+    @dev 此函数永远不会下溢，而是会将
+        授权额度限制为 0。
+    @param _spender 要减少授权额度的账户。
+    @param _sub_value 授权额度的减少量。
+    @return bool 是否成功。
     """
     cached_allowance: uint256 = self.allowance[msg.sender][_spender]
     allowance: uint256 = unsafe_sub(cached_allowance, _sub_value)
 
-    if cached_allowance < allowance:  # <------------- Check for an underflow.
+    if cached_allowance < allowance:  # <------------- 检查是否下溢。
         allowance = 0
 
     if allowance != cached_allowance:
@@ -1711,23 +1711,23 @@ def permit(
     _s: bytes32,
 ) -> bool:
     """
-    @notice Permit `_spender` to spend up to `_value` amount of `_owner`'s
-            tokens via a signature.
-    @dev In the event of a chain fork, replay attacks are prevented as
-         domain separator is recalculated. However, this is only if the
-         resulting chains update their chainId.
-    @param _owner The account which generated the signature and is granting an
-                  allowance.
-    @param _spender The account which will be granted an allowance.
-    @param _value The approval amount.
-    @param _deadline The deadline by which the signature must be submitted.
-    @param _v The last byte of the ECDSA signature.
-    @param _r The first 32 bytes of the ECDSA signature.
-    @param _s The second 32 bytes of the ECDSA signature.
-    @return bool Success.
+    @notice 通过签名（permit，EIP-2612 签名授权）允许 `_spender` 花费
+            `_owner` 最多 `_value` 数量的代币。
+    @dev 发生链分叉（fork）时，由于 domain separator（域分隔符）会被重新计算，
+         重放攻击可以被防止。但前提是分叉后
+         产生的各条链都更新了自己的 chainId。
+    @param _owner 生成签名并授予
+                  授权额度的账户。
+    @param _spender 将被授予授权额度的账户。
+    @param _value 授权数量。
+    @param _deadline 签名必须提交的截止时间。
+    @param _v ECDSA 签名的最后一个字节。
+    @param _r ECDSA 签名的前 32 字节。
+    @param _s ECDSA 签名的第二个 32 字节。
+    @return bool 是否成功。
     """
-    assert _owner != empty(address)  # dev: invalid owner
-    assert block.timestamp <= _deadline  # dev: permit expired
+    assert _owner != empty(address)  # dev: owner 无效
+    assert block.timestamp <= _deadline  # dev: permit 已过期
 
     nonce: uint256 = self.nonces[_owner]
     digest: bytes32 = keccak256(
@@ -1741,9 +1741,9 @@ def permit(
             ),
         )
     )
-    assert ecrecover(digest, _v, _r, _s) == _owner  # dev: invalid signature
+    assert ecrecover(digest, _v, _r, _s) == _owner  # dev: 签名无效
 
-    self.nonces[_owner] = unsafe_add(nonce, 1)  # <-- Unsafe add is safe here.
+    self.nonces[_owner] = unsafe_add(nonce, 1)  # <-- 此处使用 unsafe_add 是安全的。
     self._approve(_owner, _spender, _value)
     return True
 
@@ -1751,12 +1751,12 @@ def permit(
 @internal
 def mint(_to: address, _value: uint256) -> bool:
     """
-    @dev Mint an amount of the token and assigns it to an account.
-         This encapsulates the modification of balances such that the
-         proper events are emitted.
-    @param _to The account that will receive the created tokens.
-    @param _value The amount that will be created.
-    @return bool Success.
+    @dev 铸造一定数量的代币并分配给某个账户。
+         这里封装了对余额的修改，以确保
+         触发正确的事件。
+    @param _to 接收新铸造代币的账户。
+    @param _value 将要铸造的数量。
+    @return bool 是否成功。
     """
     self.totalSupply += _value
     self.balanceOf[_to] += _value
@@ -1768,10 +1768,10 @@ def mint(_to: address, _value: uint256) -> bool:
 @internal
 def mint_relative(_to: address, frac: uint256) -> uint256:
     """
-    @dev Increases supply by factor of (1 + frac/1e18) and mints it for _to
-    @param _to The account that will receive the created tokens.
-    @param frac The fraction of the current supply to mint.
-    @return uint256 Amount of tokens minted.
+    @dev 将供应量按 (1 + frac/1e18) 倍增加，并把新增部分铸造给 _to
+    @param _to 接收新铸造代币的账户。
+    @param frac 要铸造的数量占当前供应量的比例。
+    @return uint256 铸造的代币数量。
     """
     supply: uint256 = self.totalSupply
     d_supply: uint256 = supply * frac / 10**18
@@ -1786,10 +1786,10 @@ def mint_relative(_to: address, frac: uint256) -> uint256:
 @internal
 def burnFrom(_to: address, _value: uint256) -> bool:
     """
-    @dev Burn an amount of the token from a given account.
-    @param _to The account whose tokens will be burned.
-    @param _value The amount that will be burned.
-    @return bool Success.
+    @dev 从指定账户销毁一定数量的代币。
+    @param _to 其代币将被销毁的账户。
+    @param _value 将要销毁的数量。
+    @return bool 是否成功。
     """
     self.totalSupply -= _value
     self.balanceOf[_to] -= _value
@@ -1798,15 +1798,15 @@ def burnFrom(_to: address, _value: uint256) -> bool:
     return True
 
 
-# ------------------------- AMM View Functions -------------------------------
+# ------------------------- AMM 视图函数 -------------------------------
 
 
 @external
 @view
 def fee_receiver() -> address:
     """
-    @notice Returns the address of the admin fee receiver.
-    @return address Fee receiver.
+    @notice 返回管理费（admin fee）接收者的地址。
+    @return address 手续费接收者。
     """
     return Factory(self.factory).fee_receiver()
 
@@ -1815,12 +1815,12 @@ def fee_receiver() -> address:
 @view
 def calc_token_amount(amounts: uint256[N_COINS], deposit: bool) -> uint256:
     """
-    @notice Calculate LP tokens minted or to be burned for depositing or
-            removing `amounts` of coins
-    @dev Includes fee.
-    @param amounts Amounts of tokens being deposited or withdrawn
-    @param deposit True if it is a deposit action, False if withdrawn.
-    @return uint256 Amount of LP tokens deposited or withdrawn.
+    @notice 计算存入或取出 `amounts` 数量的币时
+            将铸造或需销毁的 LP 代币数量
+    @dev 已包含手续费。
+    @param amounts 存入或取出的各代币数量
+    @param deposit 存入操作为 True，取出操作为 False。
+    @return uint256 存入或取出所对应的 LP 代币数量。
     """
     view_contract: address = Factory(self.factory).views_implementation()
     return Views(view_contract).calc_token_amount(amounts, deposit, self)
@@ -1830,12 +1830,12 @@ def calc_token_amount(amounts: uint256[N_COINS], deposit: bool) -> uint256:
 @view
 def get_dy(i: uint256, j: uint256, dx: uint256) -> uint256:
     """
-    @notice Get amount of coin[j] tokens received for swapping in dx amount of coin[i]
-    @dev Includes fee.
-    @param i index of input token. Check pool.coins(i) to get coin address at ith index
-    @param j index of output token
-    @param dx amount of input coin[i] tokens
-    @return uint256 Exact amount of output j tokens for dx amount of i input tokens.
+    @notice 获取用 dx 数量的 coin[i] 兑换可得到的 coin[j] 代币数量
+    @dev 已包含手续费。
+    @param i 输入代币的索引。可通过 pool.coins(i) 查询第 i 个索引处的币地址
+    @param j 输出代币的索引
+    @param dx 输入的 coin[i] 代币数量
+    @return uint256 输入 dx 数量的 i 代币可得到的输出 j 代币的精确数量。
     """
     view_contract: address = Factory(self.factory).views_implementation()
     return Views(view_contract).get_dy(i, j, dx, self)
@@ -1845,15 +1845,15 @@ def get_dy(i: uint256, j: uint256, dx: uint256) -> uint256:
 @view
 def get_dx(i: uint256, j: uint256, dy: uint256) -> uint256:
     """
-    @notice Get amount of coin[i] tokens to input for swapping out dy amount
-            of coin[j]
-    @dev This is an approximate method, and returns estimates close to the input
-         amount. Expensive to call on-chain.
-    @param i index of input token. Check pool.coins(i) to get coin address at
-           ith index
-    @param j index of output token
-    @param dy amount of input coin[j] tokens received
-    @return uint256 Approximate amount of input i tokens to get dy amount of j tokens.
+    @notice 获取要兑换出 dy 数量的 coin[j] 时
+            需要输入的 coin[i] 代币数量
+    @dev 这是一个近似方法，返回接近实际输入
+         数量的估计值。在链上调用开销较大。
+    @param i 输入代币的索引。可通过 pool.coins(i) 查询
+           第 i 个索引处的币地址
+    @param j 输出代币的索引
+    @param dy 收到的 coin[j] 代币数量
+    @return uint256 获得 dy 数量的 j 代币所需输入的 i 代币的近似数量。
     """
     view_contract: address = Factory(self.factory).views_implementation()
     return Views(view_contract).get_dx(i, j, dy, self)
@@ -1864,9 +1864,9 @@ def get_dx(i: uint256, j: uint256, dy: uint256) -> uint256:
 @nonreentrant("lock")
 def lp_price() -> uint256:
     """
-    @notice Calculates the current price of the LP token w.r.t coin at the
-            0th index
-    @return uint256 LP price.
+    @notice 计算 LP 代币相对于第 0 个索引处的币的
+            当前价格
+    @return uint256 LP 价格。
     """
 
     price_oracle: uint256[N_COINS-1] = self._unpack_prices(
@@ -1882,14 +1882,14 @@ def lp_price() -> uint256:
 @nonreentrant("lock")
 def get_virtual_price() -> uint256:
     """
-    @notice Calculates the current virtual price of the pool LP token.
-    @dev Not to be confused with `self.virtual_price` which is a cached
-         virtual price.
-    @return uint256 Virtual Price.
+    @notice 计算池子 LP 代币当前的虚拟价格（virtual price）。
+    @dev 不要与 `self.virtual_price` 混淆，后者是缓存的
+         虚拟价格。
+    @return uint256 虚拟价格。
     """
 
     """
-    get_xcp = constant product liquidity L
+    get_xcp = 恒定乘积流动性 L
     xy = L^2
     x0 * ... * x(n-1) = L^N
 
@@ -1902,7 +1902,7 @@ def get_virtual_price() -> uint256:
                         * ...
                         * D / (N * p(n-1))
 
-    virtual price = L / total LP supply
+    虚拟价格（virtual price）= L / LP 总供应量
     """
     return 10**18 * self.get_xcp(self.D) / self.totalSupply
 
@@ -1912,29 +1912,29 @@ def get_virtual_price() -> uint256:
 @nonreentrant("lock")
 def price_oracle(k: uint256) -> uint256:
     """
-    @notice Returns the oracle price of the coin at index `k` w.r.t the coin
-            at index 0.
-    @dev The oracle is an exponential moving average, with a periodicity
-         determined by `self.ma_time`. The aggregated prices are cached state
-         prices (dy/dx) calculated AFTER the latest trade.
-    @param k The index of the coin.
-    @return uint256 Price oracle value of kth coin.
+    @notice 返回索引 `k` 处的币相对于索引 0 处的币的
+            预言机价格。
+    @dev 该预言机是一个指数移动平均（EMA），其周期
+         由 `self.ma_time` 决定。被聚合的价格是在最近一笔交易之后（AFTER）
+         计算并缓存的状态价格 (dy/dx)。
+    @param k 币的索引。
+    @return uint256 第 k 个币的价格预言机值。
     """
     price_oracle: uint256 = self._unpack_prices(self.price_oracle_packed)[k]
     price_scale: uint256 = self._unpack_prices(self.price_scale_packed)[k]
     last_prices_timestamp: uint256 = self.last_prices_timestamp
 
-    if last_prices_timestamp < block.timestamp:  # <------------ Update moving
-        #                                                   average if needed.
+    if last_prices_timestamp < block.timestamp:  # <------------ 如有需要，
+        #                                                   更新移动平均值。
 
         last_prices: uint256 = self._unpack_prices(self.last_prices_packed)[k]
         ma_time: uint256 = self._unpack(self.packed_rebalancing_params)[2]
-        # ma_time = half life / ln(2)
+        # ma_time = 半衰期（half life）/ ln(2)
         # alpha = e**(ln(0.5) * dt / H)
         #
         # ln(0.5) = ln(1/2) = -ln(2)
         #
-        # e**(-dt / ma_time) = e**(-ln(2) * dt / half life)
+        # e**(-dt / ma_time) = e**(-ln(2) * dt / 半衰期)
         alpha: uint256 = MATH.wad_exp(
             -convert(
                 (block.timestamp - last_prices_timestamp) * 10**18 / ma_time,
@@ -1942,10 +1942,10 @@ def price_oracle(k: uint256) -> uint256:
             )
         )
 
-        # ---- We cap state price that goes into the EMA with 2 x price_scale.
+        # ---- 将进入 EMA 的状态价格上限限制为 2 x price_scale。
         """
         min(last_price, 2 * price_scale) * (1 - a) + a * ma
-        last_price != last trade price
+        last_price != 最后成交价
         """
         return (
             min(last_prices, 2 * price_scale) * (10**18 - alpha) +
@@ -1959,15 +1959,15 @@ def price_oracle(k: uint256) -> uint256:
 @view
 def last_prices(k: uint256) -> uint256:
     """
-    @notice Returns last price of the coin at index `k` w.r.t the coin
-            at index 0.
-    @dev last_prices returns the quote by the AMM for an infinitesimally small swap
-         after the last trade. It is not equivalent to the last traded price, and
-         is computed by taking the partial differential of `x` w.r.t `y`. The
-         derivative is calculated in `get_p` and then multiplied with price_scale
-         to give last_prices.
-    @param k The index of the coin.
-    @return uint256 Last logged price of coin.
+    @notice 返回索引 `k` 处的币相对于索引 0 处的币的
+            最新价格。
+    @dev last_prices 返回的是在最近一笔交易之后，AMM 对一笔无穷小兑换
+         给出的报价。它并不等同于最后成交价，而是
+         通过求 `x` 对 `y` 的偏导数计算得到。该
+         导数在 `get_p` 中计算，然后乘以 price_scale（价格尺度）
+         得到 last_prices。
+    @param k 币的索引。
+    @return uint256 最近记录的币价格。
     """
     return self._unpack_prices(self.last_prices_packed)[k]
 
@@ -1976,12 +1976,12 @@ def last_prices(k: uint256) -> uint256:
 @view
 def price_scale(k: uint256) -> uint256:
     """
-    @notice Returns the price scale of the coin at index `k` w.r.t the coin
-            at index 0.
-    @dev Price scale determines the price band around which liquidity is
-         concentrated.
-    @param k The index of the coin.
-    @return uint256 Price scale of coin.
+    @notice 返回索引 `k` 处的币相对于索引 0 处的币的
+            price scale（价格尺度）。
+    @dev 价格尺度决定了流动性集中
+         所围绕的价格区间。
+    @param k 币的索引。
+    @return uint256 币的价格尺度。
     """
     return self._unpack_prices(self.price_scale_packed)[k]
 
@@ -1990,11 +1990,11 @@ def price_scale(k: uint256) -> uint256:
 @view
 def fee() -> uint256:
     """
-    @notice Returns the fee charged by the pool at current state.
-    @dev Not to be confused with the fee charged at liquidity action, since
-         there the fee is calculated on `xp` AFTER liquidity is added or
-         removed.
-    @return uint256 fee bps.
+    @notice 返回池子在当前状态下收取的手续费。
+    @dev 不要与流动性操作时收取的手续费混淆，因为
+         那里的手续费是在添加或移除流动性之后（AFTER）
+         基于 `xp` 计算的。
+    @return uint256 手续费（bps）。
     """
     return self._fee(self.xp())
 
@@ -2003,10 +2003,10 @@ def fee() -> uint256:
 @external
 def calc_withdraw_one_coin(token_amount: uint256, i: uint256) -> uint256:
     """
-    @notice Calculates output tokens with fee
-    @param token_amount LP Token amount to burn
-    @param i token in which liquidity is withdrawn
-    @return uint256 Amount of ith tokens received for burning token_amount LP tokens.
+    @notice 计算扣除手续费后的输出代币数量
+    @param token_amount 要销毁的 LP 代币数量
+    @param i 取出流动性时所用代币的索引
+    @return uint256 销毁 token_amount 个 LP 代币可收到的第 i 个代币的数量。
     """
 
     return self._calc_withdraw_one_coin(
@@ -2023,10 +2023,10 @@ def calc_token_fee(
     amounts: uint256[N_COINS], xp: uint256[N_COINS]
 ) -> uint256:
     """
-    @notice Returns the fee charged on the given amounts for add_liquidity.
-    @param amounts The amounts of coins being added to the pool.
-    @param xp The current balances of the pool multiplied by coin precisions.
-    @return uint256 Fee charged.
+    @notice 返回 add_liquidity 时对给定数量收取的手续费。
+    @param amounts 添加到池子中的各币数量。
+    @param xp 池子当前余额乘以各币精度后的值。
+    @return uint256 收取的手续费。
     """
     return self._calc_token_fee(amounts, xp)
 
@@ -2035,8 +2035,8 @@ def calc_token_fee(
 @external
 def A() -> uint256:
     """
-    @notice Returns the current pool amplification parameter.
-    @return uint256 A param.
+    @notice 返回池子当前的放大系数 A。
+    @return uint256 A 参数。
     """
     return self._A_gamma()[0]
 
@@ -2045,8 +2045,8 @@ def A() -> uint256:
 @external
 def gamma() -> uint256:
     """
-    @notice Returns the current pool gamma parameter.
-    @return uint256 gamma param.
+    @notice 返回池子当前的 gamma 参数。
+    @return uint256 gamma 参数。
     """
     return self._A_gamma()[1]
 
@@ -2055,8 +2055,8 @@ def gamma() -> uint256:
 @external
 def mid_fee() -> uint256:
     """
-    @notice Returns the current mid fee
-    @return uint256 mid_fee value.
+    @notice 返回当前的 mid fee（中间手续费）
+    @return uint256 mid_fee 的值。
     """
     return self._unpack(self.packed_fee_params)[0]
 
@@ -2065,8 +2065,8 @@ def mid_fee() -> uint256:
 @external
 def out_fee() -> uint256:
     """
-    @notice Returns the current out fee
-    @return uint256 out_fee value.
+    @notice 返回当前的 out fee（外围手续费）
+    @return uint256 out_fee 的值。
     """
     return self._unpack(self.packed_fee_params)[1]
 
@@ -2075,8 +2075,8 @@ def out_fee() -> uint256:
 @external
 def fee_gamma() -> uint256:
     """
-    @notice Returns the current fee gamma
-    @return uint256 fee_gamma value.
+    @notice 返回当前的 fee gamma
+    @return uint256 fee_gamma 的值。
     """
     return self._unpack(self.packed_fee_params)[2]
 
@@ -2085,8 +2085,8 @@ def fee_gamma() -> uint256:
 @external
 def allowed_extra_profit() -> uint256:
     """
-    @notice Returns the current allowed extra profit
-    @return uint256 allowed_extra_profit value.
+    @notice 返回当前允许的额外利润（allowed extra profit）
+    @return uint256 allowed_extra_profit 的值。
     """
     return self._unpack(self.packed_rebalancing_params)[0]
 
@@ -2095,8 +2095,8 @@ def allowed_extra_profit() -> uint256:
 @external
 def adjustment_step() -> uint256:
     """
-    @notice Returns the current adjustment step
-    @return uint256 adjustment_step value.
+    @notice 返回当前的调整步长（adjustment step）
+    @return uint256 adjustment_step 的值。
     """
     return self._unpack(self.packed_rebalancing_params)[1]
 
@@ -2105,31 +2105,31 @@ def adjustment_step() -> uint256:
 @external
 def ma_time() -> uint256:
     """
-    @notice Returns the current moving average time in seconds
-    @dev To get time in seconds, the parameter is multipled by ln(2)
-         One can expect off-by-one errors here.
-    @return uint256 ma_time value.
+    @notice 返回当前的移动平均时间（单位：秒）
+    @dev 为得到以秒为单位的时间，参数会乘以 ln(2)
+         此处可能存在差一（off-by-one）误差。
+    @return uint256 ma_time 的值。
     """
     return self._unpack(self.packed_rebalancing_params)[2] * 694 / 1000
 
 
 @view
 @external
-def precisions() -> uint256[N_COINS]:  # <-------------- For by view contract.
+def precisions() -> uint256[N_COINS]:  # <-------------- 供视图合约（view contract）使用。
     """
-    @notice Returns the precisions of each coin in the pool.
-    @return uint256[3] precisions of coins.
+    @notice 返回池子中每种币的精度。
+    @return uint256[3] 各币的精度。
     """
     return self._unpack(self.packed_precisions)
 
 
 @external
 @view
-def fee_calc(xp: uint256[N_COINS]) -> uint256:  # <----- For by view contract.
+def fee_calc(xp: uint256[N_COINS]) -> uint256:  # <----- 供视图合约使用。
     """
-    @notice Returns the fee charged by the pool at current state.
-    @param xp The current balances of the pool multiplied by coin precisions.
-    @return uint256 Fee value.
+    @notice 返回池子在当前状态下收取的手续费。
+    @param xp 池子当前余额乘以各币精度后的值。
+    @return uint256 手续费值。
     """
     return self._fee(xp)
 
@@ -2138,13 +2138,13 @@ def fee_calc(xp: uint256[N_COINS]) -> uint256:  # <----- For by view contract.
 @external
 def DOMAIN_SEPARATOR() -> bytes32:
     """
-    @notice EIP712 domain separator.
-    @return bytes32 Domain Separator set for the current chain.
+    @notice EIP712 域分隔符（domain separator）。
+    @return bytes32 为当前链设置的域分隔符。
     """
     return self._domain_separator()
 
 
-# ------------------------- AMM Admin Functions ------------------------------
+# ------------------------- AMM 管理函数 ------------------------------
 
 
 @external
@@ -2152,15 +2152,15 @@ def ramp_A_gamma(
     future_A: uint256, future_gamma: uint256, future_time: uint256
 ):
     """
-    @notice Initialise Ramping A and gamma parameter values linearly.
-    @dev Only accessible by factory admin, and only
-    @param future_A The future A value.
-    @param future_gamma The future gamma value.
-    @param future_time The timestamp at which the ramping will end.
+    @notice 开始对 A 和 gamma 参数值进行线性渐变调整（ramp）。
+    @dev 仅工厂合约（Factory）管理员可调用，并且仅
+    @param future_A 未来的 A 值。
+    @param future_gamma 未来的 gamma 值。
+    @param future_time 渐变调整结束时的时间戳。
     """
-    assert msg.sender == Factory(self.factory).admin()  # dev: only owner
-    assert block.timestamp > self.initial_A_gamma_time + (MIN_RAMP_TIME - 1)  # dev: ramp undergoing
-    assert future_time > block.timestamp + MIN_RAMP_TIME - 1  # dev: insufficient time
+    assert msg.sender == Factory(self.factory).admin()  # dev: 仅限 owner
+    assert block.timestamp > self.initial_A_gamma_time + (MIN_RAMP_TIME - 1)  # dev: 渐变调整正在进行中
+    assert future_time > block.timestamp + MIN_RAMP_TIME - 1  # dev: 时间不足
 
     A_gamma: uint256[2] = self._A_gamma()
     initial_A_gamma: uint256 = A_gamma[0] << 128
@@ -2200,10 +2200,10 @@ def ramp_A_gamma(
 @external
 def stop_ramp_A_gamma():
     """
-    @notice Stop Ramping A and gamma parameters immediately.
-    @dev Only accessible by factory admin.
+    @notice 立即停止 A 和 gamma 参数的渐变调整。
+    @dev 仅工厂合约管理员可调用。
     """
-    assert msg.sender == Factory(self.factory).admin()  # dev: only owner
+    assert msg.sender == Factory(self.factory).admin()  # dev: 仅限 owner
 
     A_gamma: uint256[2] = self._A_gamma()
     current_A_gamma: uint256 = A_gamma[0] << 128
@@ -2213,7 +2213,7 @@ def stop_ramp_A_gamma():
     self.initial_A_gamma_time = block.timestamp
     self.future_A_gamma_time = block.timestamp
 
-    # ------ Now (block.timestamp < t1) is always False, so we return saved A.
+    # ------ 现在 (block.timestamp < t1) 恒为 False，因此会返回已保存的 A。
 
     log StopRampA(A_gamma[0], A_gamma[1], block.timestamp)
 
@@ -2228,22 +2228,22 @@ def commit_new_parameters(
     _new_ma_time: uint256,
 ):
     """
-    @notice Commit new parameters.
-    @dev Only accessible by factory admin.
-    @param _new_mid_fee The new mid fee.
-    @param _new_out_fee The new out fee.
-    @param _new_fee_gamma The new fee gamma.
-    @param _new_allowed_extra_profit The new allowed extra profit.
-    @param _new_adjustment_step The new adjustment step.
-    @param _new_ma_time The new ma time. ma_time is time_in_seconds/ln(2).
+    @notice 提交新参数。
+    @dev 仅工厂合约管理员可调用。
+    @param _new_mid_fee 新的 mid fee。
+    @param _new_out_fee 新的 out fee。
+    @param _new_fee_gamma 新的 fee gamma。
+    @param _new_allowed_extra_profit 新的允许额外利润（allowed extra profit）。
+    @param _new_adjustment_step 新的调整步长（adjustment step）。
+    @param _new_ma_time 新的 ma time。ma_time 等于 time_in_seconds/ln(2)。
     """
-    assert msg.sender == Factory(self.factory).admin()  # dev: only owner
-    assert self.admin_actions_deadline == 0  # dev: active action
+    assert msg.sender == Factory(self.factory).admin()  # dev: 仅限 owner
+    assert self.admin_actions_deadline == 0  # dev: 已有进行中的操作
 
     _deadline: uint256 = block.timestamp + ADMIN_ACTIONS_DELAY
     self.admin_actions_deadline = _deadline
 
-    # ----------------------------- Set fee params ---------------------------
+    # ----------------------------- 设置手续费参数 ---------------------------
 
     new_mid_fee: uint256 = _new_mid_fee
     new_out_fee: uint256 = _new_out_fee
@@ -2252,16 +2252,16 @@ def commit_new_parameters(
     current_fee_params: uint256[3] = self._unpack(self.packed_fee_params)
 
     if new_out_fee < MAX_FEE + 1:
-        assert new_out_fee > MIN_FEE - 1  # dev: fee is out of range
+        assert new_out_fee > MIN_FEE - 1  # dev: 手续费超出范围
     else:
         new_out_fee = current_fee_params[1]
 
     if new_mid_fee > MAX_FEE:
         new_mid_fee = current_fee_params[0]
-    assert new_mid_fee <= new_out_fee  # dev: mid-fee is too high
+    assert new_mid_fee <= new_out_fee  # dev: mid-fee 过高
 
     if new_fee_gamma < 10**18:
-        assert new_fee_gamma > 0  # dev: fee_gamma out of range [1 .. 10**18]
+        assert new_fee_gamma > 0  # dev: fee_gamma 超出范围 [1 .. 10**18]
     else:
         new_fee_gamma = current_fee_params[2]
 
@@ -2269,7 +2269,7 @@ def commit_new_parameters(
         [new_mid_fee, new_out_fee, new_fee_gamma]
     )
 
-    # ----------------- Set liquidity rebalancing parameters -----------------
+    # ----------------- 设置流动性再平衡参数 -----------------
 
     new_allowed_extra_profit: uint256 = _new_allowed_extra_profit
     new_adjustment_step: uint256 = _new_adjustment_step
@@ -2283,8 +2283,8 @@ def commit_new_parameters(
     if new_adjustment_step > 10**18:
         new_adjustment_step = current_rebalancing_params[1]
 
-    if new_ma_time < 872542:  # <----- Calculated as: 7 * 24 * 60 * 60 / ln(2)
-        assert new_ma_time > 86  # dev: MA time should be longer than 60/ln(2)
+    if new_ma_time < 872542:  # <----- 计算方式：7 * 24 * 60 * 60 / ln(2)
+        assert new_ma_time > 86  # dev: MA 时间应大于 60/ln(2)
     else:
         new_ma_time = current_rebalancing_params[2]
 
@@ -2292,7 +2292,7 @@ def commit_new_parameters(
         [new_allowed_extra_profit, new_adjustment_step, new_ma_time]
     )
 
-    # ---------------------------------- LOG ---------------------------------
+    # ---------------------------------- 日志 ---------------------------------
 
     log CommitNewParameters(
         _deadline,
@@ -2309,11 +2309,11 @@ def commit_new_parameters(
 @nonreentrant("lock")
 def apply_new_parameters():
     """
-    @notice Apply committed parameters.
-    @dev Only callable after admin_actions_deadline.
+    @notice 应用已提交的参数。
+    @dev 仅可在 admin_actions_deadline 之后调用。
     """
-    assert block.timestamp >= self.admin_actions_deadline  # dev: insufficient time
-    assert self.admin_actions_deadline != 0  # dev: no active action
+    assert block.timestamp >= self.admin_actions_deadline  # dev: 时间不足
+    assert self.admin_actions_deadline != 0  # dev: 没有进行中的操作
 
     self.admin_actions_deadline = 0
 
@@ -2339,9 +2339,9 @@ def apply_new_parameters():
 @external
 def revert_new_parameters():
     """
-    @notice Revert committed parameters
-    @dev Only accessible by factory admin. Setting admin_actions_deadline to 0
-         ensures a revert in apply_new_parameters.
+    @notice 撤销已提交的参数
+    @dev 仅工厂合约管理员可调用。将 admin_actions_deadline 设为 0
+         可确保 apply_new_parameters 会回滚（revert）。
     """
-    assert msg.sender == Factory(self.factory).admin()  # dev: only owner
+    assert msg.sender == Factory(self.factory).admin()  # dev: 仅限 owner
     self.admin_actions_deadline = 0
